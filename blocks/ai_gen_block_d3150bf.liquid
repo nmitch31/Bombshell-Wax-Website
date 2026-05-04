@@ -1,0 +1,667 @@
+{% doc %}
+  @prompt
+    A dynamic "Why choose our product" section for the homepage of the website. The sections should feature an image on the left half, and 4 squares on the right half, 2 rows of 2. Include creative design options like svg icons in each square and scroll into frame animations for the elements in the section. Ensure mobile responsiveness, with padding to the left and right edges of the screen. On mobile, from top to bottom the section should go header, subheader, 2 of the squares in a row, the image, then the other 2 squares of the row. Also utilize font family: nunito., make the icons manually inputted not predetermined. Add hover effects. Add scroll into frame effect options., remove the shake effect on the icons. Ensure the cursor stays default on hover effects.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-why-choose-{{ ai_gen_id }} {
+    font-family: 'Nunito', sans-serif;
+    padding: 60px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-why-choose-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-why-choose-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .ai-why-choose-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 15px;
+    font-weight: 700;
+    opacity: 0;
+  }
+
+  .ai-why-choose-heading-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} {
+    animation: ai-fade-up-{{ ai_gen_id }} 0.8s ease forwards;
+  }
+
+  .ai-why-choose-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.subheading_color }};
+    margin: 0;
+    opacity: 0;
+  }
+
+  .ai-why-choose-subheading-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} {
+    animation: ai-fade-up-{{ ai_gen_id }} 0.8s ease 0.2s forwards;
+  }
+
+  .ai-why-choose-content-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .ai-why-choose-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    opacity: 0;
+  }
+
+  .ai-why-choose-image-wrapper-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} {
+    animation: ai-fade-in-{{ ai_gen_id }} 0.8s ease 0.4s forwards;
+  }
+
+  .ai-why-choose-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    display: block;
+  }
+
+  .ai-why-choose-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: #f4f4f4;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-why-choose-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-why-choose-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-why-choose-features-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }} {
+    background-color: {{ block.settings.feature_bg_color }};
+    padding: 30px;
+    border-radius: {{ block.settings.feature_border_radius }}px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+    opacity: 0;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} {
+    animation: ai-fade-up-{{ ai_gen_id }} 0.6s ease forwards;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}:nth-child(1).ai-animate-in-{{ ai_gen_id }} {
+    animation-delay: 0.5s;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}:nth-child(2).ai-animate-in-{{ ai_gen_id }} {
+    animation-delay: 0.6s;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}:nth-child(3).ai-animate-in-{{ ai_gen_id }} {
+    animation-delay: 0.7s;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}:nth-child(4).ai-animate-in-{{ ai_gen_id }} {
+    animation-delay: 0.8s;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-why-choose-icon-wrapper-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ block.settings.icon_bg_color }};
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}:hover .ai-why-choose-icon-wrapper-{{ ai_gen_id }} {
+    background-color: {{ block.settings.icon_hover_bg_color }};
+  }
+
+  .ai-why-choose-icon-{{ ai_gen_id }} {
+    width: calc({{ block.settings.icon_size }}px * 0.5);
+    height: calc({{ block.settings.icon_size }}px * 0.5);
+    fill: {{ block.settings.icon_color }};
+    transition: fill 0.3s ease;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}:hover .ai-why-choose-icon-{{ ai_gen_id }} {
+    fill: {{ block.settings.icon_hover_color }};
+  }
+
+  .ai-why-choose-feature-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.feature_title_size }}px;
+    color: {{ block.settings.feature_title_color }};
+    margin: 0 0 10px;
+    font-weight: 700;
+  }
+
+  .ai-why-choose-feature-desc-{{ ai_gen_id }} {
+    font-size: {{ block.settings.feature_desc_size }}px;
+    color: {{ block.settings.feature_desc_color }};
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  @keyframes ai-fade-up-{{ ai_gen_id }} {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ai-fade-in-{{ ai_gen_id }} {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-why-choose-{{ ai_gen_id }} {
+      padding: 40px 20px;
+    }
+
+    .ai-why-choose-content-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .ai-why-choose-header-{{ ai_gen_id }} {
+      order: 1;
+    }
+
+    .ai-why-choose-features-{{ ai_gen_id }} {
+      order: 2;
+    }
+
+    .ai-why-choose-features-{{ ai_gen_id }}:first-of-type {
+      order: 2;
+    }
+
+    .ai-why-choose-image-wrapper-{{ ai_gen_id }} {
+      order: 3;
+    }
+
+    .ai-why-choose-features-{{ ai_gen_id }}:last-of-type {
+      order: 4;
+    }
+
+    .ai-why-choose-feature-{{ ai_gen_id }} {
+      padding: 25px;
+    }
+  }
+{% endstyle %}
+
+<why-choose-section-{{ ai_gen_id }} class="ai-why-choose-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-why-choose-container-{{ ai_gen_id }}">
+    <div class="ai-why-choose-header-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-why-choose-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+      {% endif %}
+      {% if block.settings.subheading != blank %}
+        <p class="ai-why-choose-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="ai-why-choose-content-{{ ai_gen_id }}">
+      <div class="ai-why-choose-features-{{ ai_gen_id }} ai-why-choose-features-top-{{ ai_gen_id }}">
+        {% for i in (1..2) %}
+          {% liquid
+            assign feature_title_key = 'feature_' | append: i | append: '_title'
+            assign feature_desc_key = 'feature_' | append: i | append: '_description'
+            assign feature_icon_key = 'feature_' | append: i | append: '_icon'
+            
+            assign feature_title = block.settings[feature_title_key]
+            assign feature_desc = block.settings[feature_desc_key]
+            assign feature_icon = block.settings[feature_icon_key]
+          %}
+          
+          <div class="ai-why-choose-feature-{{ ai_gen_id }}">
+            {% if feature_icon != blank %}
+              <div class="ai-why-choose-icon-wrapper-{{ ai_gen_id }}">
+                <div class="ai-why-choose-icon-{{ ai_gen_id }}">
+                  {{ feature_icon }}
+                </div>
+              </div>
+            {% endif %}
+            {% if feature_title != blank %}
+              <h3 class="ai-why-choose-feature-title-{{ ai_gen_id }}">{{ feature_title }}</h3>
+            {% endif %}
+            {% if feature_desc != blank %}
+              <p class="ai-why-choose-feature-desc-{{ ai_gen_id }}">{{ feature_desc }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="ai-why-choose-image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.image %}
+          <img
+            src="{{ block.settings.image | image_url: width: 1200 }}"
+            alt="{{ block.settings.image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.image.width }}"
+            height="{{ block.settings.image.height }}"
+            class="ai-why-choose-image-{{ ai_gen_id }}"
+          >
+        {% else %}
+          <div class="ai-why-choose-image-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+            <div class="ai-why-choose-empty-state-{{ ai_gen_id }}">
+              Next, add an image
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-why-choose-features-{{ ai_gen_id }} ai-why-choose-features-bottom-{{ ai_gen_id }}">
+        {% for i in (3..4) %}
+          {% liquid
+            assign feature_title_key = 'feature_' | append: i | append: '_title'
+            assign feature_desc_key = 'feature_' | append: i | append: '_description'
+            assign feature_icon_key = 'feature_' | append: i | append: '_icon'
+            
+            assign feature_title = block.settings[feature_title_key]
+            assign feature_desc = block.settings[feature_desc_key]
+            assign feature_icon = block.settings[feature_icon_key]
+          %}
+          
+          <div class="ai-why-choose-feature-{{ ai_gen_id }}">
+            {% if feature_icon != blank %}
+              <div class="ai-why-choose-icon-wrapper-{{ ai_gen_id }}">
+                <div class="ai-why-choose-icon-{{ ai_gen_id }}">
+                  {{ feature_icon }}
+                </div>
+              </div>
+            {% endif %}
+            {% if feature_title != blank %}
+              <h3 class="ai-why-choose-feature-title-{{ ai_gen_id }}">{{ feature_title }}</h3>
+            {% endif %}
+            {% if feature_desc != blank %}
+              <p class="ai-why-choose-feature-desc-{{ ai_gen_id }}">{{ feature_desc }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</why-choose-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class WhyChooseSection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.animationEnabled = {{ block.settings.enable_scroll_animation | json }};
+      }
+
+      connectedCallback() {
+        if (this.animationEnabled) {
+          this.setupScrollAnimation();
+        } else {
+          this.showAllElements();
+        }
+      }
+
+      setupScrollAnimation() {
+        this.observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('ai-animate-in-{{ ai_gen_id }}');
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+          }
+        );
+
+        const elementsToAnimate = this.querySelectorAll(
+          '.ai-why-choose-heading-{{ ai_gen_id }}, .ai-why-choose-subheading-{{ ai_gen_id }}, .ai-why-choose-feature-{{ ai_gen_id }}, .ai-why-choose-image-wrapper-{{ ai_gen_id }}'
+        );
+
+        elementsToAnimate.forEach((element) => {
+          this.observer.observe(element);
+        });
+      }
+
+      showAllElements() {
+        const elementsToShow = this.querySelectorAll(
+          '.ai-why-choose-heading-{{ ai_gen_id }}, .ai-why-choose-subheading-{{ ai_gen_id }}, .ai-why-choose-feature-{{ ai_gen_id }}, .ai-why-choose-image-wrapper-{{ ai_gen_id }}'
+        );
+
+        elementsToShow.forEach((element) => {
+          element.style.opacity = '1';
+        });
+      }
+
+      disconnectedCallback() {
+        if (this.observer) {
+          this.observer.disconnect();
+        }
+      }
+    }
+
+    customElements.define('why-choose-section-{{ ai_gen_id }}', WhyChooseSection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Why choose our product",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why Choose Our Product"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 42
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover what makes us different"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Feature 1"
+    },
+    {
+      "type": "html",
+      "id": "feature_1_icon",
+      "label": "Icon SVG"
+    },
+    {
+      "type": "text",
+      "id": "feature_1_title",
+      "label": "Title",
+      "default": "Premium Quality"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_1_description",
+      "label": "Description",
+      "default": "Crafted with the finest materials for lasting durability"
+    },
+    {
+      "type": "header",
+      "content": "Feature 2"
+    },
+    {
+      "type": "html",
+      "id": "feature_2_icon",
+      "label": "Icon SVG"
+    },
+    {
+      "type": "text",
+      "id": "feature_2_title",
+      "label": "Title",
+      "default": "Fast Shipping"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_2_description",
+      "label": "Description",
+      "default": "Get your order delivered quickly and safely"
+    },
+    {
+      "type": "header",
+      "content": "Feature 3"
+    },
+    {
+      "type": "html",
+      "id": "feature_3_icon",
+      "label": "Icon SVG"
+    },
+    {
+      "type": "text",
+      "id": "feature_3_title",
+      "label": "Title",
+      "default": "Expert Support"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_3_description",
+      "label": "Description",
+      "default": "Our team is here to help you every step of the way"
+    },
+    {
+      "type": "header",
+      "content": "Feature 4"
+    },
+    {
+      "type": "html",
+      "id": "feature_4_icon",
+      "label": "Icon SVG"
+    },
+    {
+      "type": "text",
+      "id": "feature_4_title",
+      "label": "Title",
+      "default": "Money Back Guarantee"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_4_description",
+      "label": "Description",
+      "default": "100% satisfaction guaranteed or your money back"
+    },
+    {
+      "type": "header",
+      "content": "Feature style"
+    },
+    {
+      "type": "color",
+      "id": "feature_bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "feature_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "feature_title_size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Title size",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "feature_title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "feature_desc_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "feature_desc_color",
+      "label": "Description color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Icon style"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon container size",
+      "default": 70
+    },
+    {
+      "type": "color",
+      "id": "icon_bg_color",
+      "label": "Background color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_bg_color",
+      "label": "Hover background color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_color",
+      "label": "Hover icon color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_scroll_animation",
+      "label": "Enable scroll into frame animation",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why choose our product"
+    }
+  ]
+}
+{% endschema %}

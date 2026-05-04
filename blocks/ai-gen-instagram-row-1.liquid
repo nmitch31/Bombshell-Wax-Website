@@ -1,0 +1,385 @@
+{% doc %}
+  @prompt
+    A scrollable row of instagram embeds
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-instagram-scroll-{{ ai_gen_id }} {
+    width: 100%;
+    padding: {{ block.settings.section_padding }}px 0;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-instagram-scroll__container-{{ ai_gen_id }} {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-instagram-scroll__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .ai-instagram-scroll__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 10px;
+  }
+
+  .ai-instagram-scroll__subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.subheading_color }};
+    margin: 0;
+  }
+
+  .ai-instagram-scroll__wrapper-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-instagram-scroll__track-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.gap }}px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 10px;
+  }
+
+  .ai-instagram-scroll__track-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-instagram-scroll__item-{{ ai_gen_id }} {
+    flex: 0 0 auto;
+    width: {{ block.settings.embed_width }}px;
+    max-width: 100%;
+  }
+
+  .ai-instagram-scroll__embed-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    background-color: #f4f4f4;
+  }
+
+  .ai-instagram-scroll__embed-{{ ai_gen_id }} iframe {
+    width: 100%;
+    border: none;
+  }
+
+  .ai-instagram-scroll__empty-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+  }
+
+  .ai-instagram-scroll__empty-icon-{{ ai_gen_id }} {
+    font-size: 48px;
+    margin-bottom: 20px;
+    opacity: 0.3;
+  }
+
+  .ai-instagram-scroll__empty-text-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-style: italic;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-instagram-scroll__item-{{ ai_gen_id }} {
+      width: {{ block.settings.embed_width | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<instagram-scroll-{{ ai_gen_id }}
+  class="ai-instagram-scroll-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-instagram-scroll__container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank or block.settings.subheading != blank %}
+      <div class="ai-instagram-scroll__header-{{ ai_gen_id }}">
+        {% if block.settings.heading != blank %}
+          <h2 class="ai-instagram-scroll__title-{{ ai_gen_id }}">
+            {{ block.settings.heading }}
+          </h2>
+        {% endif %}
+        {% if block.settings.subheading != blank %}
+          <p class="ai-instagram-scroll__subtitle-{{ ai_gen_id }}">
+            {{ block.settings.subheading }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% liquid
+      assign has_embeds = false
+      for i in (1..10)
+        assign embed_key = 'instagram_embed_' | append: i
+        assign embed_url = block.settings[embed_key]
+        if embed_url != blank
+          assign has_embeds = true
+          break
+        endif
+      endfor
+    %}
+
+    {% if has_embeds %}
+      <div class="ai-instagram-scroll__wrapper-{{ ai_gen_id }}">
+        <div class="ai-instagram-scroll__track-{{ ai_gen_id }}">
+          {% for i in (1..10) %}
+            {% liquid
+              assign embed_key = 'instagram_embed_' | append: i
+              assign embed_url = block.settings[embed_key]
+            %}
+
+            {% if embed_url != blank %}
+              <div class="ai-instagram-scroll__item-{{ ai_gen_id }}">
+                <div class="ai-instagram-scroll__embed-{{ ai_gen_id }}">
+                  <blockquote
+                    class="instagram-media"
+                    data-instgrm-permalink="{{ embed_url }}"
+                    data-instgrm-version="14"
+                  ></blockquote>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="ai-instagram-scroll__empty-{{ ai_gen_id }}">
+        <div class="ai-instagram-scroll__empty-icon-{{ ai_gen_id }}">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+        </div>
+        <p class="ai-instagram-scroll__empty-text-{{ ai_gen_id }}">
+          Next, add Instagram post URLs to display your feed
+        </p>
+      </div>
+    {% endif %}
+  </div>
+</instagram-scroll-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class InstagramScroll{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.scriptLoaded = false;
+      }
+
+      connectedCallback() {
+        this.loadInstagramScript();
+      }
+
+      loadInstagramScript() {
+        if (this.scriptLoaded || window.instgrm) {
+          if (window.instgrm) {
+            window.instgrm.Embeds.process();
+          }
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.instagram.com/embed.js';
+        script.onload = () => {
+          this.scriptLoaded = true;
+          if (window.instgrm) {
+            window.instgrm.Embeds.process();
+          }
+        };
+        document.body.appendChild(script);
+      }
+    }
+
+    customElements.define('instagram-scroll-{{ ai_gen_id }}', InstagramScroll{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Instagram feed scroll 1",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Follow us on Instagram"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "@yourbrand"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Instagram posts"
+    },
+    {
+      "type": "paragraph",
+      "content": "To get the Instagram post URL: Open the post on Instagram, click the three dots menu, and select 'Copy link'. Paste the full URL here (e.g., https://www.instagram.com/p/ABC123/)."
+    },
+    {
+      "type": "url",
+      "id": "instagram_embed_1",
+      "label": "Instagram post URL 1"
+    },
+    {
+      "type": "url",
+      "id": "instagram_embed_2",
+      "label": "Instagram post URL 2"
+    },
+    {
+      "type": "url",
+      "id": "instagram_embed_3",
+      "label": "Instagram post URL 3"
+    },
+    {
+      "type": "url",
+      "id": "instagram_embed_4",
+      "label": "Instagram post URL 4"
+    },
+    {
+      "type": "url",
+      "id": "instagram_embed_5",
+      "label": "Instagram post URL 5"
+    },
+    {
+      "type": "url",
+      "id": "instagram_embed_6",
+      "label": "Instagram post URL 6"
+    },
+    {
+      "type": "url",
+      "id": "instagram_embed_7",
+      "label": "Instagram post URL 7"
+    },
+    {
+      "type": "url",
+      "id": "instagram_embed_8",
+      "label": "Instagram post URL 8"
+    },
+    {
+      "type": "url",
+      "id": "instagram_embed_9",
+      "label": "Instagram post URL 9"
+    },
+    {
+      "type": "url",
+      "id": "instagram_embed_10",
+      "label": "Instagram post URL 10"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "embed_width",
+      "min": 250,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "Embed width",
+      "default": 350
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between posts",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram feed scroll"
+    }
+  ]
+}
+{% endschema %}

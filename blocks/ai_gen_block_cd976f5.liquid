@@ -1,0 +1,499 @@
+{% doc %}
+  @prompt
+    Create a responsive banner section with a four-column background where each column has a different customizable color. On the left side, display text content. On the right side, stack two images vertically with no styling or backgrounds. Position the top image so it extends slightly above the banner's top edge, and the bottom image so it extends slightly below the banner's bottom edge. On mobile devices, arrange the layout vertically: top image extending above the section, text content in the middle, and bottom image extending below the section.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-banner-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .ai-banner-container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    position: relative;
+    min-height: {{ block.settings.banner_height }}px;
+  }
+
+  .ai-banner-column-{{ ai_gen_id }} {
+    position: relative;
+  }
+
+  .ai-banner-column-{{ ai_gen_id }}:nth-child(1) {
+    background-color: {{ block.settings.column_color_1 }};
+  }
+
+  .ai-banner-column-{{ ai_gen_id }}:nth-child(2) {
+    background-color: {{ block.settings.column_color_2 }};
+  }
+
+  .ai-banner-column-{{ ai_gen_id }}:nth-child(3) {
+    background-color: {{ block.settings.column_color_3 }};
+  }
+
+  .ai-banner-column-{{ ai_gen_id }}:nth-child(4) {
+    background-color: {{ block.settings.column_color_4 }};
+  }
+
+  .ai-banner-content-wrapper-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 60px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    z-index: 2;
+  }
+
+  .ai-banner-text-content-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .ai-banner-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .ai-banner-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .ai-banner-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.6;
+  }
+
+  .ai-banner-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    transition: background-color 0.3s ease;
+    align-self: flex-start;
+  }
+
+  .ai-banner-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+  }
+
+  .ai-banner-images-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .ai-banner-image-top-{{ ai_gen_id }} {
+    position: relative;
+    margin-top: -{{ block.settings.image_overflow }}px;
+    flex: 1;
+  }
+
+  .ai-banner-image-top-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-banner-image-bottom-{{ ai_gen_id }} {
+    position: relative;
+    margin-bottom: -{{ block.settings.image_overflow }}px;
+    flex: 1;
+  }
+
+  .ai-banner-image-bottom-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-banner-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-banner-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+  }
+
+  .ai-banner-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-banner-container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+
+    .ai-banner-content-wrapper-{{ ai_gen_id }} {
+      position: static;
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding: 0;
+    }
+
+    .ai-banner-text-content-{{ ai_gen_id }} {
+      order: 2;
+      padding: 40px 20px;
+      background: linear-gradient(
+        to right,
+        {{ block.settings.column_color_1 }} 0%,
+        {{ block.settings.column_color_1 }} 25%,
+        {{ block.settings.column_color_2 }} 25%,
+        {{ block.settings.column_color_2 }} 50%,
+        {{ block.settings.column_color_3 }} 50%,
+        {{ block.settings.column_color_3 }} 75%,
+        {{ block.settings.column_color_4 }} 75%,
+        {{ block.settings.column_color_4 }} 100%
+      );
+    }
+
+    .ai-banner-images-wrapper-{{ ai_gen_id }} {
+      gap: 0;
+    }
+
+    .ai-banner-image-top-{{ ai_gen_id }} {
+      order: 1;
+      margin-top: -{{ block.settings.image_overflow_mobile }}px;
+      margin-bottom: 0;
+    }
+
+    .ai-banner-image-bottom-{{ ai_gen_id }} {
+      order: 3;
+      margin-bottom: -{{ block.settings.image_overflow_mobile }}px;
+      margin-top: 0;
+    }
+
+    .ai-banner-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.7 }}px;
+    }
+
+    .ai-banner-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.8 }}px;
+    }
+
+    .ai-banner-description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.description_size | times: 0.9 }}px;
+    }
+
+    .ai-banner-button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.button_font_size | times: 0.9 }}px;
+      padding: 12px 24px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-banner-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-banner-container-{{ ai_gen_id }}">
+    <div class="ai-banner-column-{{ ai_gen_id }}"></div>
+    <div class="ai-banner-column-{{ ai_gen_id }}"></div>
+    <div class="ai-banner-column-{{ ai_gen_id }}"></div>
+    <div class="ai-banner-column-{{ ai_gen_id }}"></div>
+
+    <div class="ai-banner-content-wrapper-{{ ai_gen_id }}">
+      <div class="ai-banner-text-content-{{ ai_gen_id }}">
+        {% if block.settings.heading != blank %}
+          <h2 class="ai-banner-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+        {% endif %}
+
+        {% if block.settings.subheading != blank %}
+          <h3 class="ai-banner-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</h3>
+        {% endif %}
+
+        {% if block.settings.description != blank %}
+          <div class="ai-banner-description-{{ ai_gen_id }}">
+            {{ block.settings.description }}
+          </div>
+        {% endif %}
+
+        {% if block.settings.button_text != blank and block.settings.button_link != blank %}
+          <a href="{{ block.settings.button_link }}" class="ai-banner-button-{{ ai_gen_id }}">
+            {{ block.settings.button_text }}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="ai-banner-images-wrapper-{{ ai_gen_id }}">
+        <div class="ai-banner-image-top-{{ ai_gen_id }}">
+          {% if block.settings.image_top %}
+            <img
+              src="{{ block.settings.image_top | image_url: width: 800 }}"
+              alt="{{ block.settings.image_top.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.image_top.width }}"
+              height="{{ block.settings.image_top.height }}"
+            >
+          {% else %}
+            <div class="ai-banner-image-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+              <div class="ai-banner-empty-state-{{ ai_gen_id }}">
+                Add top image
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="ai-banner-image-bottom-{{ ai_gen_id }}">
+          {% if block.settings.image_bottom %}
+            <img
+              src="{{ block.settings.image_bottom | image_url: width: 800 }}"
+              alt="{{ block.settings.image_bottom.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.image_bottom.width }}"
+              height="{{ block.settings.image_bottom.height }}"
+            >
+          {% else %}
+            <div class="ai-banner-image-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+              <div class="ai-banner-empty-state-{{ ai_gen_id }}">
+                Add bottom image
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Four column banner",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "min": 400,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "label": "Banner height",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "image_overflow",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Image overflow (desktop)",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_overflow_mobile",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Image overflow (mobile)",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Background colors"
+    },
+    {
+      "type": "color",
+      "id": "column_color_1",
+      "label": "Column 1",
+      "default": "#FF6B6B"
+    },
+    {
+      "type": "color",
+      "id": "column_color_2",
+      "label": "Column 2",
+      "default": "#4ECDC4"
+    },
+    {
+      "type": "color",
+      "id": "column_color_3",
+      "label": "Column 3",
+      "default": "#FFE66D"
+    },
+    {
+      "type": "color",
+      "id": "column_color_4",
+      "label": "Column 4",
+      "default": "#95E1D3"
+    },
+    {
+      "type": "header",
+      "content": "Text content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Welcome to Our Store"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover amazing products"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 14,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 24
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Shop our latest collection and find the perfect items for you.</p>"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Hover background color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_top",
+      "label": "Top image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_bottom",
+      "label": "Bottom image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Four column banner"
+    }
+  ]
+}
+{% endschema %}

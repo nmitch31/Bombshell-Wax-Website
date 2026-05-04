@@ -1,0 +1,827 @@
+{% doc %}
+  @prompt
+    A dynamic "Why choose our product" section for the homepage of the website. The sections should feature an image on the left half, and 4 squares on the right half, 2 rows of 2. Include creative design options like svg icons in each square and scroll into frame animations for the elements in the section. Ensure mobile responsiveness, with padding to the left and right edges of the screen. On mobile, from top to bottom the section should go header, subheader, 2 of the squares in a row, the image, then the other 2 squares of the row. Also utilize font family: nunito., make the icons manually inputted not predetermined. Add hover effects. Add scroll into frame effect options., remove the shake effect on the icons. Ensure the cursor stays default on hover effects.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
+  .ai-why-choose-{{ ai_gen_id }} {
+    font-family: 'Nunito', sans-serif;
+    padding: {{ block.settings.section_padding_mobile }}px 20px;
+    background-color: {{ block.settings.background_color }};
+    overflow: hidden;
+  }
+
+  .ai-why-choose-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .ai-why-choose-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 40px;
+    opacity: 0;
+  }
+
+  .ai-why-choose-header-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} {
+    animation: ai-fade-up-{{ ai_gen_id }} 0.8s ease-out forwards;
+  }
+
+  .ai-why-choose-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size_mobile }}px;
+    font-weight: 700;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 15px 0;
+    line-height: 1.2;
+  }
+
+  .ai-why-choose-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size_mobile }}px;
+    font-weight: 400;
+    color: {{ block.settings.subheading_color }};
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .ai-why-choose-content-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    align-items: center;
+  }
+
+  .ai-why-choose-features-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }} {
+    background-color: {{ block.settings.feature_bg_color }};
+    border-radius: {{ block.settings.feature_border_radius }}px;
+    padding: 30px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    cursor: default;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} {
+    animation: ai-fade-up-{{ ai_gen_id }} 0.8s ease-out forwards;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    background-color: {{ block.settings.feature_hover_bg_color }};
+  }
+
+  .ai-why-choose-icon-wrapper-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ block.settings.icon_bg_color }};
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}:hover .ai-why-choose-icon-wrapper-{{ ai_gen_id }} {
+    background-color: {{ block.settings.icon_hover_bg_color }};
+    transform: scale(1.1);
+  }
+
+  .ai-why-choose-icon-wrapper-{{ ai_gen_id }} svg {
+    width: {{ block.settings.icon_size | times: 0.5 }}px;
+    height: {{ block.settings.icon_size | times: 0.5 }}px;
+    fill: {{ block.settings.icon_color }};
+    transition: fill 0.3s ease;
+  }
+
+  .ai-why-choose-feature-{{ ai_gen_id }}:hover .ai-why-choose-icon-wrapper-{{ ai_gen_id }} svg {
+    fill: {{ block.settings.icon_hover_color }};
+  }
+
+  .ai-why-choose-feature-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.feature_title_size_mobile }}px;
+    font-weight: 700;
+    color: {{ block.settings.feature_title_color }};
+    margin: 0 0 10px 0;
+    line-height: 1.3;
+  }
+
+  .ai-why-choose-feature-desc-{{ ai_gen_id }} {
+    font-size: {{ block.settings.feature_desc_size_mobile }}px;
+    font-weight: 400;
+    color: {{ block.settings.feature_desc_color }};
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .ai-why-choose-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .ai-why-choose-image-wrapper-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} {
+    animation: ai-fade-scale-{{ ai_gen_id }} 0.8s ease-out forwards;
+  }
+
+  .ai-why-choose-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-why-choose-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-why-choose-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .ai-why-choose-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @keyframes ai-fade-up-{{ ai_gen_id }} {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ai-fade-scale-{{ ai_gen_id }} {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-why-choose-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_desktop }}px 40px;
+    }
+
+    .ai-why-choose-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size }}px;
+    }
+
+    .ai-why-choose-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size }}px;
+    }
+
+    .ai-why-choose-content-{{ ai_gen_id }} {
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+    }
+
+    .ai-why-choose-features-{{ ai_gen_id }} {
+      gap: 30px;
+    }
+
+    .ai-why-choose-feature-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.feature_title_size }}px;
+    }
+
+    .ai-why-choose-feature-desc-{{ ai_gen_id }} {
+      font-size: {{ block.settings.feature_desc_size }}px;
+    }
+
+    .ai-why-choose-image-wrapper-{{ ai_gen_id }} {
+      {% if block.settings.image_position == 'right' %}
+        order: 2;
+      {% endif %}
+    }
+
+    .ai-why-choose-features-{{ ai_gen_id }} {
+      {% if block.settings.image_position == 'right' %}
+        order: 1;
+      {% endif %}
+    }
+  }
+{% endstyle %}
+
+<why-choose-section-{{ ai_gen_id }}
+  class="ai-why-choose-{{ ai_gen_id }}"
+  data-scroll-animation="{{ block.settings.enable_scroll_animation }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-why-choose-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank or block.settings.subheading != blank %}
+      <div class="ai-why-choose-header-{{ ai_gen_id }}" data-animate="header">
+        {% if block.settings.heading != blank %}
+          <h2 class="ai-why-choose-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+        {% endif %}
+        {% if block.settings.subheading != blank %}
+          <p class="ai-why-choose-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-why-choose-content-{{ ai_gen_id }}">
+      <div class="ai-why-choose-features-{{ ai_gen_id }}">
+        {% for i in (1..4) %}
+          {% liquid
+            assign feature_enabled_key = 'feature_' | append: i | append: '_enabled'
+            assign feature_icon_key = 'feature_' | append: i | append: '_icon'
+            assign feature_title_key = 'feature_' | append: i | append: '_title'
+            assign feature_desc_key = 'feature_' | append: i | append: '_desc'
+            assign feature_link_key = 'feature_' | append: i | append: '_link'
+            assign feature_link_label_key = 'feature_' | append: i | append: '_link_label'
+
+            assign feature_enabled = block.settings[feature_enabled_key]
+            assign feature_icon = block.settings[feature_icon_key]
+            assign feature_title = block.settings[feature_title_key]
+            assign feature_desc = block.settings[feature_desc_key]
+            assign feature_link = block.settings[feature_link_key]
+            assign feature_link_label = block.settings[feature_link_label_key]
+          %}
+
+          {% if feature_enabled %}
+           
+            <div 
+              class="ai-why-choose-feature-{{ ai_gen_id }}" 
+              data-animate="feature"
+              style="animation-delay: {{ i | times: 0.1 }}s;"
+            >
+                            
+  <a 
+    href="{{ feature_link }}"
+    class="ai-why-choose-feature-link-{{ ai_gen_id }}" target="_blank"
+  >
+              <div class="ai-why-choose-icon-wrapper-{{ ai_gen_id }}">
+                {% if feature_icon != blank %}
+                  {{ feature_icon }}
+                {% else %}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 6v6l4 2"></path>
+                  </svg>
+                {% endif %}
+              </div>
+              {% if feature_title != blank %}
+                <h3 class="ai-why-choose-feature-title-{{ ai_gen_id }}">{{ feature_title }}</h3>
+              {% endif %}
+              {% if feature_desc != blank %}
+                <p class="ai-why-choose-feature-desc-{{ ai_gen_id }}">{{ feature_desc }}</p>
+              {% endif %}
+               <Br>
+  {% if feature_link != blank %}
+    {{ feature_link_label | default: 'Learn more' }}
+     {% endif %}
+  </a>
+
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="ai-why-choose-image-wrapper-{{ ai_gen_id }}" data-animate="image">
+        {% if block.settings.image %}
+          <img
+            src="{{ block.settings.image | image_url: width: 1200 }}"
+            alt="{{ block.settings.image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.image.width }}"
+            height="{{ block.settings.image.height }}"
+            class="ai-why-choose-image-{{ ai_gen_id }}"
+          >
+        {% else %}
+          <div class="ai-why-choose-image-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+            <div class="ai-why-choose-empty-state-{{ ai_gen_id }}">
+              Next, add an image
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</why-choose-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class WhyChooseSection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.scrollAnimationEnabled = this.dataset.scrollAnimation === 'true';
+        this.animatedElements = new Set();
+      }
+
+      connectedCallback() {
+        if (this.scrollAnimationEnabled) {
+          this.setupScrollAnimation();
+        } else {
+          this.showAllElements();
+        }
+      }
+
+      setupScrollAnimation() {
+        this.observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && !this.animatedElements.has(entry.target)) {
+                entry.target.classList.add('ai-animate-in-{{ ai_gen_id }}');
+                this.animatedElements.add(entry.target);
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+          }
+        );
+
+        const elementsToAnimate = this.querySelectorAll('[data-animate]');
+        elementsToAnimate.forEach((el) => this.observer.observe(el));
+      }
+
+      showAllElements() {
+        const elementsToAnimate = this.querySelectorAll('[data-animate]');
+        elementsToAnimate.forEach((el) => {
+          el.classList.add('ai-animate-in-{{ ai_gen_id }}');
+        });
+      }
+
+      disconnectedCallback() {
+        if (this.observer) {
+          this.observer.disconnect();
+        }
+      }
+    }
+
+    customElements.define('why-choose-section-{{ ai_gen_id }}', WhyChooseSection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Why choose our product",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why Choose Our Product"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size (desktop)",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 18,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size (mobile)",
+      "default": 28
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover what makes us different"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size (desktop)",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_mobile",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size (mobile)",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position (desktop)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Feature 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_1_enabled",
+      "label": "Enable feature 1",
+      "default": true
+    },
+    {
+      "type": "html",
+      "id": "feature_1_icon",
+      "label": "Icon SVG code"
+    },
+    {
+      "type": "text",
+      "id": "feature_1_title",
+      "label": "Title",
+      "default": "Premium Quality"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_1_desc",
+      "label": "Description",
+      "default": "Crafted with the finest materials for lasting excellence"
+    },
+    {
+  "type": "url",
+  "id": "feature_1_link",
+  "label": "Feature 1 link"
+},
+{
+  "type": "text",
+  "id": "feature_1_link_label",
+  "label": "Feature 1 link label",
+  "default": "Learn more"
+},
+    {
+      "type": "header",
+      "content": "Feature 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_2_enabled",
+      "label": "Enable feature 2",
+      "default": true
+    },
+    {
+      "type": "html",
+      "id": "feature_2_icon",
+      "label": "Icon SVG code"
+    },
+    {
+      "type": "text",
+      "id": "feature_2_title",
+      "label": "Title",
+      "default": "Fast Shipping"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_2_desc",
+      "label": "Description",
+      "default": "Quick delivery to your doorstep within 2-3 business days"
+    },
+    {
+  "type": "url",
+  "id": "feature_2_link",
+  "label": "Feature 2 link"
+},
+{
+  "type": "text",
+  "id": "feature_2_link_label",
+  "label": "Feature 2 link label",
+  "default": "Learn more"
+},
+    {
+      "type": "header",
+      "content": "Feature 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_3_enabled",
+      "label": "Enable feature 3",
+      "default": true
+    },
+    {
+      "type": "html",
+      "id": "feature_3_icon",
+      "label": "Icon SVG code"
+    },
+    {
+      "type": "text",
+      "id": "feature_3_title",
+      "label": "Title",
+      "default": "Easy Returns"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_3_desc",
+      "label": "Description",
+      "default": "30-day hassle-free return policy for your peace of mind"
+    },
+    {
+  "type": "url",
+  "id": "feature_3_link",
+  "label": "Feature 3 link"
+},
+{
+  "type": "text",
+  "id": "feature_3_link_label",
+  "label": "Feature 3 link label",
+  "default": "Learn more"
+},
+    {
+      "type": "header",
+      "content": "Feature 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_4_enabled",
+      "label": "Enable feature 4",
+      "default": true
+    },
+    {
+      "type": "html",
+      "id": "feature_4_icon",
+      "label": "Icon SVG code"
+    },
+    {
+      "type": "text",
+      "id": "feature_4_title",
+      "label": "Title",
+      "default": "24/7 Support"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_4_desc",
+      "label": "Description",
+      "default": "Our dedicated team is always here to help you"
+    },
+    {
+  "type": "url",
+  "id": "feature_4_link",
+  "label": "Feature 4 link"
+},
+{
+  "type": "text",
+  "id": "feature_4_link_label",
+  "label": "Feature 4 link label",
+  "default": "Learn more"
+},
+
+    {
+      "type": "header",
+      "content": "Feature style"
+    },
+    {
+      "type": "color",
+      "id": "feature_bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "feature_hover_bg_color",
+      "label": "Hover background color",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "range",
+      "id": "feature_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "feature_title_size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size (desktop)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "feature_title_size_mobile",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Title size (mobile)",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "feature_title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "feature_desc_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size (desktop)",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "feature_desc_size_mobile",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size (mobile)",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "feature_desc_color",
+      "label": "Description color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Icon style"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon container size",
+      "default": 70
+    },
+    {
+      "type": "color",
+      "id": "icon_bg_color",
+      "label": "Icon background color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_bg_color",
+      "label": "Icon hover background color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_color",
+      "label": "Icon hover color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding_desktop",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding (desktop)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_mobile",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding (mobile)",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_scroll_animation",
+      "label": "Enable scroll into frame animation",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why choose our product"
+    }
+  ]
+}
+{% endschema %}

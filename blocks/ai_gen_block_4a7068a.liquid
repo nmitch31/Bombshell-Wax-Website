@@ -1,0 +1,501 @@
+{% doc %}
+  @prompt
+    a scrollable row of products with a header above containing a title and image left of the title. The image should have default dimensions of 100px by 100px, but responsive to the image with max height 200 and max width 500. Include a subheader below the image and title for paragraph text. Make sure the product names and prices are included below the product images., please make the logo next to the title responsive to the image dimensions uploaded, with max height 200 and max width 500
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-product-row-{{ ai_gen_id }} {
+    padding: {{ block.settings.section_padding }}px 0;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-product-row-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-product-row-header-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .ai-product-row-image-wrapper-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    max-width: 500px;
+    max-height: 200px;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-product-row-image-{{ ai_gen_id }} {
+    width: auto;
+    height: auto;
+    max-width: 500px;
+    max-height: 200px;
+    display: block;
+  }
+
+  .ai-product-row-image-placeholder-{{ ai_gen_id }} {
+    width: 100px;
+    height: 100px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-product-row-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    color: #ccc;
+  }
+
+  .ai-product-row-header-content-{{ ai_gen_id }} {
+    flex-grow: 1;
+  }
+
+  .ai-product-row-title-{{ ai_gen_id }} {
+    margin: 0 0 8px 0;
+    font-size: {{ block.settings.title_font_size }}px;
+    color: {{ block.settings.title_color }};
+    font-weight: 600;
+  }
+
+  .ai-product-row-subheader-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.subheader_font_size }}px;
+    color: {{ block.settings.subheader_color }};
+    line-height: 1.5;
+  }
+
+  .ai-product-row-products-{{ ai_gen_id }} {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: {{ block.settings.scrollbar_color }} transparent;
+  }
+
+  .ai-product-row-products-{{ ai_gen_id }}::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .ai-product-row-products-{{ ai_gen_id }}::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .ai-product-row-products-{{ ai_gen_id }}::-webkit-scrollbar-thumb {
+    background-color: {{ block.settings.scrollbar_color }};
+    border-radius: 4px;
+  }
+
+  .ai-product-row-grid-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.product_gap }}px;
+    padding-bottom: 16px;
+  }
+
+  .ai-product-row-item-{{ ai_gen_id }} {
+    flex: 0 0 {{ block.settings.product_width }}px;
+    background-color: {{ block.settings.product_background }};
+    border-radius: {{ block.settings.product_border_radius }}px;
+    padding: {{ block.settings.product_padding }}px;
+    border: 1px solid {{ block.settings.product_border_color }};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-product-row-item-{{ ai_gen_id }}:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-product-row-product-image-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    margin-bottom: 12px;
+    border-radius: {{ block.settings.product_image_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-product-row-product-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-product-row-product-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-product-row-product-image-placeholder-{{ ai_gen_id }} svg {
+    width: 50%;
+    height: 50%;
+    color: #ddd;
+  }
+
+  .ai-product-row-product-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_title_size }}px;
+    color: {{ block.settings.product_title_color }};
+    margin: 0 0 8px 0;
+    font-weight: 500;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ai-product-row-product-price-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_price_size }}px;
+    color: {{ block.settings.product_price_color }};
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .ai-product-row-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-style: italic;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-product-row-header-{{ ai_gen_id }} {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .ai-product-row-image-wrapper-{{ ai_gen_id }} {
+      max-width: 400px;
+      max-height: 160px;
+    }
+
+    .ai-product-row-image-{{ ai_gen_id }} {
+      max-width: 400px;
+      max-height: 160px;
+    }
+
+    .ai-product-row-image-placeholder-{{ ai_gen_id }} {
+      width: 80px;
+      height: 80px;
+    }
+
+    .ai-product-row-item-{{ ai_gen_id }} {
+      flex: 0 0 {{ block.settings.product_width | times: 0.8 }}px;
+    }
+
+    .ai-product-row-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_font_size | times: 0.9 }}px;
+    }
+
+    .ai-product-row-subheader-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheader_font_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-product-row-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-product-row-container-{{ ai_gen_id }}">
+    <div class="ai-product-row-header-{{ ai_gen_id }}">
+      <div class="ai-product-row-image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.header_image %}
+          <img
+            src="{{ block.settings.header_image | image_url: width: 500 }}"
+            alt="{{ block.settings.header_image.alt | escape }}"
+            class="ai-product-row-image-{{ ai_gen_id }}"
+            loading="lazy"
+            width="{{ block.settings.header_image.width }}"
+            height="{{ block.settings.header_image.height }}"
+          >
+        {% else %}
+          <div class="ai-product-row-image-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-product-row-header-content-{{ ai_gen_id }}">
+        {% if block.settings.title != blank %}
+          <h2 class="ai-product-row-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+        {% endif %}
+        
+        {% if block.settings.subheader != blank %}
+          <div class="ai-product-row-subheader-{{ ai_gen_id }}">{{ block.settings.subheader }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if block.settings.collection != blank and block.settings.collection.products.size > 0 %}
+      <div class="ai-product-row-products-{{ ai_gen_id }}">
+        <div class="ai-product-row-grid-{{ ai_gen_id }}">
+          {% for product in block.settings.collection.products limit: block.settings.products_limit %}
+            <div class="ai-product-row-item-{{ ai_gen_id }}">
+              <a href="{{ product.url }}" class="ai-product-row-product-link-{{ ai_gen_id }}">
+                <div class="ai-product-row-product-image-{{ ai_gen_id }}">
+                  {% if product.featured_image %}
+                    <img
+                      src="{{ product.featured_image | image_url: width: 400 }}"
+                      alt="{{ product.featured_image.alt | escape }}"
+                      loading="lazy"
+                      width="400"
+                      height="400"
+                    >
+                  {% else %}
+                    <div class="ai-product-row-product-image-placeholder-{{ ai_gen_id }}">
+                      {{ 'product-1' | placeholder_svg_tag }}
+                    </div>
+                  {% endif %}
+                </div>
+
+                <h3 class="ai-product-row-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+                <div class="ai-product-row-product-price-{{ ai_gen_id }}">
+                  {% if product.compare_at_price > product.price %}
+                    <span style="text-decoration: line-through; opacity: 0.7; margin-right: 8px;">
+                      {{ product.compare_at_price | money }}
+                    </span>
+                  {% endif %}
+                  {{ product.price | money }}
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="ai-product-row-empty-state-{{ ai_gen_id }}">
+        Next, select a collection to display products
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Scrollable product row AH",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "image_picker",
+      "id": "header_image",
+      "label": "Header image"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 8
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Featured products"
+    },
+    {
+      "type": "textarea",
+      "id": "subheader",
+      "label": "Subheader",
+      "default": "Discover our handpicked selection of premium products"
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "label": "Products to show",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "product_width",
+      "min": 200,
+      "max": 350,
+      "step": 10,
+      "unit": "px",
+      "label": "Product card width",
+      "default": 250
+    },
+    {
+      "type": "range",
+      "id": "product_gap",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between products",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "subheader_color",
+      "label": "Subheader color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "product_background",
+      "label": "Product card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "product_border_color",
+      "label": "Product card border",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "product_title_color",
+      "label": "Product title color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "product_price_color",
+      "label": "Product price color",
+      "default": "#FF871D"
+    },
+    {
+      "type": "color",
+      "id": "scrollbar_color",
+      "label": "Scrollbar color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 18,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Title font size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "subheader_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheader font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "product_title_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Product title size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "product_price_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Product price size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "product_padding",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Product card padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "product_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Product card border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "product_image_border_radius",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "label": "Product image border radius",
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrollable product row"
+    }
+  ]
+}
+{% endschema %}

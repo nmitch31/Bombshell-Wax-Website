@@ -1,0 +1,621 @@
+{% doc %}
+  @prompt
+    Design a visually engaging, scrollable Instagram embed section for the Bombshell Wax website that feels premium, bold, and clean—reflecting a confident beauty-brand aesthetic. The section should utilize manual inputs of the embed code - rather than URL or manually inputting thumbnails. Include creative layout ideas (like horizontal scroll, carousel, or peek-through slides), styling details (colors, typography, spacing, hover effects), and strong CTAs (e.g., “Tag us to be featured” or “Follow @BombshellWax”). The section should blend seamlessly into a modern Shopify beauty site while feeling dynamic and interactive. Ensure mobile responsiveness. 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-instagram-feed-{{ ai_gen_id }} {
+    padding: {{ block.settings.section_padding_top }}px 0 {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+    overflow: hidden;
+  }
+
+  .ai-instagram-feed__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-instagram-feed__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .ai-instagram-feed__heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .ai-instagram-feed__subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.subheading_color }};
+    margin: 0 0 24px;
+    font-weight: 400;
+  }
+
+  .ai-instagram-feed__cta-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: {{ block.settings.cta_bg_color }};
+    color: {{ block.settings.cta_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.cta_border_radius }}px;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+  }
+
+  .ai-instagram-feed__cta-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.cta_hover_bg_color }};
+    color: {{ block.settings.cta_hover_text_color }};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-instagram-feed__scroll-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+
+  .ai-instagram-feed__scroll-container-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.post_gap }}px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 20px;
+  }
+
+  .ai-instagram-feed__scroll-container-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-instagram-feed__post-{{ ai_gen_id }} {
+    flex: 0 0 {{ block.settings.post_width }}px;
+    position: relative;
+    border-radius: {{ block.settings.post_border_radius }}px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-instagram-feed__post-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .ai-instagram-feed__post-{{ ai_gen_id }}:hover .ai-instagram-feed__overlay-{{ ai_gen_id }} {
+    opacity: 1;
+  }
+
+  .ai-instagram-feed__embed-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    min-height: {{ block.settings.post_width }}px;
+    position: relative;
+  }
+
+  .ai-instagram-feed__embed-wrapper-{{ ai_gen_id }} iframe,
+  .ai-instagram-feed__embed-wrapper-{{ ai_gen_id }} blockquote {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .ai-instagram-feed__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+    pointer-events: none;
+  }
+
+  .ai-instagram-feed__overlay-text-{{ ai_gen_id }} {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .ai-instagram-feed__empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+  }
+
+  .ai-instagram-feed__empty-icon-{{ ai_gen_id }} {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+  }
+
+  .ai-instagram-feed__empty-text-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-style: italic;
+  }
+
+  .ai-instagram-feed__nav-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .ai-instagram-feed__nav-btn-{{ ai_gen_id }} {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: {{ block.settings.nav_bg_color }};
+    color: {{ block.settings.nav_icon_color }};
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-instagram-feed__nav-btn-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.nav_hover_bg_color }};
+    color: {{ block.settings.nav_hover_icon_color }};
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .ai-instagram-feed__nav-btn-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-instagram-feed__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.75 }}px;
+    }
+
+    .ai-instagram-feed__subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.85 }}px;
+    }
+
+    .ai-instagram-feed__post-{{ ai_gen_id }} {
+      flex: 0 0 {{ block.settings.post_width | times: 0.8 }}px;
+    }
+
+    .ai-instagram-feed__embed-wrapper-{{ ai_gen_id }} {
+      min-height: {{ block.settings.post_width | times: 0.8 }}px;
+    }
+
+    .ai-instagram-feed__cta-{{ ai_gen_id }} {
+      padding: 12px 24px;
+      font-size: 14px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .ai-instagram-feed__post-{{ ai_gen_id }} {
+      flex: 0 0 280px;
+    }
+
+    .ai-instagram-feed__embed-wrapper-{{ ai_gen_id }} {
+      min-height: 280px;
+    }
+  }
+{% endstyle %}
+
+<instagram-feed-{{ ai_gen_id }} class="ai-instagram-feed-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-instagram-feed__container-{{ ai_gen_id }}">
+    <div class="ai-instagram-feed__header-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-instagram-feed__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+      {% endif %}
+
+      {% if block.settings.subheading != blank %}
+        <p class="ai-instagram-feed__subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+      {% endif %}
+
+      {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
+        <a href="{{ block.settings.cta_url }}" class="ai-instagram-feed__cta-{{ ai_gen_id }}" target="_blank" rel="noopener">
+          {{ block.settings.cta_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="ai-instagram-feed__scroll-wrapper-{{ ai_gen_id }}">
+      {% liquid
+        assign has_posts = false
+        if block.settings.post_1 != blank or block.settings.post_2 != blank or block.settings.post_3 != blank or block.settings.post_4 != blank or block.settings.post_5 != blank or block.settings.post_6 != blank or block.settings.post_7 != blank or block.settings.post_8 != blank
+          assign has_posts = true
+        endif
+      %}
+
+      {% if has_posts %}
+        <div class="ai-instagram-feed__scroll-container-{{ ai_gen_id }}" data-scroll-container>
+          {% for i in (1..8) %}
+            {% liquid
+              assign post_key = 'post_' | append: i
+              assign post_embed = block.settings[post_key]
+            %}
+
+            {% if post_embed != blank %}
+              <div class="ai-instagram-feed__post-{{ ai_gen_id }}">
+                <div class="ai-instagram-feed__embed-wrapper-{{ ai_gen_id }}">
+                  {{ post_embed }}
+                </div>
+                {% if block.settings.show_overlay %}
+                  <div class="ai-instagram-feed__overlay-{{ ai_gen_id }}">
+                    <span class="ai-instagram-feed__overlay-text-{{ ai_gen_id }}">View on Instagram</span>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        {% if block.settings.show_navigation %}
+          <div class="ai-instagram-feed__nav-{{ ai_gen_id }}">
+            <button class="ai-instagram-feed__nav-btn-{{ ai_gen_id }}" data-scroll-prev aria-label="Previous posts">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button class="ai-instagram-feed__nav-btn-{{ ai_gen_id }}" data-scroll-next aria-label="Next posts">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="ai-instagram-feed__empty-state-{{ ai_gen_id }}">
+          <div class="ai-instagram-feed__empty-icon-{{ ai_gen_id }}">📸</div>
+          <p class="ai-instagram-feed__empty-text-{{ ai_gen_id }}">Add Instagram embed codes to display your feed</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</instagram-feed-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class InstagramFeed{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.scrollContainer = null;
+        this.prevBtn = null;
+        this.nextBtn = null;
+      }
+
+      connectedCallback() {
+        this.scrollContainer = this.querySelector('[data-scroll-container]');
+        this.prevBtn = this.querySelector('[data-scroll-prev]');
+        this.nextBtn = this.querySelector('[data-scroll-next]');
+
+        if (this.scrollContainer && this.prevBtn && this.nextBtn) {
+          this.setupNavigation();
+        }
+
+        this.loadInstagramEmbeds();
+      }
+
+      setupNavigation() {
+        this.prevBtn.addEventListener('click', () => {
+          const scrollAmount = this.scrollContainer.offsetWidth * 0.8;
+          this.scrollContainer.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth'
+          });
+        });
+
+        this.nextBtn.addEventListener('click', () => {
+          const scrollAmount = this.scrollContainer.offsetWidth * 0.8;
+          this.scrollContainer.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+          });
+        });
+      }
+
+      loadInstagramEmbeds() {
+        if (window.instgrm) {
+          window.instgrm.Embeds.process();
+        } else {
+          const script = document.createElement('script');
+          script.async = true;
+          script.src = '//www.instagram.com/embed.js';
+          document.body.appendChild(script);
+        }
+      }
+    }
+
+    customElements.define('instagram-feed-{{ ai_gen_id }}', InstagramFeed{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Instagram feed 2",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Follow @BombshellWax"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Tag us to be featured"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Follow Us"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "Button text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "cta_hover_bg_color",
+      "label": "Button hover background",
+      "default": "#FF871D"
+    },
+    {
+      "type": "color",
+      "id": "cta_hover_text_color",
+      "label": "Button hover text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "cta_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Instagram posts"
+    },
+    {
+      "type": "paragraph",
+      "content": "Paste Instagram embed codes below. To get embed code: Open Instagram post → Click '...' → Select 'Embed' → Copy code"
+    },
+    {
+      "type": "html",
+      "id": "post_1",
+      "label": "Post 1 embed code"
+    },
+    {
+      "type": "html",
+      "id": "post_2",
+      "label": "Post 2 embed code"
+    },
+    {
+      "type": "html",
+      "id": "post_3",
+      "label": "Post 3 embed code"
+    },
+    {
+      "type": "html",
+      "id": "post_4",
+      "label": "Post 4 embed code"
+    },
+    {
+      "type": "html",
+      "id": "post_5",
+      "label": "Post 5 embed code"
+    },
+    {
+      "type": "html",
+      "id": "post_6",
+      "label": "Post 6 embed code"
+    },
+    {
+      "type": "html",
+      "id": "post_7",
+      "label": "Post 7 embed code"
+    },
+    {
+      "type": "html",
+      "id": "post_8",
+      "label": "Post 8 embed code"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "post_width",
+      "min": 250,
+      "max": 450,
+      "step": 10,
+      "unit": "px",
+      "label": "Post width",
+      "default": 350
+    },
+    {
+      "type": "range",
+      "id": "post_gap",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between posts",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "post_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Post border radius",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show hover overlay",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "nav_bg_color",
+      "label": "Arrow background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "nav_icon_color",
+      "label": "Arrow color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "nav_hover_bg_color",
+      "label": "Arrow hover background",
+      "default": "#FF871D"
+    },
+    {
+      "type": "color",
+      "id": "nav_hover_icon_color",
+      "label": "Arrow hover color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram feed"
+    }
+  ]
+}
+{% endschema %}

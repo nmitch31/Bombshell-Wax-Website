@@ -1,0 +1,1091 @@
+{% doc %}
+  @prompt
+    Create me a section that displays a collection of products, including their front image and title and price below. Include a slider to select how many products are displayed in the row. Above the products, I would like to include a bulk pricing chart, a row of squares where I can denote the bulk size with the percentage saving just below. I would like the section to have tabs where you can select multiple selections. The tab selectors should be above the bulk pricing chart, and the bulk pricing chart should change for each tab. Above the tab selectors, a space for a title., include the sale percent off within the square where the bulk weight is denoted. Above the sale squares but below the active tabs, include a header that says "bulk pricing chart"
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-bulk-collection-{{ ai_gen_id }} {
+    padding: 40px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-bulk-collection-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-bulk-collection-title-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.text_color }};
+    font-weight: 600;
+  }
+
+  .ai-bulk-tabs-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .ai-bulk-tab-{{ ai_gen_id }} {
+    padding: 12px 24px;
+    background-color: {{ block.settings.tab_bg_color }};
+    color: {{ block.settings.tab_text_color }};
+    border: 2px solid {{ block.settings.tab_border_color }};
+    border-radius: {{ block.settings.tab_border_radius }}px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+  }
+
+  .ai-bulk-tab-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.tab_active_bg_color }};
+    color: {{ block.settings.tab_active_text_color }};
+    border-color: {{ block.settings.tab_active_border_color }};
+  }
+
+  .ai-bulk-tab-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.tab_hover_bg_color }};
+    color: {{ block.settings.tab_hover_text_color }};
+  }
+
+  .ai-bulk-chart-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: {{ block.settings.text_color }};
+    font-weight: 600;
+  }
+
+  .ai-bulk-pricing-chart-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .ai-bulk-pricing-item-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+  }
+
+  .ai-bulk-pricing-square-{{ ai_gen_id }} {
+    width: {{ block.settings.square_size }}px;
+    height: {{ block.settings.square_size }}px;
+    background-color: {{ block.settings.square_bg_color }};
+    border: 2px solid {{ block.settings.square_border_color }};
+    border-radius: {{ block.settings.square_border_radius }}px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .ai-bulk-pricing-weight-{{ ai_gen_id }} {
+    font-size: {{ block.settings.weight_font_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.square_text_color }};
+    line-height: 1;
+  }
+
+  .ai-bulk-pricing-discount-{{ ai_gen_id }} {
+    font-size: {{ block.settings.discount_font_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.discount_color }};
+    margin-top: 2px;
+  }
+
+  .ai-bulk-pricing-savings-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: {{ block.settings.text_color }};
+    text-align: center;
+  }
+
+  .ai-products-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(var(--ai-products-per-row-{{ ai_gen_id }}), 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .ai-product-card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.product_card_bg }};
+    border-radius: {{ block.settings.product_card_radius }}px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-product-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-product-image-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .ai-product-info-{{ ai_gen_id }} {
+    padding: 15px;
+  }
+
+  .ai-product-title-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .ai-product-price-{{ ai_gen_id }} {
+    font-size: 18px;
+    font-weight: 700;
+    color: {{ block.settings.price_color }};
+  }
+
+  .ai-products-per-row-control-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .ai-products-per-row-label-{{ ai_gen_id }} {
+    font-size: 16px;
+    color: {{ block.settings.text_color }};
+    font-weight: 500;
+  }
+
+  .ai-products-per-row-slider-{{ ai_gen_id }} {
+    width: 200px;
+    height: 6px;
+    border-radius: 3px;
+    background: {{ block.settings.slider_track_color }};
+    outline: none;
+    appearance: none;
+  }
+
+  .ai-products-per-row-slider-{{ ai_gen_id }}::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: {{ block.settings.slider_thumb_color }};
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .ai-products-per-row-slider-{{ ai_gen_id }}::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: {{ block.settings.slider_thumb_color }};
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .ai-products-per-row-value-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .ai-tab-content-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-tab-content-{{ ai_gen_id }}.active {
+    display: block;
+  }
+
+  .ai-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+  }
+
+  .ai-empty-state-{{ ai_gen_id }} h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: {{ block.settings.text_color }};
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-bulk-tabs-{{ ai_gen_id }} {
+      gap: 10px;
+    }
+
+    .ai-bulk-tab-{{ ai_gen_id }} {
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+
+    .ai-bulk-pricing-chart-{{ ai_gen_id }} {
+      gap: 10px;
+    }
+
+    .ai-bulk-pricing-square-{{ ai_gen_id }} {
+      width: {{ block.settings.square_size | times: 0.8 }}px;
+      height: {{ block.settings.square_size | times: 0.8 }}px;
+    }
+
+    .ai-products-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .ai-products-per-row-control-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ai-products-per-row-slider-{{ ai_gen_id }} {
+      width: 150px;
+    }
+  }
+{% endstyle %}
+
+<bulk-collection-{{ ai_gen_id }}
+  class="ai-bulk-collection-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-bulk-collection-container-{{ ai_gen_id }}">
+    {% if block.settings.section_title != blank %}
+      <h2 class="ai-bulk-collection-title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+    {% endif %}
+
+    <div class="ai-bulk-tabs-{{ ai_gen_id }}">
+      {% for i in (1..3) %}
+        {% liquid
+          assign tab_enabled_key = 'tab_' | append: i | append: '_enabled'
+          assign tab_title_key = 'tab_' | append: i | append: '_title'
+          assign tab_enabled = block.settings[tab_enabled_key]
+          assign tab_title = block.settings[tab_title_key]
+        %}
+        {% if tab_enabled and tab_title != blank %}
+          <button
+            class="ai-bulk-tab-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}"
+            data-tab="{{ i }}"
+          >
+            {{ tab_title }}
+          </button>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ai-bulk-chart-header-{{ ai_gen_id }}">Bulk pricing chart</div>
+
+    {% for i in (1..3) %}
+      {% liquid
+        assign tab_enabled_key = 'tab_' | append: i | append: '_enabled'
+        assign tab_enabled = block.settings[tab_enabled_key]
+      %}
+      {% if tab_enabled %}
+        <div
+          class="ai-tab-content-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}"
+          data-tab-content="{{ i }}"
+        >
+          <div class="ai-bulk-pricing-chart-{{ ai_gen_id }}">
+            {% for j in (1..5) %}
+              {% liquid
+                assign weight_key = 'tab_' | append: i | append: '_weight_' | append: j
+                assign discount_key = 'tab_' | append: i | append: '_discount_' | append: j
+                assign savings_key = 'tab_' | append: i | append: '_savings_' | append: j
+                assign weight = block.settings[weight_key]
+                assign discount = block.settings[discount_key]
+                assign savings = block.settings[savings_key]
+              %}
+              {% if weight != blank %}
+                <div class="ai-bulk-pricing-item-{{ ai_gen_id }}">
+                  <div class="ai-bulk-pricing-square-{{ ai_gen_id }}">
+                    <div class="ai-bulk-pricing-weight-{{ ai_gen_id }}">{{ weight }}</div>
+                    {% if discount != blank %}
+                      <div class="ai-bulk-pricing-discount-{{ ai_gen_id }}">{{ discount }}% OFF</div>
+                    {% endif %}
+                  </div>
+                  {% if savings != blank %}
+                    <div class="ai-bulk-pricing-savings-{{ ai_gen_id }}">{{ savings }}</div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          <div class="ai-products-per-row-control-{{ ai_gen_id }}">
+            <label class="ai-products-per-row-label-{{ ai_gen_id }}">Products per row:</label>
+            <input
+              type="range"
+              class="ai-products-per-row-slider-{{ ai_gen_id }}"
+              min="2"
+              max="6"
+              value="{{ block.settings.default_products_per_row }}"
+              data-products-slider="{{ i }}"
+            >
+            <span class="ai-products-per-row-value-{{ ai_gen_id }}" data-products-value="{{ i }}">{{ block.settings.default_products_per_row }}</span>
+          </div>
+
+          {% liquid
+            assign collection_key = 'tab_' | append: i | append: '_collection'
+            assign collection = block.settings[collection_key]
+          %}
+
+          {% if collection != blank and collection.products.size > 0 %}
+            <div
+              class="ai-products-grid-{{ ai_gen_id }}"
+              data-products-grid="{{ i }}"
+              style="--ai-products-per-row-{{ ai_gen_id }}: {{ block.settings.default_products_per_row }};"
+            >
+              {% for product in collection.products limit: block.settings.products_limit %}
+                <div class="ai-product-card-{{ ai_gen_id }}">
+                  <a href="{{ product.url }}">
+                    {% if product.featured_image %}
+                      <img
+                        src="{{ product.featured_image | image_url: width: 400 }}"
+                        alt="{{ product.featured_image.alt | escape }}"
+                        class="ai-product-image-{{ ai_gen_id }}"
+                        loading="lazy"
+                        width="400"
+                        height="400"
+                      >
+                    {% else %}
+                      <div class="ai-product-image-placeholder-{{ ai_gen_id }}">
+                        {{ 'product-1' | placeholder_svg_tag }}
+                      </div>
+                    {% endif %}
+                  </a>
+                  <div class="ai-product-info-{{ ai_gen_id }}">
+                    <h3 class="ai-product-title-{{ ai_gen_id }}">
+                      <a href="{{ product.url }}">{{ product.title }}</a>
+                    </h3>
+                    <div class="ai-product-price-{{ ai_gen_id }}">
+                      {{ product.price | money }}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="ai-empty-state-{{ ai_gen_id }}">
+              <h3>No products found</h3>
+              <p>Please select a collection for this tab to display products.</p>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</bulk-collection-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class BulkCollection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.tabs = this.querySelectorAll('.ai-bulk-tab-{{ ai_gen_id }}');
+        this.tabContents = this.querySelectorAll('.ai-tab-content-{{ ai_gen_id }}');
+        this.sliders = this.querySelectorAll('.ai-products-per-row-slider-{{ ai_gen_id }}');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.tabs.forEach((tab) => {
+          tab.addEventListener('click', (e) => {
+            const tabId = e.target.dataset.tab;
+            this.switchTab(tabId);
+          });
+        });
+
+        this.sliders.forEach((slider) => {
+          slider.addEventListener('input', (e) => {
+            const tabId = e.target.dataset.productsSlider;
+            const value = e.target.value;
+            this.updateProductsPerRow(tabId, value);
+          });
+        });
+      }
+
+      switchTab(tabId) {
+        this.tabs.forEach((tab) => {
+          tab.classList.remove('active');
+          if (tab.dataset.tab === tabId) {
+            tab.classList.add('active');
+          }
+        });
+
+        this.tabContents.forEach((content) => {
+          content.classList.remove('active');
+          if (content.dataset.tabContent === tabId) {
+            content.classList.add('active');
+          }
+        });
+      }
+
+      updateProductsPerRow(tabId, value) {
+        const grid = this.querySelector(`[data-products-grid="${tabId}"]`);
+        const valueDisplay = this.querySelector(`[data-products-value="${tabId}"]`);
+        
+        if (grid) {
+          grid.style.setProperty('--ai-products-per-row-{{ ai_gen_id }}', value);
+        }
+        
+        if (valueDisplay) {
+          valueDisplay.textContent = value;
+        }
+      }
+    }
+
+    customElements.define('bulk-collection-{{ ai_gen_id }}', BulkCollection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Bulk collection display",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "Bulk Products Collection"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "label": "Maximum products to show",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "default_products_per_row",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Default products per row",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Tab style"
+    },
+    {
+      "type": "color",
+      "id": "tab_bg_color",
+      "label": "Tab background",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "tab_text_color",
+      "label": "Tab text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "tab_border_color",
+      "label": "Tab border color",
+      "default": "#dddddd"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_bg_color",
+      "label": "Active tab background",
+      "default": "#FF871D"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_text_color",
+      "label": "Active tab text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_border_color",
+      "label": "Active tab border color",
+      "default": "#FF871D"
+    },
+    {
+      "type": "color",
+      "id": "tab_hover_bg_color",
+      "label": "Tab hover background",
+      "default": "#e8e8e8"
+    },
+    {
+      "type": "color",
+      "id": "tab_hover_text_color",
+      "label": "Tab hover text color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "tab_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Tab border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Bulk pricing squares"
+    },
+    {
+      "type": "range",
+      "id": "square_size",
+      "min": 80,
+      "max": 140,
+      "step": 10,
+      "unit": "px",
+      "label": "Square size",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "square_bg_color",
+      "label": "Square background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "square_border_color",
+      "label": "Square border color",
+      "default": "#dddddd"
+    },
+    {
+      "type": "color",
+      "id": "square_text_color",
+      "label": "Square text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "discount_color",
+      "label": "Discount text color",
+      "default": "#FF871D"
+    },
+    {
+      "type": "range",
+      "id": "square_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Square border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "weight_font_size",
+      "min": 14,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Weight font size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "discount_font_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Discount font size",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Product cards"
+    },
+    {
+      "type": "color",
+      "id": "product_card_bg",
+      "label": "Product card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "product_card_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Product card border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Slider style"
+    },
+    {
+      "type": "color",
+      "id": "slider_track_color",
+      "label": "Slider track color",
+      "default": "#dddddd"
+    },
+    {
+      "type": "color",
+      "id": "slider_thumb_color",
+      "label": "Slider thumb color",
+      "default": "#FF871D"
+    },
+    {
+      "type": "header",
+      "content": "Tab 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_1_enabled",
+      "label": "Enable tab 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tab_1_title",
+      "label": "Tab 1 title",
+      "default": "Candles"
+    },
+    {
+      "type": "collection",
+      "id": "tab_1_collection",
+      "label": "Tab 1 collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_weight_1",
+      "label": "Weight 1",
+      "default": "1 lb"
+    },
+    {
+      "type": "range",
+      "id": "tab_1_discount_1",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 1",
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "tab_1_savings_1",
+      "label": "Savings text 1",
+      "default": "Save $5"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_weight_2",
+      "label": "Weight 2",
+      "default": "2 lbs"
+    },
+    {
+      "type": "range",
+      "id": "tab_1_discount_2",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 2",
+      "default": 10
+    },
+    {
+      "type": "text",
+      "id": "tab_1_savings_2",
+      "label": "Savings text 2",
+      "default": "Save $12"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_weight_3",
+      "label": "Weight 3",
+      "default": "5 lbs"
+    },
+    {
+      "type": "range",
+      "id": "tab_1_discount_3",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 3",
+      "default": 15
+    },
+    {
+      "type": "text",
+      "id": "tab_1_savings_3",
+      "label": "Savings text 3",
+      "default": "Save $25"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_weight_4",
+      "label": "Weight 4",
+      "default": "10 lbs"
+    },
+    {
+      "type": "range",
+      "id": "tab_1_discount_4",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 4",
+      "default": 20
+    },
+    {
+      "type": "text",
+      "id": "tab_1_savings_4",
+      "label": "Savings text 4",
+      "default": "Save $50"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_weight_5",
+      "label": "Weight 5",
+      "default": "20 lbs"
+    },
+    {
+      "type": "range",
+      "id": "tab_1_discount_5",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 5",
+      "default": 25
+    },
+    {
+      "type": "text",
+      "id": "tab_1_savings_5",
+      "label": "Savings text 5",
+      "default": "Save $100"
+    },
+    {
+      "type": "header",
+      "content": "Tab 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_2_enabled",
+      "label": "Enable tab 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tab_2_title",
+      "label": "Tab 2 title",
+      "default": "Wax Melts"
+    },
+    {
+      "type": "collection",
+      "id": "tab_2_collection",
+      "label": "Tab 2 collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_weight_1",
+      "label": "Weight 1",
+      "default": "6 pack"
+    },
+    {
+      "type": "range",
+      "id": "tab_2_discount_1",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 1",
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "tab_2_savings_1",
+      "label": "Savings text 1",
+      "default": "Save $3"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_weight_2",
+      "label": "Weight 2",
+      "default": "12 pack"
+    },
+    {
+      "type": "range",
+      "id": "tab_2_discount_2",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 2",
+      "default": 10
+    },
+    {
+      "type": "text",
+      "id": "tab_2_savings_2",
+      "label": "Savings text 2",
+      "default": "Save $8"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_weight_3",
+      "label": "Weight 3",
+      "default": "24 pack"
+    },
+    {
+      "type": "range",
+      "id": "tab_2_discount_3",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 3",
+      "default": 15
+    },
+    {
+      "type": "text",
+      "id": "tab_2_savings_3",
+      "label": "Savings text 3",
+      "default": "Save $18"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_weight_4",
+      "label": "Weight 4",
+      "default": "48 pack"
+    },
+    {
+      "type": "range",
+      "id": "tab_2_discount_4",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 4",
+      "default": 20
+    },
+    {
+      "type": "text",
+      "id": "tab_2_savings_4",
+      "label": "Savings text 4",
+      "default": "Save $40"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_weight_5",
+      "label": "Weight 5",
+      "default": "100 pack"
+    },
+    {
+      "type": "range",
+      "id": "tab_2_discount_5",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 5",
+      "default": 25
+    },
+    {
+      "type": "text",
+      "id": "tab_2_savings_5",
+      "label": "Savings text 5",
+      "default": "Save $85"
+    },
+    {
+      "type": "header",
+      "content": "Tab 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_3_enabled",
+      "label": "Enable tab 3",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tab_3_title",
+      "label": "Tab 3 title",
+      "default": "Accessories"
+    },
+    {
+      "type": "collection",
+      "id": "tab_3_collection",
+      "label": "Tab 3 collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_weight_1",
+      "label": "Weight 1",
+      "default": "3 items"
+    },
+    {
+      "type": "range",
+      "id": "tab_3_discount_1",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 1",
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "tab_3_savings_1",
+      "label": "Savings text 1",
+      "default": "Save $2"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_weight_2",
+      "label": "Weight 2",
+      "default": "5 items"
+    },
+    {
+      "type": "range",
+      "id": "tab_3_discount_2",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 2",
+      "default": 10
+    },
+    {
+      "type": "text",
+      "id": "tab_3_savings_2",
+      "label": "Savings text 2",
+      "default": "Save $5"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_weight_3",
+      "label": "Weight 3",
+      "default": "10 items"
+    },
+    {
+      "type": "range",
+      "id": "tab_3_discount_3",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 3",
+      "default": 15
+    },
+    {
+      "type": "text",
+      "id": "tab_3_savings_3",
+      "label": "Savings text 3",
+      "default": "Save $12"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_weight_4",
+      "label": "Weight 4",
+      "default": "20 items"
+    },
+    {
+      "type": "range",
+      "id": "tab_3_discount_4",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 4",
+      "default": 20
+    },
+    {
+      "type": "text",
+      "id": "tab_3_savings_4",
+      "label": "Savings text 4",
+      "default": "Save $25"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_weight_5",
+      "label": "Weight 5",
+      "default": "50 items"
+    },
+    {
+      "type": "range",
+      "id": "tab_3_discount_5",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Discount 5",
+      "default": 25
+    },
+    {
+      "type": "text",
+      "id": "tab_3_savings_5",
+      "label": "Savings text 5",
+      "default": "Save $60"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bulk collection display"
+    }
+  ]
+}
+{% endschema %}

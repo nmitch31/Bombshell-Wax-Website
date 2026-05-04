@@ -1,0 +1,211 @@
+{% doc %}
+  @prompt
+    add html script schema
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-html-script-schema-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  .ai-html-script-schema-preview-{{ ai_gen_id }} {
+    background-color: {{ block.settings.preview_bg_color }};
+    border: 2px dashed {{ block.settings.preview_border_color }};
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    color: {{ block.settings.preview_text_color }};
+    font-size: 14px;
+    margin: 10px 0;
+  }
+
+  .ai-html-script-schema-preview-{{ ai_gen_id }} svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+    opacity: 0.6;
+  }
+
+  .ai-html-script-schema-preview-title-{{ ai_gen_id }} {
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .ai-html-script-schema-preview-desc-{{ ai_gen_id }} {
+    opacity: 0.8;
+    font-size: 12px;
+  }
+
+  .ai-html-script-schema-content-{{ ai_gen_id }} {
+    width: 100%;
+  }
+
+  {% if block.settings.show_container %}
+    .ai-html-script-schema-container-{{ ai_gen_id }} {
+      max-width: {{ block.settings.container_width }}px;
+      margin: 0 auto;
+      padding: {{ block.settings.container_padding }}px;
+    }
+  {% endif %}
+
+  @media screen and (max-width: 749px) {
+    {% if block.settings.show_container %}
+      .ai-html-script-schema-container-{{ ai_gen_id }} {
+        padding: {{ block.settings.container_padding | times: 0.7 }}px;
+      }
+    {% endif %}
+  }
+{% endstyle %}
+
+<div
+  class="ai-html-script-schema-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.show_container %}
+    <div class="ai-html-script-schema-container-{{ ai_gen_id }}">
+  {% endif %}
+
+  {% if block.settings.custom_html != blank %}
+    <div class="ai-html-script-schema-content-{{ ai_gen_id }}">
+      {{ block.settings.custom_html }}
+    </div>
+  {% else %}
+    {% if block.settings.show_preview %}
+      <div class="ai-html-script-schema-preview-{{ ai_gen_id }}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+        </svg>
+        <div class="ai-html-script-schema-preview-title-{{ ai_gen_id }}">
+          Custom HTML & Script Schema
+        </div>
+        <div class="ai-html-script-schema-preview-desc-{{ ai_gen_id }}">
+          Add your custom HTML, JavaScript, or structured data schema in the block settings
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+
+  {% if block.settings.show_container %}
+    </div>
+  {% endif %}
+</div>
+
+{% if block.settings.custom_javascript != blank %}
+  <script>
+    (function() {
+      {{ block.settings.custom_javascript }}
+    })();
+  </script>
+{% endif %}
+
+{% if block.settings.schema_markup != blank %}
+  <script type="application/ld+json">
+    {{ block.settings.schema_markup }}
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "HTML script schema",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Custom HTML"
+    },
+    {
+      "type": "html",
+      "id": "custom_html",
+      "label": "Custom HTML",
+      "info": "Add your custom HTML content here. This will be rendered directly on the page."
+    },
+    {
+      "type": "header",
+      "content": "Custom JavaScript"
+    },
+    {
+      "type": "liquid",
+      "id": "custom_javascript",
+      "label": "Custom JavaScript",
+      "info": "Add your custom JavaScript code here. It will be wrapped in an IIFE for safety."
+    },
+    {
+      "type": "header",
+      "content": "Schema markup"
+    },
+    {
+      "type": "liquid",
+      "id": "schema_markup",
+      "label": "Schema markup (JSON-LD)",
+      "info": "Add structured data schema in JSON-LD format. This helps search engines understand your content better."
+    },
+    {
+      "type": "header",
+      "content": "Container settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_container",
+      "label": "Use container",
+      "default": false,
+      "info": "Wrap content in a container with max-width and padding"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 600,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Container max width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "container_padding",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Container padding",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Preview settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_preview",
+      "label": "Show preview when empty",
+      "default": true,
+      "info": "Display a preview message when no custom content is added"
+    },
+    {
+      "type": "color",
+      "id": "preview_bg_color",
+      "label": "Preview background color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "preview_border_color",
+      "label": "Preview border color",
+      "default": "#dee2e6"
+    },
+    {
+      "type": "color",
+      "id": "preview_text_color",
+      "label": "Preview text color",
+      "default": "#6c757d"
+    }
+  ],
+  "presets": [
+    {
+      "name": "HTML script schema"
+    }
+  ]
+}
+{% endschema %}

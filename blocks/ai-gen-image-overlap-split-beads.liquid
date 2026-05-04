@@ -1,0 +1,571 @@
+{% doc %}
+  @prompt
+    a responsive banner with an image on the right hand side and text on the left hand side, with the image on the right being slightly overlapped over the top edge of the banner. So the image should slightly extend past the top edge of the section. The background for the banner should be split into 4 even sections (columns) with a different color selection for each
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-split-banner-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+    padding: {{ block.settings.banner_padding }}px 0;
+  }
+
+  .ai-split-banner__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-split-banner__inner-{{ ai_gen_id }} {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 40px;
+    min-height: {{ block.settings.min_height }}px;
+  }
+
+  .ai-split-banner__background-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: 0;
+  }
+
+  .ai-split-banner__bg-column-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 10px;
+  }
+
+  .ai-split-banner__bg-column-{{ ai_gen_id }}:nth-child(1) {
+    background-color: {{ block.settings.bg_color_1 }};
+  }
+
+  .ai-split-banner__bg-column-{{ ai_gen_id }}:nth-child(2) {
+    background-color: {{ block.settings.bg_color_2 }};
+  }
+
+  .ai-split-banner__bg-column-{{ ai_gen_id }}:nth-child(3) {
+    background-color: {{ block.settings.bg_color_3 }};
+  }
+
+  .ai-split-banner__bg-column-{{ ai_gen_id }}:nth-child(4) {
+    background-color: {{ block.settings.bg_color_4 }};
+  }
+
+  .ai-split-banner__content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+    padding: 40px;
+  }
+
+  .ai-split-banner__heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 20px;
+    line-height: 1.2;
+  }
+
+  .ai-split-banner__text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 30px;
+    line-height: 1.6;
+  }
+
+  .ai-split-banner__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-split-banner__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+  }
+
+  .ai-split-banner__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+    margin-top: {{ block.settings.image_overlap }}px;
+  }
+
+  .ai-split-banner__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-split-banner__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    position: relative;
+  }
+
+  .ai-split-banner__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-split-banner__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-split-banner__bg-image-{{ ai_gen_id }} {
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: {{ block.settings.bg_image_border_radius }}px;
+
+    animation: spin 10s infinite linear;
+    transform-origin: center;
+    display: inline-block;
+  }
+
+  .ai-split-banner__bg-image-placeholder-{{ ai_gen_id }} {
+    width: 85px;
+    height: 85px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: {{ block.settings.bg_image_border_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-split-banner__bg-image-placeholder-{{ ai_gen_id }} svg {
+    width: 40px;
+    height: 40px;
+    opacity: 0.5;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-split-banner__inner-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .ai-split-banner__content-{{ ai_gen_id }} {
+      padding: 20px;
+      order: 2;
+    }
+
+    .ai-split-banner__image-wrapper-{{ ai_gen_id }} {
+      order: 1;
+      margin-top: {{ block.settings.image_overlap | times: 0.5 }}px;
+    }
+
+    .ai-split-banner__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.7 }}px;
+    }
+
+    .ai-split-banner__text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.9 }}px;
+    }
+    .ai-split-banner__background-{{ ai_gen_id }} {
+      top: {{ block.settings.image_overlap | times: 0.5 }}px;
+    }
+    .ai-split-banner__bg-column-{{ ai_gen_id }} {
+      padding: 15px 5px;
+    }
+    .ai-split-banner__bg-image-{{ ai_gen_id }},
+    .ai-split-banner__bg-image-placeholder-{{ ai_gen_id }} {
+      width: 60px;
+      height: 60px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-split-banner-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+
+  <div class="ai-split-banner__background-{{ ai_gen_id }}">
+    {% for col in (1..4) %}
+      <div class="ai-split-banner__bg-column-{{ ai_gen_id }}">
+        {% for img in (1..4) %}
+          {% assign img_key = 'column_' | append: col | append: '_image_' | append: img %}
+          {% assign image = block.settings[img_key] %}
+          
+          {% if image %}
+            <img
+              src="{{ image | image_url: width: 170 }}"
+              alt="{{ image.alt | escape }}"
+              class="ai-split-banner__bg-image-{{ ai_gen_id }}"
+              loading="lazy"
+              width="85"
+              height="85"
+            >
+          {% else %}
+            <div class="ai-split-banner__bg-image-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="ai-split-banner__container-{{ ai_gen_id }}">
+    <div class="ai-split-banner__inner-{{ ai_gen_id }}">
+      <div class="ai-split-banner__content-{{ ai_gen_id }}">
+        {% if block.settings.heading != blank %}
+          <h2 class="ai-split-banner__heading-{{ ai_gen_id }}">
+            {{ block.settings.heading }}
+          </h2>
+        {% endif %}
+
+        {% if block.settings.text != blank %}
+          <div class="ai-split-banner__text-{{ ai_gen_id }}">
+            {{ block.settings.text }}
+          </div>
+        {% endif %}
+
+        {% if block.settings.button_text != blank %}
+          <a
+            href="{{ block.settings.button_link }}"
+            class="ai-split-banner__button-{{ ai_gen_id }}"
+          >
+            {{ block.settings.button_text }}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="ai-split-banner__image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.image %}
+          <img
+            src="{{ block.settings.image | image_url: width: 1200 }}"
+            alt="{{ block.settings.image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.image.width }}"
+            height="{{ block.settings.image.height }}"
+            class="ai-split-banner__image-{{ ai_gen_id }}"
+          >
+        {% else %}
+          <div class="ai-split-banner__image-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+            <div class="ai-split-banner__empty-state-{{ ai_gen_id }}">
+              Next, add an image
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Split BGAH AH AH AH",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Minimum height",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "banner_padding",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Background colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_1",
+      "label": "Column 1",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_1_image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_1_image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_1_image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_1_image_4",
+      "label": "Image 4"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_2",
+      "label": "Column 2",
+      "default": "#e8e8e8"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_2_image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_2_image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_2_image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_2_image_4",
+      "label": "Image 4"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_3",
+      "label": "Column 3",
+      "default": "#d4d4d4"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_3_image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_3_image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_3_image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_3_image_4",
+      "label": "Image 4"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_4",
+      "label": "Column 4",
+      "default": "#c0c0c0"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_4_image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_4_image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_4_image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_4_image_4",
+      "label": "Image 4"
+    },
+    
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Discover Our Collection</p>"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Explore our latest products and find something special for you.</p>"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Button text size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Button hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_overlap",
+      "min": -200,
+      "max": 0,
+      "step": 10,
+      "unit": "px",
+      "label": "Image overlap",
+      "default": -80,
+      "info": "Negative value moves image upward"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Split BGAHHHHHHH"
+    }
+  ]
+}
+{% endschema %}

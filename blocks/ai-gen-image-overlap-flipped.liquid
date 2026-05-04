@@ -1,0 +1,719 @@
+{% doc %}
+  @prompt
+    Create a hero banner section with overlapping image and multi-column decorative background
+    
+    Layout:
+    
+    Desktop: Two-column layout with text content (left) and featured image (right)
+    The right image should extend upward beyond the section's top edge using negative positioning to overlap the section above
+    Mobile: Stack vertically with image on top, text below
+    Use flexbox or CSS Grid for responsive behavior
+    Background Design:
+    
+    Divide the section background into 4 equal vertical columns (25% width each)
+    Each column supports customizable backgrounds: solid color, gradient, or image
+    Each column displays 3-4 small decorative images (85×85px), vertically centered and evenly spaced within the column
+    Customization Settings (Schema):
+    
+    Text: heading, subheading
+    Call-to-action: button text and URL (optional)
+    Main image uploader for the overlapping right-side image
+    Overlap controls: separate range inputs for desktop and mobile overlap amount
+    Per-column settings (repeat for columns 1-4):
+    Background type selector (color/gradient/image)
+    Color picker or gradient inputs or image uploader
+    3-4 decorative image upload fields per column
+    Technical Requirements:
+    
+    Use semantic HTML5 elements
+    Include scoped CSS within the section
+    Mobile-first responsive design with smooth transitions
+    Ensure proper z-index layering for the overlap effect
+    Full JSON schema with all settings clearly labeled and organized
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+ @keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+  .ai-hero-banner-{{ ai_gen_id }} {
+    position: relative;
+    overflow: visible;
+    width: 100%;
+  }
+
+  .ai-hero-banner-background-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: 1;
+  }
+
+  .ai-hero-banner-bg-column-{{ ai_gen_id }} {
+    width: 25%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px 10px;
+  }
+
+  .ai-hero-banner-bg-column-{{ ai_gen_id }}--color-1 {
+    background-color: {{ block.settings.column_1_bg_color }};
+  }
+
+  .ai-hero-banner-bg-column-{{ ai_gen_id }}--color-2 {
+    background-color: {{ block.settings.column_2_bg_color }};
+  }
+
+  .ai-hero-banner-bg-column-{{ ai_gen_id }}--color-3 {
+    background-color: {{ block.settings.column_3_bg_color }};
+  }
+
+  .ai-hero-banner-bg-column-{{ ai_gen_id }}--color-4 {
+    background-color: {{ block.settings.column_4_bg_color }};
+  }
+
+  .ai-hero-banner-bg-column-{{ ai_gen_id }}--gradient-1 {
+    background: {{ block.settings.column_1_gradient }};
+  }
+
+  .ai-hero-banner-bg-column-{{ ai_gen_id }}--gradient-2 {
+    background: {{ block.settings.column_2_gradient }};
+  }
+
+  .ai-hero-banner-bg-column-{{ ai_gen_id }}--gradient-3 {
+    background: {{ block.settings.column_3_gradient }};
+  }
+
+  .ai-hero-banner-bg-column-{{ ai_gen_id }}--gradient-4 {
+    background: {{ block.settings.column_4_gradient }};
+  }
+
+  .ai-hero-banner-bg-column-{{ ai_gen_id }}--image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .ai-hero-banner-decorative-img-{{ ai_gen_id }} {
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 8px;
+    animation: spin 10s infinite linear;
+    transform-origin: center;
+  }
+
+  .ai-hero-banner-content-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .ai-hero-banner-text-content-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .ai-hero-banner-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    line-height: 1.2;
+    margin: 0;
+    color: {{ block.settings.heading_color }};
+  }
+
+  .ai-hero-banner-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    line-height: 1.5;
+    margin: 0;
+    color: {{ block.settings.subheading_color }};
+  }
+
+  .ai-hero-banner-button-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+  }
+
+  .ai-hero-banner-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+    color: {{ block.settings.button_hover_text_color }};
+  }
+
+  .ai-hero-banner-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    margin-top: -{{ block.settings.image_overlap_desktop }}px;
+  }
+
+  .ai-hero-banner-main-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+  }
+
+  .ai-hero-banner-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background-color: #f4f4f4;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-hero-banner-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-hero-banner-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-hero-banner-content-wrapper-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 40px 20px;
+    }
+
+    .ai-hero-banner-image-wrapper-{{ ai_gen_id }} {
+      order: -1;
+      margin-top: -{{ block.settings.image_overlap_mobile }}px;
+    }
+
+    .ai-hero-banner-heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.7);
+    }
+
+    .ai-hero-banner-subheading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subheading_size }}px * 0.9);
+    }
+
+    .ai-hero-banner-bg-column-{{ ai_gen_id }} {
+      gap: 15px;
+      padding: 30px 5px;
+    }
+
+    .ai-hero-banner-decorative-img-{{ ai_gen_id }} {
+      width: 60px;
+      height: 60px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-hero-banner-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-hero-banner-background-{{ ai_gen_id }}">
+    {% for i in (1..4) %}
+      {% liquid
+        assign bg_type_key = 'column_' | append: i | append: '_bg_type'
+        assign bg_type = block.settings[bg_type_key]
+        
+        assign bg_image_key = 'column_' | append: i | append: '_bg_image'
+        assign bg_image = block.settings[bg_image_key]
+        
+        assign column_class = 'ai-hero-banner-bg-column-' | append: ai_gen_id
+        
+        if bg_type == 'color'
+          assign column_class = column_class | append: ' ai-hero-banner-bg-column-' | append: ai_gen_id | append: '--color-' | append: i
+        elsif bg_type == 'gradient'
+          assign column_class = column_class | append: ' ai-hero-banner-bg-column-' | append: ai_gen_id | append: '--gradient-' | append: i
+        elsif bg_type == 'image' and bg_image
+          assign column_class = column_class | append: ' ai-hero-banner-bg-column-' | append: ai_gen_id | append: '--image'
+        endif
+      %}
+      
+      <div 
+        class="{{ column_class }}"
+        {% if bg_type == 'image' and bg_image %}
+          style="background-image: url('{{ bg_image | image_url: width: 600 }}');"
+        {% endif %}
+      >
+        {% for j in (1..4) %}
+          {% liquid
+            assign decorative_img_key = 'column_' | append: i | append: '_decorative_' | append: j
+            assign decorative_img = block.settings[decorative_img_key]
+          %}
+          
+          {% if decorative_img %}
+            <img 
+              src="{{ decorative_img | image_url: width: 170 }}" 
+              alt="" 
+              class="ai-hero-banner-decorative-img-{{ ai_gen_id }}"
+              loading="lazy"
+              width="85"
+              height="85"
+            >
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="ai-hero-banner-content-wrapper-{{ ai_gen_id }}">
+
+    <div class="ai-hero-banner-image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.main_image %}
+        <img 
+          src="{{ block.settings.main_image | image_url: width: 1200 }}" 
+          alt="{{ block.settings.main_image.alt | escape }}"
+          class="ai-hero-banner-main-image-{{ ai_gen_id }}"
+          loading="eager"
+          width="{{ block.settings.main_image.width }}"
+          height="{{ block.settings.main_image.height }}"
+        >
+      {% else %}
+        <div class="ai-hero-banner-image-placeholder-{{ ai_gen_id }}">
+          {{ 'image' | placeholder_svg_tag }}
+          <div class="ai-hero-banner-empty-state-{{ ai_gen_id }}">
+            Add a featured image
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-hero-banner-text-content-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h1 class="ai-hero-banner-heading-{{ ai_gen_id }}">
+          {{ block.settings.heading }}
+        </h1>
+      {% endif %}
+
+      {% if block.settings.subheading != blank %}
+        <div class="ai-hero-banner-subheading-{{ ai_gen_id }}">
+          {{ block.settings.subheading }}
+        </div>
+      {% endif %}
+
+      {% if block.settings.button_text != blank %}
+        <a 
+          href="{{ block.settings.button_url | default: '#' }}" 
+          class="ai-hero-banner-button-{{ ai_gen_id }}"
+        >
+          {{ block.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+    
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image OVERLAP FLipped",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Discover Our Collection"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Explore our curated selection of premium products designed to elevate your lifestyle."
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Button hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Button hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Featured image"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_overlap_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Overlap amount (desktop)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "image_overlap_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Overlap amount (mobile)",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Column 1 background"
+    },
+    {
+      "type": "select",
+      "id": "column_1_bg_type",
+      "label": "Background type",
+      "options": [
+        {
+          "value": "color",
+          "label": "Solid color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "color"
+    },
+    {
+      "type": "color",
+      "id": "column_1_bg_color",
+      "label": "Background color",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "text",
+      "id": "column_1_gradient",
+      "label": "Gradient CSS",
+      "default": "linear-gradient(180deg, #f8f8f8 0%, #e8e8e8 100%)"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_1_bg_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_1_decorative_1",
+      "label": "Decorative image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_1_decorative_2",
+      "label": "Decorative image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_1_decorative_3",
+      "label": "Decorative image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_1_decorative_4",
+      "label": "Decorative image 4"
+    },
+    {
+      "type": "header",
+      "content": "Column 2 background"
+    },
+    {
+      "type": "select",
+      "id": "column_2_bg_type",
+      "label": "Background type",
+      "options": [
+        {
+          "value": "color",
+          "label": "Solid color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "color"
+    },
+    {
+      "type": "color",
+      "id": "column_2_bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "column_2_gradient",
+      "label": "Gradient CSS",
+      "default": "linear-gradient(180deg, #ffffff 0%, #f0f0f0 100%)"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_2_bg_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_2_decorative_1",
+      "label": "Decorative image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_2_decorative_2",
+      "label": "Decorative image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_2_decorative_3",
+      "label": "Decorative image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_2_decorative_4",
+      "label": "Decorative image 4"
+    },
+    {
+      "type": "header",
+      "content": "Column 3 background"
+    },
+    {
+      "type": "select",
+      "id": "column_3_bg_type",
+      "label": "Background type",
+      "options": [
+        {
+          "value": "color",
+          "label": "Solid color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "color"
+    },
+    {
+      "type": "color",
+      "id": "column_3_bg_color",
+      "label": "Background color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "text",
+      "id": "column_3_gradient",
+      "label": "Gradient CSS",
+      "default": "linear-gradient(180deg, #f0f0f0 0%, #e0e0e0 100%)"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_3_bg_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_3_decorative_1",
+      "label": "Decorative image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_3_decorative_2",
+      "label": "Decorative image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_3_decorative_3",
+      "label": "Decorative image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_3_decorative_4",
+      "label": "Decorative image 4"
+    },
+    {
+      "type": "header",
+      "content": "Column 4 background"
+    },
+    {
+      "type": "select",
+      "id": "column_4_bg_type",
+      "label": "Background type",
+      "options": [
+        {
+          "value": "color",
+          "label": "Solid color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "color"
+    },
+    {
+      "type": "color",
+      "id": "column_4_bg_color",
+      "label": "Background color",
+      "default": "#e8e8e8"
+    },
+    {
+      "type": "text",
+      "id": "column_4_gradient",
+      "label": "Gradient CSS",
+      "default": "linear-gradient(180deg, #e8e8e8 0%, #d8d8d8 100%)"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_4_bg_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_4_decorative_1",
+      "label": "Decorative image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_4_decorative_2",
+      "label": "Decorative image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_4_decorative_3",
+      "label": "Decorative image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_4_decorative_4",
+      "label": "Decorative image 4"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image OVERLAP Flipped"
+    }
+  ]
+}
+{% endschema %}
