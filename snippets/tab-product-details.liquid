@@ -1,0 +1,1446 @@
+<div class=" tab-pd-details">
+  <div class="bd-tab">
+    <div class="container container-v2" id="tab-section">
+      <ul class="nav nav-tabs tab_prod">
+        {% if settings.enable_review_tab %}
+        <li>
+          <a class="underline_scale sa_review_widget_tab active" data-toggle="tab" href="#review" >{{settings.reviewtab_title}}</a>
+        </li>
+        {% endif %}
+        {% if settings.enable_description_tab %}
+        <li>
+          <a class="underline_scale"  data-toggle="tab" href="#des"  >{{settings.destab_title}}</a>
+        </li>
+        {% endif %}
+        {% if settings.enable_performance_tab %}
+
+          {% case template.suffix %}
+            {% when 'ipanema', 'rose-garden', 'fiji-pearl', 'simpli-zen', 'pink-2', 'blue', 'rose-petal', 'clearli-zero', 'honey-kiss', 'honey-kiss-roller', 'feels-better-waxed', 'equipro-chair', 'compressed-sponge', 'magnifying-lamp', 't3-botanical-mist', 'clearli-bare', 'vegas-strips', 'applicator-kit', 'valentines26', '86-pads', 'silicone-warmer-insert' %}
+        <li>
+          <a class="underline_scale"  data-toggle="tab" href="#perf"  >{{settings.performance_title}}</a>
+        </li>
+            {% else %}
+          {% endcase %}
+        {% endif %}
+        {% if settings.enable_addition_tab %}
+        {% case template.suffix %}
+      {% when 'hard-wax', 'ipanema', 'rose-garden', 'fiji-pearl', 'simpli-zen', 'pink-2', 'blue', 'rose-petal', 'clearli-zero', 'honey-kiss', 'skin-masks', '86-pads', 'warmers', 'lgcap-waxwarmer', 'applicators', 'gloves', 'feels-better-waxed', 'merch', 'brows', 'epilfree', 'kig', 'high-frequency', 'stirrers', 'cornstarch-powder', 'pinky-winky', 'equipro-chair', 't3-botanical-mist', 'clearli-bare', 'applicator-kit', 'valentines26', 'silicone-warmer-insert' %}
+      <li>
+          <a  class="underline_scale"  data-toggle="tab" href="#add"  >{{settings.addtab_title}}</a>
+        </li>
+    {% else %}
+    {% endcase %}
+        
+          
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  <div class="tab-content container container-v2" >
+    {% if settings.enable_review_tab %}
+      
+    <div class="tab-pane fade mt-4 show active" id="review">
+      <!-- <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>-->
+
+
+      <!-- shopper approved product widget snippets/tab-product-details.liquid -->
+            <div id="SA_review_wrapper"></div>  
+            <script type="text/javascript">
+                window.addEventListener('DOMContentLoaded', function() {        
+                    setTimeout(function() {
+                      document.querySelector('.relative .product-title').insertAdjacentHTML('afterend','<div id="product_just_stars" class="reg aside"><span class="saReviewsJump sa_noreviews" style="cursor:pointer;">No reviews yet - Be the first to write a review</span></div>');
+                      runReviewsJump();
+                   var sa_product = 'Shopify_US_{{ product.id }}';
+                   var sa_interval = 5000;function saLoadScript(src) { var js = window.document.createElement('script'); js.src = src; js.type = 'text/javascript'; document.getElementsByTagName("head")[0].appendChild(js); } if (typeof(shopper_first) == 'undefined') saLoadScript('//www.shopperapproved.com/widgets/35487/product/'+sa_product+'/product-widget/6612XLHDdKpz.js'); 
+                  }, 2000);
+                });
+            </script>     
+      <!-- END shopper approved product widget snippets/tab-product-details.liquid -->
+
+            <!-- Shopper Approved jumpcode -->
+            <script>
+            function runReviewsJump() {
+                var saReviewsJump = document.querySelector('.saReviewsJump');
+            
+                saReviewsJump.addEventListener('click', function() {
+                    document.querySelector('.sa_review_widget_tab').click();
+                    // Get references to the body and html elements
+                    var body = document.querySelector('body');
+                    var html = document.querySelector('html');
+                    
+                    // Get the offset top position of the #SA_review_wrapper element
+                    var targetOffset = document.querySelector('.tab-pd-details').offsetTop;
+                    
+                    // Subtract 100 from the offset top position
+                    var scrollTo = targetOffset - 100;
+                    
+                    // Scroll to the calculated position over 1000 milliseconds
+                    html.scrollTo({
+                      top: scrollTo,
+                      behavior: 'smooth'
+                    });
+                    
+                    body.scrollTo({
+                      top: scrollTo,
+                      behavior: 'smooth'
+                    });
+                });
+            }
+        	var jumHtml='';
+        	var saJump = setInterval(function(){ //interval that fires until the element exists
+        		if(document.querySelectorAll('.sa_jump_to_reviews')!=undefined  &&  document.querySelectorAll('.sa_jump_to_reviews')!=null  &&  document.querySelectorAll('.sa_jump_to_reviews').length > 0){
+        			jumHtml = document.querySelectorAll('.SA__total_reviews .sa_jump_to_reviews')[0].innerHTML; //Grab the contents of the current element
+        			document.querySelectorAll('#product_just_stars .SA__total_reviews')[0].innerHTML=('<span class="saReviewsJump" style="cursor:pointer;">'+jumHtml+'</span>'); //create a new element that does not have the default functionality
+
+                    runReviewsJump();
+        					  
+        		    clearInterval(saJump);
+        		}
+        	},2000);
+            </script>
+            <!-- END Shopper Approved jumpcode -->
+    </div>
+      {% endif %}
+    {% if settings.enable_description_tab %}
+    <div class="tab-pane fade" id="des">
+      <div class="desc product-desc">
+        {% if shop.metafields.apd.settings.enabled == true and product.metafields.apd.apd.disable == false and product.metafields.apd.apd.saved %}
+          {% render 'apd' %}
+        {% else %}
+          {{ product.description }}
+        {% endif %}
+      </div>      
+    </div>
+    {% endif %}
+    {% if settings.enable_performance_tab %}
+      {% case template.suffix %}
+      {% when 'ipanema', 'rose-garden', 'fiji-pearl', 'simpli-zen', 'pink-2', 'blue', 'rose-petal', 'clearli-zero', 'honey-kiss', 'honey-kiss-roller', 'feels-better-waxed', 'compressed-sponge', 'magnifying-lamp', 't3-botanical-mist', 'clearli-bare', 'vegas-strips', 'applicator-kit', 'deo-2lb-digital', 'valentines26', '86-pads', 'silicone-warmer-insert' %}
+      <div class="tab-pane fade tab-performance" id="perf">
+      
+        {% render 'performance-and-benefits' %}
+           
+    </div>
+      {% else %}
+    {% endcase %} 
+    {% endif %}
+    {% if settings.enable_addition_tab %}
+    <div class="tab-pane fade tab-addition" id="add">
+      {% if settings.addtab_content != blank %}
+      {{settings.addtab_content}}
+      {% else %}
+
+      {% comment %} HARD WAX {% endcomment %}
+      {% if template.suffix == 'hard-wax' or template.suffix == 'rose-garden' or template.suffix == 'simpli-zen' or template.suffix == 'ipanema' or template.suffix == 'fiji-pearl' or template.suffix == 'blue' or template.suffix == 'pink-2' %}  
+      <div class="hard-wax-how-to">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+              <a href="https://cdn.shopify.com/s/files/1/0347/0934/0300/files/hard_wax_cheat_sheet_1.pdf?v=1769191536" target="_blank" class="usagepdf button-universal"> Downloadable PDF </a>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Melt the Wax:</h3>
+                   <p>Turn on your <a href="https://bombshellwax.com/collections/equipments-and-supplies" style="color: #e272a3;">wax warmer</a> 
+                     and stir until the wax reaches a smooth, pancake batter-like consistency, adjusting the temperature as needed. <Br>To check, lift the wax
+                    with a spatula; if it drips instantly, it’s too hot. If it clings to the applicator without dripping for more than 3 seconds, it’s ready.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Test the Temperature:</h3>
+                   <p>Apply a small test strip of wax on your wrist. This ensures the wax is at a safe temperature to avoid skin burns. Adjust temperature to the fluctuating wax & room temperatures.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Prepare the Skin:</h3>
+                    <p>Ensure the area to be waxed is thoroughly prepared using <a href="https://bombshellwax.com/products/86-skin-foam-cleanse-protect?variant=43743079071987" style="color: #e272a3;">Bombshell's Pre Wax Products.</a> Cleanse the skin using either our Foaming Skin Cleanser
+                     or Mineral Oil Solution.
+                     Some estheticians also like to use our Cornstarch Powder to minimize skin contact.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Apply the wax:</h3>
+                   <p>Using a <a href="https://bombshellwax.com/collections/spa-and-wax-esentials?constraint=applicators" style="color: #e272a3;">wooden spatula</a>,
+                     stir the wax in a figure-eight motion three times, then scoop. Hold the applicator perpendicular to the skin 
+                     and apply wax evenly <strong>in the direction of hair growth</strong> with gentle pressure, leaving a thicker 'pull-tab' at the end of the wax patch.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Cool and Set:</h3>
+                   <p>Allow the wax to cool until it is no longer sticky when you tap your finger on it.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Remove the Wax:</h3>
+                   <p>
+                     Once the wax hardens to the touch, put pressure on the skin near the thicker end of the wax patch.
+                     Using your other hand, grip the 'pull-tab' and the skin beneath at the front end of the wax patch with your thumb and index finger. 
+                     Pull the wax tab off smoothly and briskly, parallel to the skin against the direction of the hair growth. 
+                     Immediately apply pressure to the waxed area to soothe the skin & the customer.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Post Wax Care:</h3>
+                   <p>Finish with Bombshell's excellent <a href="https://bombshellwax.com/collections/pre-post" style="color: #e272a3;">Post Wax Care Products,</a> including Mineral Oil Solutions and Soothing & Disinfecting Cremes
+                     to soothe and hydrate the waxed area, and Exfoliating Skin Pads to clean out pores.
+                      Emphasize to clients: at home care is essential pre wax care for their next appointment!</p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+{% comment %} SOFT WAX {% endcomment %}
+      {% if template.suffix == 'strip-wax' or template.suffix == 'clearli-zero' or template.suffix == 'honey-kiss' or template.suffix == 'rose-petal' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+              <a href="https://cdn.shopify.com/s/files/1/0347/0934/0300/files/soft_wax_cheat_sheet_1.pdf?v=1769191543" target="_blank" class="usagepdf button-universal"> Downloadable PDF </a>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Put the Can in</h3>
+                   <p>Bombshell Soft wax comes in plastic cans. Feel free to place the cans directly into a wax warmer to use.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Melt the Wax:</h3>
+                   <p>Turn on your <a href="https://bombshellwax.com/collections/equipments-and-supplies" style="color: #e272a3;">wax warmer</a>.
+                     Turn temperature past half-way until wax is melted, to check, lift the wax with a spatula; 
+                     if it drips instantly, it’s too hot. If it clings to the applicator without dripping for about 3 seconds, it’s ready.
+                     Then either; 
+                     <Br>
+                     <li>lower temp to before half-way and keep in warmer to use.</li>
+                     <li>pour the wax from the plastic can into a metal insert to use.</li>
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Test the Temperature:</h3>
+                   <p>Apply a small test strip of wax on your wrist. This ensures the wax is at a safe temperature to avoid skin burns. Adjust temperature to the fluctuating wax & room temperatures.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Prepare the Skin:</h3>
+                   <p>Ensure the area to be waxed is thoroughly prepared using <a href="https://bombshellwax.com/products/86-skin-foam-cleanse-protect?variant=43743079071987" style="color: #e272a3;">Bombshell's Pre Wax Products.</a> Cleanse the skin using either our Foaming Skin Cleanser
+                     or Mineral Oil Solution.
+                     Some estheticians also like to use our Cornstarch Powder to minimize skin contact.</p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Apply the wax:</h3>
+                   <p>
+                     Using a <a href="https://bombshellwax.com/collections/spa-and-wax-esentials?constraint=applicators" style="color: #e272a3;">wooden spatula</a>,
+                     stir the wax in a figure-eight motion three times, then scoop. Hold the applicator perpendicular to the skin 
+                     and apply wax evenly <strong>in the direction of hair growth</strong> with gentle pressure.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Apply the strip:</h3>
+                   <p>After applying the wax, grab your <a href="https://bombshellwax.com/collections/spa-and-wax-esentials?constraint=wax-strips">wax strips</a>
+                     and lay the strip over the applied wax, pressing firmly and smoothing it down in the direction of hair growth. 
+                     Leave a small section of the strip wax free to grip when removing.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Remove the Strip:</h3>
+                   <p>Hold the skin taut with one hand, grab the edge of the strip with the other, and peel it off briskly in the opposite direction of hair growth. 
+                     Immediately apply pressure to the waxed area to soothe the skin & the customer.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Post Wax Care:</h3>
+                   <p>Finish with Bombshell's excellent <a href="https://bombshellwax.com/collections/pre-post" style="color: #e272a3;">Post Wax Care Products,</a> including Mineral Oil Solutions and Soothing & Disinfecting Cremes
+                     to soothe and hydrate the waxed area, and Exfoliating Skin Pads to clean out pores.
+                      Emphasize to clients: at home care is essential pre wax care for their next appointment!
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        
+        {% comment %} SKIN MASKS {% endcomment %}
+        {% if template.suffix == 'skin-masks' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Post Treatment Add-Ons</h3>
+                   <p> Skin Masks are an excellent product for post treatment upsells. Offer {{ product.title }} as a recovery treatment paired with an aesthetic, dermatology, or wax service.
+                    <li>Facial Waxing & Vajacials</li>
+                    <li>Dermaplaning</li>
+                    <li>Microneedling</li>
+                    <li>IPL</li>
+                    <li>Laser</li>
+                     <br>
+                    Retail as an Express Home-Care recovery mask!
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Know the Skin</h3>
+                   <p>Ensure client has no specific allergies. Bombshell Skin Masks are designed for all skin types, especially sensitive & irritated skin.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Use Guide</h3>
+                   <p>
+                       <li>Thoroughly Cleanse Face</li>
+                       <li>Open foil packet</li>
+                       <li>Unfold and lay mask on thoroughly cleansed face</li>
+                       <li>Leave on for 15-20 minutes</li>
+                       <li>Remove mask and discard, massage in the remaining essence from the pack</li>
+                       <li>Finish with a toner and moisturizer</li>
+                   </p>
+                 </div>
+              </div>             
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+                {% comment %} 86 Foam 
+        {% if template.suffix == '86-foam' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">  {{ product.title }}</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Pre-Wax Application</h3>
+                   <p>
+                    <li>Dispense: Pump a small amount of the foaming cleanser into clean, gloved hands or onto a cotton pad.</li>
+                    <li>
+                      Cleanse: Gently apply to the treatment area, working in light circular motions.
+                    
+      <li style="list-style-type: circle;">This removes surface oils, makeup, sweat, and environmental debris.</li>
+      <li style="list-style-type: circle;">Focus on folds, creases, or areas prone to buildup.</li>
+    
+                    </li>
+                    <li>Disinfect: Allow the foam to sit for a few seconds to ensure proper cleansing and antimicrobial action.</li>
+                    <li>Remove: Wipe away excess with a disposable cotton pad, tissue, or a clean dry towel. The skin should feel refreshed and residue-free, ready for waxing.</li>
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Post-Wax Application</h3>
+                   <p>
+                    <li>Soothe: After completing the wax service, apply one pump of the foaming cleanser to the treated area.</li>
+                    <li>
+                     Protect & Hydrate: Smooth the foam gently over the skin.
+                      
+      <li style="list-style-type: circle;">The formula disinfects freshly waxed skin to reduce risk of irritation or folliculitis.</li>
+      <li style="list-style-type: circle;">Added moisturizing ingredients calm the skin barrier and help prevent dryness.</li>
+    
+                    </li>
+                    <li>Follow-Up: Continue with your usual post-wax finishing products, such as soothing lotions, oils, or ingrown prevention serums.</li>
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Pro Tips</h3>
+                   <p>
+                       <li>A little foam expands to cover a large area.</li>
+                       <li>Always apply with clean, gloved hands to avoid cross-contamination.</li>
+                   </p>
+                 </div>
+              </div>             
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% endcomment %}
+
+{% comment %} 86 exfoliating pads {% endcomment %}
+      {% if template.suffix == '86-pads' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2">
+                   <p>
+                    <li>Cleanse skin prior to application.</li>
+                    <li>Gently swipe pad over treatment area.</li>
+                    <li>Allow product to dry fully before waxing (if using pre-service).</li>
+                    <li>Use consistently between waxing services to support exfoliation and prevention of ingrown hairs and breakouts (acne, razor burn).</li>
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Pro Tips</h3>
+                   <p>
+                    <li>Follow with your favorite hydrating serum or moisturizer to balance the skin barrier.</li>
+                    <li>If new to exfoliating acids, start slowly and increase frequency as tolerated.</li>
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Caution</h3>
+                   <p>
+                       ⚠️ Avoid contact with eyes. Use sunscreen when using exfoliating acids.
+                   </p>
+                 </div>
+              </div>             
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        
+        {% comment %} WARMERS {% endcomment %}
+        {% if template.suffix == 'warmers' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Use</h3>
+                   <p>
+                     Start by adding the appropriate amount of wax beads/chunks or your strip wax can. 
+                     Hard wax beads can be added directly into the melting chamber. 
+                     Set the warmer to your desired temperature, allow the wax to melt thoroughly. 
+                     Once melted, stir the wax to check its consistency, then test a small amount on your 
+                     wrist to ensure it's at a comfortable temperature before application.
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Deo Mini Warmer (Brow Bar Warmer) Instructions</h3>
+                   <p> <a href="https://cdn.shopify.com/s/files/1/0347/0934/0300/files/deo_warmer_instructions.jpg?v=1639155400" target="_blank">Tap Here</a>
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+{% comment %} LGCAP WARMER {% endcomment %}
+        {% if template.suffix == 'lgcap-waxwarmer' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+          <div class="row skip-video-wrapper">
+            <iframe width="875" height="492" src="https://www.youtube.com/embed/OFdpr0cmLQc" title="Deo Large Capacity Wax Warmer How To Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Use</h3>
+                   <p>
+                     Start by adding the appropriate amount of wax beads/chunks or your strip wax can. 
+                     Hard wax beads can be added directly into the melting chamber. 
+                     Set the warmer to your desired temperature, allow the wax to melt thoroughly. 
+                     Once melted, stir the wax to check its consistency, then test a small amount on your 
+                     wrist to ensure it's at a comfortable temperature before application.
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Specific Warmer Instructions</h3>
+                   <p> The power lead and ON/OFF switch is at the rear of the unit
+                     <br>
+The control panel is at the front of the unit.
+                     <br>
+The blue time display is a 12-hourclock. 
+                     <br>
+A small red LED indicates AM and a green LED for PM.
+                     <br>
+The red MODE display shows temperature in degrees Fahrenheit plus other functions that will be described below
+The factory defaults that will appear at first switch on are:
+                     <br>
+                     
+                       <li>
+                         Clock is set to GMT
+                       </li>
+                       <li>
+                         Alarm is set to 7am
+                       </li>
+                     
+The target temp is what is set on the display and will flash at power ON.
+                   <br>
+Flashing indicates the heater is trying to reach target temperature.
+                   <Br>
+Whenever the power is SWITCHED ON the display will default a red flashing TARGET temperature. This target temperature can be changed by pressing the +/- buttons and will become the new default TARGET whenever powered ON. 
+                   <br>
+A flashing display means the heater is ON and trying to achieve the target temperature. When the target temperature is reached the display will stop flashing. Within a few minutes, the temperature will naturally drop and at which point the flashing display will resume to show that heating is trying to achieve target temperature. 
+Three red dashes. This temporarily sets the target temperature to 100F but there will beno temperature display. The wax temperature drops and stays at its melt plateau. Pressing the M button resets the display to the last set temperature and the display will start flashing immediately. 
+F-H: This function forces the heater into a higher power mode for 65 minutes when ever the wakeup alarm is triggered. Pressing the M button to select F-H allows temporary accelerated heating until the M button is pressed again. 
+                   <br>
+A large red LED illuminates to show that: The alarm has been set and will wake the unit at the pre-selected time. Upon reaching the alarm time, fast heating (F- H) is activated and will flash for 65 minutes to bring the wax up to working temperature.After65 minutes the last target temperature will be displayed. At the end of each working day, the wake up alarm for the next day can reset by pressing the M button until the large red LED is illuminated. 
+Red display is blank. The time display is illuminated. SETTING TIME (clock) Press the T button once and the HOURS will flash Use the +/- buttons to adjust the hours. Remember that there are little red and green LEDs to indicate AM or PM Press the T button again and the minutes flash, Use the +/- keys to adjust the minutes Press the T button again to exit clock setting and return to live time. 
+Press the M button until the RED alarm LED is ON Press the A button once and the HOURS will flash. Use the +/- buttons to adjust the hours 
+<br>
+                   Remember that there are little red and green LEDs to indicate AM or PM 
+                   <br>
+Press the A button again and the minutes flash, Use the +/- keys to adjust the minutes Press the A button again to exit alarm setting and return to live time.
+                   <br>
+Only when the red LED is ON is the alarm activated for the next day.
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      
+
+        {% comment %} APPLICATORS {% endcomment %}
+        {% if template.suffix == 'applicators' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Choose the Right Size:</h3>
+                   <p>
+                    Use smaller applicators for brows and facial waxing, and larger ones for body areas like legs, arms, and back.
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Even Application:</h3>
+                   <p> Dip the applicator into the wax, rotate it to avoid drips, wax temperature is correct when it clings to your applicator
+                     without dripping for 2-3 seconds. Apply with firm, even pressure for smooth coverage.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Hygienic Practice:</h3>
+                   <p> <strong>NO DOUBLE-DIPPING.</strong> Rule #1! Always use a new applicator for each dip/spread. 
+                     This keeps your wax sanitary and your clients safe.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Precision & Control:</h3>
+                   <p> 
+                     Use the edge of the applicator for clean lines, especially when shaping brows or applying wax in detailed areas.
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% comment %} GLOVES {% endcomment %}
+        {% if template.suffix == 'gloves' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Choose your fit:</h3>
+                   <p>
+                   Select the right size for a snug yet comfortable fit to maintain dexterity and control during waxing.
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Stay Hygienic:</h3>
+                   <p> Always use a fresh pair for each client to prevent cross-contamination and maintain professional sanitation standards.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Proper Removal:</h3>
+                   <p> To avoid contamination, peel gloves off from the wrist down, turning them inside out as you remove them. Dispose of them immediately after use.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Material Matters:</h3>
+                   <p> 
+                     Nitrile gloves offer durability and resistance to wax heat, while vinyl gloves provide a lightweight, flexible option for less intensive applications.
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+                {% comment %} MERCH {% endcomment %}
+        {% if template.suffix == 'merch' or template.suffix == 'feels-better-waxed'%}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Wear It Like A Boss:</h3>
+                   <p>
+                   Throw on your Bombshell tee and rep your favorite wax brand 💪 
+                     With our merch on, you'll be instantly equipped with the confidence for 5 star service 🤩
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Style It Your Way:</h3>
+                   <p> Pair with leggings for the ultimate casual friday fit or a chill salon day, or dress it up with a cute jacket—because Bombshells do it all 💁‍♀️
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Spread the Vibes:</h3>
+                   <p> Whether you're waxing, teaching, or just running errands, let the world know you’re part of the Bomb Squad!
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Wash & Repeat:</h3>
+                   <p> 
+                      VERY IMPORTANT ‼️Wash your stinky clothes‼️😂
+                     Machine wash cold, tumble dry low, and rock it again.
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% comment %} BROWS {% endcomment %}
+        {% if template.suffix == 'brows' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Shape & Define:</h3>
+                   <p>
+                   Use our <a href="https://bombshellwax.com/products/eyebrow-ruler-stencils?variant=43876469801203">stencils</a> and <a href="https://bombshellwax.com/products/eyebrow-white-stick">mapping stick</a>to outline your perfect brow shape before filling in.
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Fill & Perfect:</h3>
+                   <p> 
+                     Apply <a href="https://bombshellwax.com/products/soft-black-eyebrow-powder">eyebrow powder</a> or <a href="https://bombshellwax.com/products/eyebrow-pencils-for-shaping">pencil</a> with light strokes to create a natural, fuller look.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Blend It Out:</h3>
+                   <p> 
+                    Use a <a href="https://bombshellwax.com/products/disposable-mascara-wands-pink?variant=46744716902643">mascara wand</a> to soften harsh lines and distribute product evenly for a seamless finish.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Lock It In:</h3>
+                   <p> 
+                      Finish with <a href="https://bombshellwax.com/products/stay-in-place-eyebrow-gel-clear?variant=37139362250910">brow gel</a> to set your brows in place for all-day perfection. 
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+                {% comment %} EPILFREE {% endcomment %}
+        {% if template.suffix == 'epilfree' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Wax:</h3>
+                   <p>
+                   Perform your waxing service on the area. **IMPORTANT NOTE** In order for Epilfree to be effective, the area must be waxed with
+                     a wax containing <strong>NO</strong> pine rosin and <strong>NO</strong>beeswax.
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Apply Epilfree:</h3>
+                   <p> 
+                     Apply Epilfree to the area immediately after the waxing service. Massage into the skin.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Avoidances Post Procedure:</h3>
+                   <p> 
+                    **IMPORTANT** Epilfree is a product that must be used exactly as directed for most effective results.
+                     Post application, AVOID SWEATING. Sweat or high friction activities post application will diminish the results of the product.
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+      {% comment %} Kiss It Goodbye {% endcomment %}
+        {% if template.suffix == 'kig' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Wax Equipment and Floor Cleaning:</h3>
+                   <p>
+                   After building up your wax messes and spills, grab your Kiss it Goodbye Cleaner and a paper towel or wipe. Apply Kiss it Goodbye to
+                     the paper towel or wipe, then scrub your wax mess goodbye! Suitable for wax warmers, countertops, floors, and other hard surfaces.
+                   </p>
+                 </div>
+              </div> 
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% comment %} Infraderm High Frequency Machine {% endcomment %}
+        {% if template.suffix == 'high-frequency' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Prepare and sanitize</h3>
+                   <p>
+                   Begin with thoroughly cleansed, dry skin - free of makeup, oils, or residue - to ensure safe and effective treatment
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Choose the right electrode</h3>
+                   <p>
+                    Select from one of the included electrodes:
+                    <ul>
+                    <li>Large mushroom - great for general facial use and anti-aging benefits</li>
+                    <li>Small mushroom - ideal for targeting acne-prone or oily skin</li>
+                    <li>Indirect massage electrode - useful for toning and stimulating via client-handheld technique</li>
+                  </ul>
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Apply conductive medium</h3>
+                   <p>
+                    Apply a thin layer of conductive gel or serum to the treatment area. This aids glide, optimizes current distribution, and enhances comfort
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Start low and go slow</h3>
+                   <p> 
+                     <li>Insert the chosen electrode into the wand.</li>
+                    <li>Power on the machine, beginning at the lowest intensity.</li>
+                    <li>Gradually increase the setting until a gentle, comfortable tingle is felt</li>
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Select your technique</h3>
+                   <p> 
+                     <li>Direct method: Gently glide the mushroom electrode in circular motions, maintaining movement to avoid overstimulation,
+                       or hover briefly (3-5 seconds) over blemishes to target acne-causing bacteria</li>
+                    <li>Indirect method: Have the client hold the electrode, then massage the area—such as the face or neck—using the wand from a distance,
+                       to boost circulation and tone</li>
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Watch your timing</h3>
+                   <p> 
+                     Aim for 5-10 minutes per session, depending on the treatment area and skin sensitivity
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Aftercare application</h3>
+                   <p> 
+                     Post-treatment, apply a calming moisturizer or hydrating serum. The increased circulation enhances absorption,
+                      making this an ideal time for nourishing skincare application
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Practice hygiene and safety</h3>
+                   <p> 
+                     <li>Clean electrodes thoroughly after each use using disinfectant or alcohol.</li>
+                    <li>Avoid alcohol-based products before treatment - they may ignite due to sparking risk</li>
+                    <li>Important contraindications: Do not use the machine on clients who are pregnant, have a pacemaker,
+                       are epileptic, or have metal implants in the treatment area. Also avoid broken, inflamed skin or areas with active cold sores</li>
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+
+{% comment %} Equipro Poly-Comfort Chair {% endcomment %}
+        {% if template.suffix == 'equipro-chair' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+              <div class="content2">
+                 <div class="info2">
+                   <p>
+                    Perfect for estheticians, massage therapists, and spa professionals offering multi-service treatments, ensuring both comfort and performance for clients during waxing or skincare services.
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+
+
+        {% comment %} Stirrers {% endcomment %}
+        {% if template.suffix == 'stirrers' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Prepare your wax warmer</h3>
+                   <p>
+                   Turn on your wax pot and set it to the desired temperature. Allow the wax to begin melting until it softens enough to stir.
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Stir!</h3>
+                   <p>
+                    Use the wax pot stirrer to gently mix the wax while it melts. This allows your wax to receive even heating and achieve a smooth consistency.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Maintain consistency</h3>
+                   <p>
+                    Re-stir the wax between clients or as needed throughout your service to prevent separation and maintain the correct texture. Always check wax temperature before application to avoid overheating.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Important Tips!</h3>
+                   <p> 
+                     <li>DO NOT leave the stirrer sitting inside the pot while the warmer is on</li>
+                    <li>Avoid contact with the heating element or sides of the pot, as they may be hot</li>
+                    <li>Always practice proper sanitation protocols between clients!</li>
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% comment %} Cornstarch Powder {% endcomment %}
+        {% if template.suffix == 'cornstarch-powder' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>cleanse the skin</h3>
+                   <p>
+                   Begin by cleansing the treatment area with a gentle, oil-free cleanser or pre-wax solution. Pat dry thoroughly - powder should only be applied to dry skin.
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Apply powder lightly</h3>
+                   <p>
+                    Dust a light, even layer over the area to be waxed. (Less is more — you only need enough to absorb surface moisture.)
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Distribute Evenly</h3>
+                   <p>
+                    Gently press or sweep the powder across the skin so it forms a thin, even barrier. Ensure all excess is brushed away; skin should look matte, not coated.
+                   </p>
+                 </div>
+              </div>
+              <div class="content2">
+                 <div class="info2"> <h3>Wax!</h3>
+                   <p> 
+                    Apply wax directly over the powdered skin. The powder will absorb oils and perspiration, allowing the wax to grip hairs more effectively while minimizing skin irritation.
+                   </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+      {% comment %} Pinky Winky {% endcomment %}
+        {% if template.suffix == 'pinky-winky' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Pre Wax:</h3>
+                   <p>
+<b>Cleanse the Skin</b> - Before waxing, ensure the area is clean and dry. Use a gentle cleanser to remove any dirt, oils, or lotions.
+<br>
+<b>Apply a Small Amount of Pinky</b> - Pour a few drops of the mineral oil onto a cotton pad or your gloved hands.
+<br>
+<b>Lightly Massage Into Skin</b> - Gently massage a thin layer over the area to be waxed. This helps protect the skin and creates a barrier, preventing wax from sticking to live skin cells while still gripping the hair.
+<br>
+<b>Blot Excess Oil</b> - Use a tissue or dry cotton pad to blot away any excess oil. The skin should feel conditioned but not greasy before applying wax.
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Post Wax:</h3>
+                   <p>
+After waxing, apply a small amount of mineral oil to a cotton pad.
+<br>
+<b>Gently Wipe the Area</b> - Sweep the pad over the skin to dissolve and remove any leftover wax residue.
+<br>
+<b>Soothe and Condition </b>- After removing residue, lightly massage any remaining oil into the skin to calm irritation and leave the skin soft and moisturized.                     
+                   </p>
+                 </div>
+              </div> 
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% comment %} T3 Treatment Mist {% endcomment %}
+        {% if template.suffix == 't3-botanical-mist' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Pre-Wax:</h3>
+                   <p>
+                    Apply 1-2 pumps to gloved hands and lightly massage onto the treatment area to soften the skin, hydrate tissue, and condition the surface before waxing.
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Post-Wax:</h3>
+                  <p>
+                    Reapply a small amount to soothe the skin, calm redness, restore balance, and support skin recovery. Do not over-apply; a thin layer is sufficient.
+                  </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Additional Uses:</h3>
+                  <p>
+                    <li>Refreshes and hydrates skin between services</li>
+                    <li>Ideal for calming sensitive or reactive skin</li>
+                    <li>Lightweight daily skin-conditioning mist</li>
+                  </p>
+                 </div>
+              </div> 
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% comment %} Clearli Bare {% endcomment %}
+        {% if template.suffix == 'clearli-bare' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Pre-Wax:</h3>
+                   <p>
+                    Apply 1-2 pumps to gloved hands and lightly massage onto the treatment area to cleanse, condition, and prep the skin before waxing.
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Post-Wax:</h3>
+                  <p>
+                    Reapply a small amount to soothe the skin, restore balance, and help prevent ingrowns. Do not over-apply; a thin layer is sufficient.
+                  </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Additional Uses:</h3>
+                  <p>
+                    <li>Remove residual wax</li>
+                    <li>Lightweight daily moisturizer</li>
+                    <li>Gentle makeup remover</li>
+                  </p>
+                 </div>
+              </div> 
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% comment %} applicator Kit {% endcomment %}
+        {% if template.suffix == 'applicator-kit' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2">
+                   <ol>
+                    <li>Select the appropriate applicator size for the treatment area.</li>
+                    <li>Dip applicator into wax and apply evenly in the direction of hair growth.</li>
+                    <li>Dispose after single use.</li>
+                    <li>*Use a new applicator for each wax dip to maintain hygiene standards.*</li>
+                   </ol> 
+                 </div>
+              </div> 
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+
+        {% comment %} Valentines '26 {% endcomment %}
+        {% if template.suffix == 'valentines26' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2">
+                   <li> Heat desired hard wax beads until fully melted and smooth. </li>
+                   <li> Apply a thin, even layer in the direction of hair growth. </li>
+                   <li> Allow wax to set until pliable. </li>
+                   <li> Remove swiftly against hair growth. </li>
+                   <li> Use Pinky Winky pre-wax to support the skin barrier and post-wax to remove residual wax and soothe the skin. </li>
+                 </div>
+              </div> 
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+
+        {% comment %} Silicone Warmer Insert {% endcomment %}
+        {% if template.suffix == 'silicone-warmer-insert' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2">
+                   <p>
+                    <ol>
+                      <li>Place silicone insert into wax warmer.</li>
+                      <li>Add desired amount of hard wax beads.</li>
+                      <li>Heat until fully melted.</li>
+                      <li>Use handles to safely remove or pour wax as needed.</li>
+                      <li>Allow wax to cool and peel away for easy cleaning.</li>
+                    </ol>
+                  </p>
+                 </div>
+              </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+
+
+        {% if template.suffix == 'xyz' %}  
+      <div class="">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="title_content">
+              <p class="more_info">Bombshell Education</p>
+              <h3 class="">{{ product.title }} - Usage and Recommendations</h3>
+            </div>
+            <div class="row">
+              <div class="content2">
+                 <div class="info2"> <h3>Header</h3>
+                   <p>
+                   </p>
+                 </div>
+              </div> 
+              <div class="content2">
+                 <div class="info2"> <h3>Header</h3>
+                  <p>
+                  </p>
+                 </div>
+              </div> 
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="https://bombshellwax.com/pages/bombshell-education-resources">Bombshell Education and Training</a></li>
+                    <li>For more in depth tutorials and specific service instructions!</li>
+                    <li><a href="https://bombshellwax.com/pages/contact">Contact Us</a></li>                    
+                    <li><a href="https://bombshellwax.com/account">Your Orders</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>  
+
+
+
+
+
+
+<style>
+  @media (max-width: 768px){
+  .row{
+  padding-left: 10px;
+padding-right: 10px;}
+  }
+
+  .usagepdf{
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+li {
+  list-style-position: inside;
+  padding-left: 0;
+}
+</style>
