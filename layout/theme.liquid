@@ -1,0 +1,502 @@
+{% comment %}BSS B2B Login{% endcomment %}
+{% capture bsscommerce_login_require_template %}{% include 'bsscommerce_login_require' %}{% endcapture %}{% unless bsscommerce_login_require_template contains "Liquid error" %}{{ bsscommerce_login_require_template }}{% endunless %}
+{% comment %}BSS B2B Login{% endcomment %}
+{% capture bsscommerce_login_require_template %}{% include 'bsscommerce_login_require' %}{% endcapture %}{% unless bsscommerce_login_require_template contains "Liquid error" %}{{ bsscommerce_login_require_template }}{% endunless %}<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js p-0" {% if settings.enable_rtl_mode %} dir="rtl"{% endif %} > <!--<![endif]-->
+<html lang="en-US">
+<head>
+
+{{ 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css' | stylesheet_tag }}
+
+
+  <!-- Google Search Console Site Verification ================================================== -->
+<meta name="google-site-verification" content="uwXbMy69H4tG1RIj3Aeo0sEw_umw1RJCFkUtMKM1Cfc" />
+  <!-- Basic page needs ================================================== -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Title and description ================================================== -->
+  {% if canonical_url == 'https://bombshellwax.com/' %}
+  <title>Wax Strips, Body Wax Beads Boston MA, Los Angeles CA, Houston TX</title>
+{% elsif canonical_url == 'https://bombshellwax.com/collections' %}
+  <title>Professional Waxing Supplies for Salons and Estheticians</title>
+{% else %}
+  <title>{{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}</title>
+{% endif %}
+  
+  {% unless canonical_url == 'https://bombshellwax.com/' or canonical_url == 'https://bombshellwax.com/collections'%}
+  <meta name="description" content="{{ page_description | escape }}">
+  {% endunless %}
+  
+  {% if canonical_url == 'https://bombshellwax.com/' %}
+  <meta name="description" content="Discover Bombshell Wax's premium wax strips and body wax beads, trusted for 100+ years. Available globally! Boston, MA; Los Angeles, CA; Houston, TX; Miami, FL.">
+  {% endif %}
+  {% if canonical_url == 'https://bombshellwax.com/collections' %}
+  <meta name="description" content="Browse professional waxing supplies including wax warmers, hard and soft wax, and skin prep products made for salon use and licensed esthetic professionals">
+  {% endif %}
+  
+  <!-- Helpers ================================================== -->
+  {% include 'social-meta-tags' %}
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.m_primary_color }}">
+  <link rel="icon" href="{{'favicon.png'| asset_url}}" type="image/png" sizes="16x16">
+
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- font -->
+  {% include 'engo-header-fonts' %}
+  <!-- CSS ================================================== -->
+  {% if settings.po_style == "po_swatchs" %}
+  {{ 'timber.scss.css' | asset_url | stylesheet_tag }}
+  {% endif %}
+  {% if settings.po_style == "po_dropdown" %}
+  {{ 'timber_2.scss.css' | asset_url | stylesheet_tag }}
+  {% endif %}
+
+  {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+  {{ 'slick.css' | asset_url | stylesheet_tag }}
+  {{ 'slick-theme.css' | asset_url | stylesheet_tag }}
+  <link rel="stylesheet" href="{{ 'jquery.fancybox.min.css' | asset_url }}" media="nope!" onload="this.media='all'">
+  {{ 'style-main.scss.css' | asset_url | stylesheet_tag }}
+  {{ 'engo-customizes.css' | asset_url | stylesheet_tag }}
+  {{ 'animate.min.css'| asset_url | stylesheet_tag}}
+
+
+
+  <!-- Header hook for plugins ================================================== -->
+  {{ content_for_header }}
+  {% include 'oldIE-js' %}
+  <script src="{{ 'jquery-3.5.0.min.js' | asset_url }}" type="text/javascript"></script>
+  {{ 'api.jquery.js' | shopify_asset_url | script_tag }}
+  {{ 'modernizr-2.8.3.min.js' | asset_url | script_tag }}
+  {{ 'option_selection.js' | shopify_asset_url | script_tag }}
+  {{ 'lazysizes.min.js' | asset_url | script_tag }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+
+  <script>
+    window.ajax_cart = true;
+    window.money_format = '{{shop.money_with_currency_format}}';
+    window.shop_currency = '{{ shop.currency }}';
+    window.show_multiple_currencies = true;
+    window.loading_url = "{{ 'loader.gif' | asset_url}}";
+    window.use_color_swatch = true;
+    window.product_image_resize = true;
+    window.enable_sidebar_multiple_choice = true;
+
+    window.file_url = "{{''|file_url}}";
+    window.asset_url = "{{''|asset_url}}";
+    window.images_size = {
+      is_crop: true,
+      ratio_width : 1,
+      ratio_height : 1,
+    };
+    window.inventory_text = {
+      in_stock: "{{ 'products.product.in_stock' | t }}",
+      many_in_stock: "{{ 'products.product.many_in_stock' | t }}",
+      out_of_stock: "{{ 'products.product.out_of_stock' | t }}",
+      add_to_cart: "{{ 'products.product.add_to_cart' | t }}",
+      sold_out: "{{ 'products.product.sold_out' | t }}",
+      unavailable: "{{ 'products.product.unavailable' | t }}"
+    };
+
+    window.sidebar_toggle = {
+      show_sidebar_toggle: "{{ 'general.sidebar_toggle.show_sidebar_toggle' | t }}",
+      hide_sidebar_toggle: "{{ 'general.sidebar_toggle.hide_sidebar_toggle' | t }}"
+    };
+
+  </script>
+
+  {% comment %}
+  If you store has customer accounts disabled, you can remove the following JS file
+  {% endcomment %}
+  {% if template contains 'customers' %}
+  {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+  {% endif %}
+
+  {% include 'social-meta-tags' %}
+
+  {% render 'weglot_hreftags' %}
+  {% render 'weglot_switcher' %}
+
+<!-- Start: AvisPlus -->
+<script src="{{ 'avisplus-product-options-custom.js' | asset_url }}" defer="defer"></script>
+<!-- End: AvisPlus -->
+</head>
+{% comment %}
+Add the page template as a class for easy page or template specific styling.
+{% endcomment %}
+<body class="{% if settings.enable_rtl_mode %}rtl{% endif %} preload push_filter_left js_overhidden relative" {% if settings.bg_color_body != blank %}style="background: {{settings.bg_color_body}};"{% endif %}>
+
+  <div class="wrap">
+    <div class="contentbody">
+      {% if settings.enable_promo_topbar %}
+      {% include 'promo-topbar' %}
+      {% endif %}
+      {% section 'header' %}
+
+      <!-- HEADING HIDDEN SEO -->
+      {% if template contains 'index' %}
+      <h1 class="sr-only">{{shop.name}}</h1>
+      {% endif %}
+
+      {% include 'search' %}
+      {% include 'minicart' %}
+      {% include 'menu_mobile' %}
+      {% include 'popup-login' %}
+      {{ content_for_layout }}
+
+      {% section 'footer' %}
+
+    </div>
+
+  </div>
+
+  {% comment %}
+  {{ 'fastclick.js' | asset_url | script_tag }}
+  {% endcomment %}
+  {% include 'currencies' %}
+  {{ 'timber.js' | asset_url | script_tag }}
+
+  {% comment %}
+  Template-specific js
+  {% endcomment %}
+  <script>
+    {% if resetPassword %}
+    $(function() {
+      timber.resetPasswordSuccess();
+    });
+    {% endif %}
+  </script>
+
+  <script>
+    jQuery(function() {
+      jQuery('.swatch :radio').change(function() {
+        var optionIndex = jQuery(this).closest('.swatch').attr('data-option-index');
+        var optionValue = jQuery(this).val();
+        jQuery(this)
+        .closest('form')
+        .find('.single-option-selector')
+        .eq(optionIndex)
+        .val(optionValue)
+        .trigger('change');
+      });
+    });
+  </script>
+
+  {% if settings.ajax_cart_method == "drawer" %}
+  {{ 'handlebars.min.js' | asset_url | script_tag }}
+  {% include 'ajax-cart-template' %}
+  {{ 'ajax-cart.js' | asset_url | script_tag }}
+  <script>
+    var ajaxCartConfig = {
+      cartContainer: '.enj-minicart-ajax',
+      addToCartSelector: '.enj-add-to-cart-btn',
+      cartCountSelector: '.enj-cartcount',
+      cartCostSelector: '.enj-cartcost',
+      moneyFormat: {{ shop.money_format | json }}
+    };
+      jQuery(function($) {
+      ajaxCart.init(ajaxCartConfig);
+    });
+
+    jQuery('body').on('ajaxCart.afterCartLoad', function(evt, cart) {
+      // Bind to 'ajaxCart.afterCartLoad' to run any javascript after the cart has loaded in the DOM
+      /*   timber.RightDrawer.open(); */
+    });
+  </script>
+  {% endif %}
+
+  {% if template contains 'contact' %}
+  {{ 'gmaps.min.js' | asset_url | script_tag }}
+  {% endif %}
+
+  {{ 'bootstrap.bundle.min.js' | asset_url | script_tag }}
+  {{ 'slick.min.js' | asset_url | script_tag }}
+  {{ 'instafeed.min.js' | asset_url | script_tag }}
+  {{ 'jquery.fancybox.min.js' | asset_url | script_tag }}
+  {{ 'engo-plugins.js' | asset_url | script_tag }}
+  {{ 'quickview.js' | asset_url | script_tag }}
+  {% comment %}
+  {% endcomment %}
+  {{ 'collection.js' | asset_url | script_tag }}
+  {{ 'engo-scripts.js' | asset_url | script_tag }}
+  {{ 'masonry.pkgd.min.js' | asset_url | script_tag }}
+
+
+
+  {% include 'product-quick-view' %}
+  {% include 'template-popup' %}
+  {% include 'template-popup-ajax-addtocart' %}
+
+  {% include 'linked-options' %}
+  {% include 'remove-sold-out' %}
+  {% if settings.ena_popup_cookie %}
+  {% include 'popup-cookie' %}
+  {% endif %}
+
+  {% include 'popup-product-random' %}
+
+  {% if settings.ena_popup_recently_view %}
+  {% include 'recently-sticky-cart' %}
+  {% endif %}
+
+  {% if settings.show_menu_toolbar %}
+  {% include 'menu-toolbar' %}
+  {% endif %}
+
+  {% if settings.ena_popup_news %}
+  {% if template contains 'index' %}
+  {% include 'popup-newletter' %}
+  {% endif%}
+  {% endif %}
+
+  {% if template contains 'product' %}
+  <script>
+    jQuery(document).ready(function($) {
+      if($(window).width() > 1024){
+        $(window).scroll(function(){
+          if ($(window).scrollTop() >= 100) {
+            $('.sticky_addcart').addClass('active'); 
+            $('.popup_random_prod').addClass('active'); 
+            $('.popup-cookie').addClass('active'); 
+
+          }
+          else {
+            $('.sticky_addcart').removeClass('active');
+            $('.popup_random_prod').removeClass('active');
+
+            $('.popup-cookie').removeClass('active');
+          }
+        });
+      }
+    });
+
+    jQuery(document).ready(function($) {
+
+      if($(window).width() < 576){
+
+
+
+        if($('.popup-cookie').length){
+          $('.popup_random_prod').css('bottom','208px');
+        }
+        else{
+          $('.popup_random_prod').css('bottom','0px');
+        }
+        $('.got_it').on('click', function() {
+          $('.popup_random_prod').css('bottom','0px');
+
+        }); 
+
+
+
+        $(window).scroll(function(){
+          if ($(window).scrollTop() >= 300) {
+            $('.sticky_addcart').addClass('active'); 
+            $('.popup-cookie').css('bottom','114px');
+            $('.menu_toolbar').addClass('active'); 
+            $('.got_it').on('click', function() {
+              $('.popup_random_prod').css('bottom','114px');
+
+            }); 
+
+            if($('.popup-cookie').length){
+              $('.popup_random_prod').css('bottom','323px');
+            }
+            else{
+              $('.popup_random_prod').css('bottom','114px');
+            }
+            if($('.popup-cookie').hasClass('d-none')){
+              $('.popup_random_prod').css('bottom','114px');
+            }
+
+          }
+          else {
+            $('.menu_toolbar').removeClass('active');
+            $('.sticky_addcart').removeClass('active');
+            $('.popup-cookie').css('bottom','0px');
+            if($('.popup-cookie').length){
+              $('.popup_random_prod').css('bottom','208px');
+            }
+            else{
+              $('.popup_random_prod').css('bottom','0px');
+            }
+            if($('.popup-cookie').hasClass('d-none')){
+              $('.popup_random_prod').css('bottom','0px');
+            }
+          }
+        });
+      }
+    });
+  </script>
+  {% endif %}
+
+  {% unless template contains 'product' %}
+  <script>
+    jQuery(document).ready(function($) {
+      if($(window).width() < 577){
+
+        if($('.popup-cookie').length){
+          $('.popup_random_prod').css('bottom','208px');
+        }
+        else{
+          $('.popup_random_prod').css('bottom','0px');
+        }
+        $('.got_it').on('click', function() {
+          $('.popup_random_prod').css('bottom','0px');
+
+        }); 
+
+
+        $(window).scroll(function(){
+
+          if ($(window).scrollTop() >= 300) {
+            $('.menu_toolbar').addClass('active'); 
+            $('.popup_random_prod').css('bottom','260px');
+            $('.popup-cookie').css('bottom','50px');
+            $('.got_it').on('click', function() {
+              $('.popup_random_prod').css('bottom','50px');
+            });
+
+            if($('.popup-cookie').length){
+              $('.popup_random_prod').css('bottom','258px');
+            }
+            else{
+              $('.popup_random_prod').css('bottom','50px');
+            }
+
+            if($('.popup-cookie').hasClass('d-none')){
+              $('.popup_random_prod').css('bottom','50px');
+            }
+          }
+          else {
+
+            if($('.popup-cookie').length){
+              $('.popup_random_prod').css('bottom','208px');
+            }
+            else{
+              $('.popup_random_prod').css('bottom','0px');
+            }
+            if($('.popup-cookie').hasClass('d-none')){
+              $('.popup_random_prod').css('bottom','0px');
+            }
+            $('.menu_toolbar').removeClass('active');
+            $('.popup-cookie').css('bottom','0px');
+
+          }
+        });
+      }
+    });
+  </script>
+  {% endunless %}
+
+
+
+{% capture bsscommerce_login_to_see_price_product_custom %}{% render 'bsscommerce-login-to-see-price-custom-js.liquid' %}{% endcapture %}{% unless bsscommerce_login_to_see_price_product_custom contains "Liquid error" %}{% render 'bsscommerce-login-to-see-price-custom-js.liquid' %}{% endunless %}
+
+<!-- Shopper approved layout/theme.liquid -->
+  <style>
+
+    #product_just_stars {
+      display: inline-block;
+    }
+    
+    #product_just_stars .SA__review_widget_item .SA__total_reviews a {
+      font-weight: bold;
+      font-size: 12px;
+      padding-right: 10px;
+      margin-right: 8px;
+      text-decoration:underline;
+    }
+    
+  
+    .group-stars .ind_cnt {
+      font-size: 10px;
+      display: inline;
+      width: 100%;
+      text-align: center;
+      margin: 0 auto;
+      padding-left: 5px;
+      top: -4px;
+      position: relative;
+    }
+    #SA_review_wrapper .SA__review_widget .SA__review_widget_item .SA__review_content .SA__review_num_ratings span {
+      vertical-align: 1px;
+    }
+    #SA_review_wrapper .SA__review_widget .SA__review_widget_item .SA__review_content .SA__review_num_ratings span:last-child {
+      vertical-align: 1px;
+    }
+    .SA__customer_name:before {
+    background: none !important;
+    }
+    
+    .SA__customer_name {
+        text-transform: capitalize !important;
+    }
+    span.saReviewsJump {
+      font-size: 12px;
+      font-weight: bold;
+      text-decoration: underline;
+  }
+      span.sa_noreviews {
+      text-decoration: none;
+  }
+  </style>
+
+  
+  <!-- category widget code -->
+  <script type="text/javascript"> 
+    function saLoadScript(src) { var js = window.document.createElement('script'); js.src = src; js.type = 'text/javascript'; document.getElementsByTagName("head")[0].appendChild(js); } saLoadScript("https://www.shopperapproved.com/widgets/group2.0/35487.js"); 
+  </script>
+  <!-- category widget code -->
+
+  
+  
+  <!-- Shopper approved layout/theme.liquid -->
+
+
+{% render 'paywhirl-main' %}  
+ {% capture bss_ltap_fl_redirect %}{% render 'bss-ltap-fl-redirect.liquid' %}{% endcapture %}{% unless bss_ltap_fl_redirect contains "Liquid error" %}{% render 'bss-ltap-fl-redirect.liquid' %}{% endunless %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const animatedEls = document.querySelectorAll('.animate-on-scroll');
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const effect = el.getAttribute('data-effect') || 'fadeInUp';
+          const delay = el.getAttribute('data-delay') || '0s';
+          const duration = el.getAttribute('data-duration') || '1s';
+
+          el.classList.add('in-view', 'animate__animated', 'animate__' + effect);
+          el.style.setProperty('--animate-delay', delay);
+          el.style.setProperty('--animate-duration', duration);
+
+          obs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    animatedEls.forEach(el => observer.observe(el));
+  } else {
+    // fallback for browsers without IntersectionObserver
+    animatedEls.forEach(el => {
+      const effect = el.getAttribute('data-effect') || 'fadeInUp';
+      el.classList.add('in-view', 'animate__animated', 'animate__' + effect);
+    });
+  }
+});
+</script>
+</body>
+</html>
+
