@@ -1,0 +1,721 @@
+{% comment %}
+  ============================================================
+  50 WAXERS IN 50 STATES — Interactive Educator Map
+  Shopify Liquid Page Template — v3
+  
+  HOW TO ADD EDUCATORS:
+  Edit the `educators` object in the <script> section below.
+  Each entry takes:
+    XX: {
+      name:  "Full Name",
+      city:  "City, ST",
+      bio:   "Short description",
+      photo: "https://your-cdn.com/photo.jpg",   ← Shopify CDN or absolute URL
+      url:   "/pages/your-educator-page-handle"  ← their dedicated page
+    }
+
+  INSTALLATION:
+  1. Shopify Admin → Online Store → Themes → Edit Code
+  2. Under "Templates", click "Add a new template"
+  3. Choose "page", name it "educators-map"
+  4. Paste this entire file
+  5. Go to Online Store → Pages → Add page
+  6. Set template to "page.educators-map"
+  ============================================================
+{% endcomment %}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --cream:        #FAF6F0;
+    --warm-white:   #FDF9F4;
+    --warm-white2:rgb(255, 253, 254);
+    --gold:         #efc9dd;
+    --gold-light:   #f9e5e8;
+    --gold-dark:    #e272a3;
+    --charcoal:     #2C2420;
+    --brown-mid:    #5C3D2E;
+    --blush-light:  #F5E6E0;
+    --state-empty:  #f9e5e8;
+    --state-hover:  #efc9dd;
+    --state-filled: #e272a3;
+    --state-active: #E15F8D;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .wax-map-page {
+    font-family: nunito;
+    color: var(--charcoal);
+    padding-bottom: 80px;
+  }
+
+  /* ── Hero ── */
+  .wax-hero {
+    text-align: center;
+    padding: 64px 20px 36px;
+    position: relative;
+  }
+  .wax-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 1px; height: 44px;
+    background: linear-gradient(to bottom, transparent, var(--gold));
+  }
+  .wax-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    margin-bottom: 18px;
+  }
+  .wax-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--charcoal);
+  }
+  .wax-title em {
+    font-style: italic;
+    color: var(--gold-dark);
+  }
+
+
+  /* ── Counters ── */
+  .wax-counters {
+    display: flex;
+    justify-content: center;
+    gap: 52px;
+    padding: 32px 20px 8px;
+    flex-wrap: wrap;
+  }
+  .wax-counter { text-align: center; }
+  .wax-counter-num {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--gold-dark);
+    line-height: 1;
+  }
+  .wax-counter-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    margin-top: 5px;
+  }
+
+  /* ── Map container ── */
+  .wax-map-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .wax-map-card {
+    background: var(--warm-white2);
+    border-radius: 8px;
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 40px rgba(44,36,32,0.08), 0 1px 4px rgba(201,169,110,0.12);
+    padding: 36px 28px 28px;
+    overflow: visible;
+  }
+  .wax-map-card svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    touch-action: none;
+  }
+
+  /* ── State paths ── */
+  .state-path {
+    fill: var(--state-empty);
+    stroke: #fff;
+    stroke-width: 1px;
+    cursor: pointer;
+    transition: fill 0.18s ease, filter 0.18s ease;
+  }
+  .state-path.has-educator { fill: var(--state-filled); }
+  .state-path:hover,
+  .state-path.is-active {
+    fill: var(--state-hover);
+    filter: drop-shadow(0 2px 8px rgba(226,114,163,0.4));
+  }
+  .state-path.has-educator:hover,
+  .state-path.has-educator.is-active {
+    fill: var(--state-active);
+    filter: drop-shadow(0 2px 8px rgba(226,114,163,0.45));
+  }
+
+  /* ── Progress bar ── */
+  .wax-progress-wrap {
+    max-width: 980px;
+    margin: 28px auto 0;
+    padding: 0 20px;
+  }
+  .wax-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .wax-progress-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+  }
+  .wax-progress-pct {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 15px;
+    color: var(--gold-dark);
+    font-weight: 700;
+  }
+  .wax-progress-track {
+    width: 100%;
+    height: 10px;
+    background: var(--gold-light);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .wax-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+    border-radius: 99px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+  .wax-progress-states {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 7px;
+  }
+  .wax-progress-states span {
+    font-size: 11px;
+    color: var(--charcoal);
+    opacity: 0.7;
+  }
+
+  /* ── Legend ── */
+  .wax-legend {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  .wax-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--charcoal);
+  }
+  .wax-legend-swatch {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--gold);
+    flex-shrink: 0;
+  }
+  .wax-legend-swatch.filled { background: var(--state-filled); }
+  .wax-legend-swatch.empty  { background: var(--state-empty);  }
+
+  .wax-map-note {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--charcoal);
+    opacity: 0.65;
+  }
+
+  /* ── Hover tooltip (desktop) ── */
+  #wax-tooltip {
+    position: fixed;
+    pointer-events: none;
+    z-index: 800;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.16s ease, transform 0.16s ease;
+  }
+  #wax-tooltip.wax-tip-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .wax-tip-card {
+    background: var(--charcoal);
+    color: var(--cream);
+    border-radius: 4px;
+    padding: 12px 16px;
+    min-width: 170px;
+    max-width: 220px;
+    box-shadow: 0 6px 24px rgba(44,36,32,0.28);
+    position: relative;
+  }
+  .wax-tip-card::after {
+    content: '';
+    position: absolute;
+    bottom: -7px; left: 20px;
+    width: 14px; height: 14px;
+    background: var(--charcoal);
+    transform: rotate(45deg);
+    border-radius: 4px;
+  }
+  .wax-tip-state {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .wax-tip-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+  .wax-tip-hint {
+    font-size: 11px;
+    color: #e272a3;
+    font-style: italic;
+  }
+  .wax-tip-soon {
+    font-size: 12px;
+    color: var(--gold-light);
+    font-style: italic;
+  }
+
+  /* ── Profile modal ── */
+  .wax-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(44, 36, 32, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .wax-modal-overlay.wax-modal-open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .wax-modal {
+    background: var(--warm-white);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 24px 64px rgba(44,36,32,0.28), 0 4px 16px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+  }
+  .wax-modal-overlay.wax-modal-open .wax-modal {
+    transform: translateY(0) scale(1);
+  }
+
+  /* Photo header */
+  .wax-modal-photo {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+    background: var(--gold-light);
+  }
+  .wax-modal-photo-placeholder {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(135deg, var(--gold-light), var(--blush-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wax-modal-photo-placeholder svg {
+    width: 64px;
+    height: 64px;
+    opacity: 0.35;
+  }
+
+  /* State ribbon */
+  .wax-modal-ribbon {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    background: rgba(44,36,32,0.72);
+    color: var(--gold-light);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 99px;
+    backdrop-filter: blur(6px);
+  }
+
+  /* Close button */
+  .wax-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: rgba(44,36,32,0.65);
+    border: none;
+    color: #fff;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .wax-modal-close:hover { background: rgba(44,36,32,0.9); }
+  .wax-modal-close svg { width: 14px; height: 14px; }
+
+  /* Body */
+  .wax-modal-body {
+    padding: 24px 28px 28px;
+  }
+  .wax-modal-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--charcoal);
+    margin-bottom: 4px;
+  }
+  .wax-modal-city {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--gold-dark);
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .wax-modal-city svg { width: 12px; height: 12px; flex-shrink: 0; }
+  .wax-modal-divider {
+    height: 1px;
+    background: var(--gold-light);
+    margin-bottom: 14px;
+  }
+  .wax-modal-bio {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.75;
+    margin-bottom: 22px;
+  }
+  .wax-modal-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: var(--charcoal);
+    color: var(--cream);
+    font-family: nunito;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.18s ease, transform 0.12s ease;
+  }
+  .wax-modal-btn:hover {
+    background: var(--gold-dark);
+    transform: translateY(-1px);
+  }
+
+  /* No-educator modal state */
+  .wax-modal-empty {
+    padding: 40px 28px;
+    text-align: center;
+  }
+  .wax-modal-empty-icon {
+    font-size: 36px;
+    margin-bottom: 14px;
+  }
+  .wax-modal-empty h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .wax-modal-empty p {
+    font-size: 14px;
+    color: var(--charcoal);
+    line-height: 1.7;
+  }
+
+  /* ── Intro section ── */
+  .wax-intro {
+    max-width: 980px;
+    margin: 0 auto 48px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .wax-intro-text h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    color: var(--charcoal);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .wax-intro-text h2 em {
+    font-style: italic;
+    color: var(--gold-dark);
+  }
+  .wax-intro-text p {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
+  .wax-intro-text p:last-child { margin-bottom: 0; }
+  .wax-intro-image {
+    border-radius: 4px;
+    overflow: hidden;
+    aspect-ratio: 10/9;
+    background: var(--gold-light);
+  }
+  .wax-intro-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .wax-intro-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--gold-light), var(--blush-light));
+    color: var(--gold-dark);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.6;
+  }
+
+  /* ── State dropdown ── */
+  .wax-dropdown-wrap {
+    max-width: 980px;
+    margin: 32px auto 0;
+    padding: 0 20px;
+  }
+  .wax-dropdown-card {
+    background: var(--warm-white);
+    border: 1px solid var(--gold-light);
+    border-radius: 4px;
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .wax-dropdown-label {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .wax-dropdown-select {
+    flex: 1;
+    min-width: 200px;
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--warm-white2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239B7A3E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+    border: 1px solid var(--gold-light);
+    border-radius: 4px;
+    padding: 12px 40px 12px 16px;
+    font-family: nunito;
+    font-size: 14px;
+    color: var(--charcoal);
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .wax-dropdown-select:focus {
+    outline: none;
+    border-color: var(--gold-dark);
+  }
+  .wax-dropdown-btn {
+    background: var(--charcoal);
+    color: var(--cream);
+    border: none;
+    border-radius: 4px;
+    padding: 12px 24px;
+    font-family: nunito;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.12s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .wax-dropdown-btn:hover {
+    background: var(--gold-dark);
+    transform: translateY(-1px);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 760px) {
+    .wax-intro {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .wax-intro-image { display: none; }
+  }
+  @media (max-width: 640px) {
+    .wax-counters { gap: 32px; }
+    .wax-counter-num { font-size: 32px; }
+    .wax-map-card { padding: 16px 10px 16px; }
+    .wax-modal { max-width: 100%; border-radius: 20px 20px 0 0; }
+    .wax-modal-overlay { align-items: flex-end; padding: 0; }
+    .wax-modal-overlay.wax-modal-open .wax-modal { transform: translateY(0) scale(1); }
+    .wax-modal { transform: translateY(100%); }
+    .wax-dropdown-card { padding: 20px; }
+    .wax-dropdown-select { min-width: 100%; }
+  }
+
+  .wax-dropdown-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 8px 20px 0;
+  }
+  .wax-dropdown-inner {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+  }
+  .wax-dropdown-inner::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--gold-dark);
+    pointer-events: none;
+  }
+  #wax-state-select {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--warm-white2);
+    border: 1.5px solid var(--gold);
+    border-radius: 4px;
+    padding: 13px 44px 13px 18px;
+    font-family: nunito;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--charcoal);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+  }
+  #wax-state-select:focus {
+    border-color: var(--gold-dark);
+    box-shadow: 0 0 0 3px rgba(226,114,163,0.15);
+  }
+  #wax-state-select option[disabled] {
+    color: #aaa;
+  }
+
+   .wax-apply-wrap {
+    text-align: center;
+    padding: 40px 20px 20px;
+  }
+  .wax-apply-text {
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.75;
+  }
+  .wax-apply-link {
+    font-weight: 500;
+    color: var(--gold-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s;
+  }
+  .wax-apply-link:hover {
+    color: var(--charcoal);
+  }
+</style>
+
+<div class="wax-map-page">
+
+  <!-- HERO -->
+  <section class="wax-hero">
+    <h1 class="wax-title">50 Waxers in<br><em>50 States</em></h1>
+  </section>
+
+  <!-- INTRO SECTION: paragraph left, image right -->
+  <!-- 
+    TO CUSTOMISE:
+    - Replace the <p> text with your own copy.
+    - Replace the src="" on the <img> below with your Shopify CDN image URL,
+      e.g. src="{{ 'your-image.jpg' | asset_url }}"
+    - If you don't have an image yet, the placeholder box will show automatically.
+  -->
+  <section class="wax-intro">
+    <div class="wax-intro-text">
+      <h2>Spreading the art of waxing <em>coast to coast</em></h2>
+      <p>Looking to offer wax classes? We've got you covered. Our 50 Waxers in 50 States program is on a mission to plant a certified wax educator in every state across the country. Each educator is hand-selected, trained in our signature technique, and equipped with our professional product line to teach classes in their local community.</p>
+    <!-- COUNTERS -->
+  <div class="wax-counters">
+    <div class="wax-counter">
+      <div class="wax-counter-num" id="wax-filled">5/50</div>
+      <div class="wax-counter-label">Educators placed so far</div>
+    </div>
+    {% comment %}
+    <div class="wax-counter">
+      <div class="wax-counter-num">50</div>
+      <div class="wax-counter-label">States in program</div>
+    </div>
+    {% endcomment %}
+  </div>
+    </div>
+    <div class="wax-intro-image">
+      <!-- Replace src="" with your image URL -->
+      <img src="https://cdn.shopify.com/s/files/1/0347/0934/0300/files/bombshell_50_50_seal.png?v=1775249566" alt="Wax educator in class" id="wax-intro-img">
+      <div class="wax-intro-image-placeholder" id="wax-intro-placeholder">Your image here</div>
+    </div>
+
+    
+  </section>
+<div class="wax-apply-wrap">
+  <p class="wax-apply-text">
+    If you'd like to become an educator for your state, apply
+    <a class="wax-apply-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfcNuR8NCVqdo-3wZD4PuTUsR90-CWazq8ahe7Am6nGLcZ_xw/viewform?usp=sharing&ouid=107461442807732303611" target="_blank">here</a>.
+  </p>
+</div>
+  </div>
+

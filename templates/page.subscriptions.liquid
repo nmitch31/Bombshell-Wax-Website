@@ -1,0 +1,72 @@
+<section>
+  <div class="container">
+    <div class="pt-65 pb-30">
+      <div class="wrap-bread-crumb">
+        {% include 'breadcrumb' %}
+      </div>
+    </div>
+  </div>
+</section>
+<div class="sr-only">{{page.title}}</div>
+<section>
+  <div class="container">
+    <div class="mb-50">
+      <div class="maxus-titlebox">
+        <div class="text-center">
+          <h1 class="maxus-titlebox__title h1 font-300 fz-60 mb-5">{{page.title}}</h1>
+          <h2 class="maxus-titlebox__meta text-uppercase h5  "></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="container">
+<div id="subscription-section">
+  <h2>My Subscriptions</h2>
+  <div id="subscription-results">
+    <p>Loading subscription details...</p>
+  </div>
+</div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const customerId = "6320598843635"; // Static ID for now
+    const email = "jennies.molina@gmail.com"; // Static email
+
+    fetch("https://api.shop.paywhirl.com/2022-04/subscriptions", {
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer YOUR_API_KEY_HERE", // Replace with actual key
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      const subs = data.subscriptions || [];
+      const container = document.getElementById("subscription-results");
+      if (subs.length === 0) {
+        container.innerHTML = "<p>No subscriptions found.</p>";
+        return;
+      }
+
+      let html = "<ul>";
+      subs.forEach(sub => {
+        html += `<li>
+          <strong>Subscription ID:</strong> ${sub.id}<br/>
+          <strong>Status:</strong> ${sub.status}<br/>
+          <strong>Next Payment:</strong> ${sub.next_charge_scheduled_at || "N/A"}
+        </li>`;
+      });
+      html += "</ul>";
+
+      container.innerHTML = html;
+    })
+    .catch(error => {
+      console.error("Error fetching subscription data:", error);
+      document.getElementById("subscription-results").innerHTML = "<p>Error loading subscriptions.</p>";
+    });
+  });
+</script>
