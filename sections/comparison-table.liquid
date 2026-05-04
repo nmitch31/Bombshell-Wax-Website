@@ -1,0 +1,224 @@
+{% comment %}
+  Bulk Pricing Comparison Table – FIXED Liquid syntax
+{% endcomment %}
+
+<section class="bulk-comparison">
+  {% if section.settings.heading != blank %}
+    <h2 class="bulk-comparison__heading">{{ section.settings.heading }}</h2>
+  {% endif %}
+
+  <div>
+    <p>{{ section.settings.paragraph }}</p>
+    <p class="scroll-hint">Swipe to compare →</p>
+
+  </div>
+
+  <div class="bulk-comparison__table-wrapper">
+    <table class="bulk-comparison__table">
+      <thead>
+        <tr>
+          <th class="feature-col">{{ section.settings.features_heading }}</th>
+
+          {% for i in (1..6) %}
+            {% capture plan_label_key %}plan_{{ i }}_label{% endcapture %}
+            {% assign plan_label = section.settings[plan_label_key] %}
+            {% if plan_label != blank %}
+              <th class="plan-col">{{ plan_label }}</th>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for block in section.blocks %}
+          <tr>
+            <td class="feature-col">
+  {% if block.settings.feature_anchor != blank %}
+    <a href="{{ block.settings.feature_anchor }}" class="feature-link">
+      {{ block.settings.feature_name }}
+    </a>
+  {% else %}
+    {{ block.settings.feature_name }}
+  {% endif %}
+</td>
+
+
+            {% for i in (1..6) %}
+              {% capture plan_label_key %}plan_{{ i }}_label{% endcapture %}
+              {% assign plan_label = section.settings[plan_label_key] %}
+
+              {% if plan_label != blank %}
+                {% capture type_key %}plan_{{ i }}_type{% endcapture %}
+                {% capture text_key %}plan_{{ i }}_text{% endcapture %}
+
+                <td class="plan-col">
+                  {% case block.settings[type_key] %}
+                    {% when 'check' %}
+                      <span class="checkmark">✓</span>
+                    {% when 'text' %}
+                      {{ block.settings[text_key] }}
+                    {% else %}
+                      <!-- blank -->
+                  {% endcase %}
+                </td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<style>
+  .bulk-comparison{
+padding-left: 30px;
+padding-right: 30px;}
+
+.bulk-comparison__heading{
+text-align: center;}
+
+  .bulk-comparison__table-wrapper {
+    overflow-x: auto;
+  }
+
+  .bulk-comparison__table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+  }
+
+  .bulk-comparison__table th,
+  .bulk-comparison__table td {
+    border: 1px solid rgb(177, 178, 178);
+    padding: 12px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .bulk-comparison__table th {
+    font-weight: 600;
+    background:rgba(226, 114, 163, 0.15);
+  }
+
+  .feature-col {
+    text-align: left;
+    min-width: 220px;
+  }
+
+  .checkmark {
+    font-size: 18px;
+    font-weight: 600;
+    color: #e272a3;
+  }
+
+  .scroll-hint {
+  font-size: 12px;
+  text-align: right;
+  color: #777;
+  margin-bottom: 8px;
+}
+
+@media (min-width: 769px) {
+  .scroll-hint {
+    display: none;
+  }
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+.feature-link {
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.feature-link:hover {
+  opacity: 0.75;
+}
+
+</style>
+
+{% schema %}
+{
+  "name": "Bulk Pricing Comparison",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Table heading", "default": "Bulk Pricing Comparison" },
+    { "type": "textarea", "id": "paragraph", "label": "Heading Paragraph", "default": "blah blah blah" },
+    { "type": "text", "id": "features_heading", "label": "Features column heading", "default": "Features" },
+
+    { "type": "header", "content": "Plan Columns" },
+    { "type": "text", "id": "plan_1_label", "label": "Plan 1 label" },
+    { "type": "text", "id": "plan_2_label", "label": "Plan 2 label" },
+    { "type": "text", "id": "plan_3_label", "label": "Plan 3 label" },
+    { "type": "text", "id": "plan_4_label", "label": "Plan 4 label" },
+    { "type": "text", "id": "plan_5_label", "label": "Plan 5 label" },
+    { "type": "text", "id": "plan_6_label", "label": "Plan 6 label" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Row",
+      "settings": [
+        { "type": "textarea", "id": "feature_name", "label": "Feature name" },
+
+        {
+          "type": "text",
+          "id": "feature_anchor",
+          "label": "FAQ anchor or URL",
+          "info": "Example: #bulk-pricing or /pages/faq#bulk-pricing"
+        },
+
+        { "type": "select", "id": "plan_1_type", "label": "Plan 1 value type", "options": [
+          { "value": "blank", "label": "Blank" },
+          { "value": "check", "label": "Checkmark" },
+          { "value": "text", "label": "Text" }
+        ], "default": "blank" },
+        { "type": "textarea", "id": "plan_1_text", "label": "Plan 1 text value" },
+
+        { "type": "select", "id": "plan_2_type", "label": "Plan 2 value type", "options": [
+          { "value": "blank", "label": "Blank" },
+          { "value": "check", "label": "Checkmark" },
+          { "value": "text", "label": "Text" }
+        ], "default": "blank" },
+        { "type": "textarea", "id": "plan_2_text", "label": "Plan 2 text value" },
+
+        { "type": "select", "id": "plan_3_type", "label": "Plan 3 value type", "options": [
+          { "value": "blank", "label": "Blank" },
+          { "value": "check", "label": "Checkmark" },
+          { "value": "text", "label": "Text" }
+        ], "default": "blank" },
+        { "type": "textarea", "id": "plan_3_text", "label": "Plan 3 text value" },
+
+        { "type": "select", "id": "plan_4_type", "label": "Plan 4 value type", "options": [
+          { "value": "blank", "label": "Blank" },
+          { "value": "check", "label": "Checkmark" },
+          { "value": "text", "label": "Text" }
+        ], "default": "blank" },
+        { "type": "textarea", "id": "plan_4_text", "label": "Plan 4 text value" },
+
+        { "type": "select", "id": "plan_5_type", "label": "Plan 5 value type", "options": [
+          { "value": "blank", "label": "Blank" },
+          { "value": "check", "label": "Checkmark" },
+          { "value": "text", "label": "Text" }
+        ], "default": "blank" },
+        { "type": "textarea", "id": "plan_5_text", "label": "Plan 5 text value" },
+
+        { "type": "select", "id": "plan_6_type", "label": "Plan 6 value type", "options": [
+          { "value": "blank", "label": "Blank" },
+          { "value": "check", "label": "Checkmark" },
+          { "value": "text", "label": "Text" }
+        ], "default": "blank" },
+        { "type": "textarea", "id": "plan_6_text", "label": "Plan 6 text value" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Bulk Pricing Comparison Table" }
+  ]
+}
+{% endschema %}
+

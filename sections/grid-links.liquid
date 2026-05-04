@@ -1,0 +1,377 @@
+<section id="flex-grid-{{ section.id }}" class="flex-grid-section">
+  <div 
+    class="flex-grid-wrapper"
+    style="
+      --cols-desktop: {{ section.settings.columns_desktop }};
+      --rows-desktop: {{ section.settings.rows_desktop }};
+      --cols-mobile: {{ section.settings.columns_mobile }};
+      --rows-mobile: {{ section.settings.rows_mobile }};
+      --gap-desktop: {{ section.settings.grid_gap_desktop }}px;
+      --gap-mobile: {{ section.settings.grid_gap_mobile }}px;
+      --cell-pad-desktop: {{ section.settings.cell_padding_desktop }}px;
+      --cell-pad-mobile: {{ section.settings.cell_padding_mobile }}px;
+      --icon-gap-desktop: {{ section.settings.icon_gap_desktop }}px;
+      --icon-gap-mobile: {{ section.settings.icon_gap_mobile }}px;
+      --main-link-margin: {{ section.settings.main_link_margin }}px;
+    "
+  >
+    {% for block in section.blocks %}
+      <div class="grid-cell">
+        
+        {%- if block.settings.main_link_text != blank and block.settings.main_link_url != blank -%}
+          <a 
+            href="{{ block.settings.main_link_url }}" 
+            class="main-link {% if block.settings.main_link_as_button %}button-style{% endif %}"
+          >
+            {{ block.settings.main_link_text }}
+          </a>
+        {%- endif -%}
+
+        {% if block.settings.icon_count > 0 %}
+          <div class="icon-row">
+            {% for i in (1..block.settings.icon_count) %}
+              {% assign icon_svg_key = "icon_svg_" | append: i %}
+              {% assign icon_url_key = "icon_url_" | append: i %}
+
+              {% assign icon_svg = block.settings[icon_svg_key] %}
+              {% assign icon_url = block.settings[icon_url_key] %}
+
+              {% if icon_svg != blank and icon_url != blank %}
+                <a href="{{ icon_url }}" class="icon-link">
+                  {{ icon_svg }}
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  #flex-grid-{{ section.id }} .flex-grid-wrapper {
+  display: grid;
+  gap: var(--gap-desktop);
+  grid-template-columns: repeat(var(--cols-desktop), max-content);
+  grid-template-rows: repeat(var(--rows-desktop), auto);
+  justify-content: center;
+    }
+
+
+  #flex-grid-{{ section.id }} .grid-cell {
+    text-align: center;
+    padding: var(--cell-pad-desktop);
+  }
+
+  #flex-grid-{{ section.id }} .main-link {
+    display: inline-block;
+    margin-bottom: var(--main-link-margin);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  #flex-grid-{{ section.id }} .button-style {
+    padding: 10px 18px;
+    border-radius: 6px;
+    background: {{ section.settings.button_bg }};
+    color: {{ section.settings.button_text }};
+  }
+
+  #flex-grid-{{ section.id }} .icon-row {
+    display: flex;
+    justify-content: center;
+    gap: var(--icon-gap-desktop);
+  }
+
+  #flex-grid-{{ section.id }} .icon-link svg {
+    width: {{ section.settings.icon_size_desktop }}px;
+    height: {{ section.settings.icon_size_desktop }}px;
+  }
+
+  @media (max-width: 768px) {
+  #flex-grid-{{ section.id }} .flex-grid-wrapper {
+    gap: var(--gap-mobile);
+    grid-template-columns: repeat(var(--cols-mobile), max-content);
+    grid-template-rows: repeat(var(--rows-mobile), auto);
+    justify-content: center;
+  }
+
+    #flex-grid-{{ section.id }} .grid-cell {
+      padding: var(--cell-pad-mobile);
+    }
+
+    #flex-grid-{{ section.id }} .icon-row {
+      gap: var(--icon-gap-mobile);
+    }
+
+    #flex-grid-{{ section.id }} .icon-link svg {
+      width: {{ section.settings.icon_size_mobile }}px;
+      height: {{ section.settings.icon_size_mobile }}px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Flexible Grid Link + Icon",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Grid Layout Controls"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (Desktop)",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "rows_desktop",
+      "label": "Rows (Desktop)",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "label": "Columns (Mobile)",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "rows_mobile",
+      "label": "Rows (Mobile)",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    },
+
+    {
+      "type": "header",
+      "content": "Spacing Controls"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_desktop",
+      "label": "Grid Gap (Desktop)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_mobile",
+      "label": "Grid Gap (Mobile)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_desktop",
+      "label": "Cell Padding (Desktop)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_mobile",
+      "label": "Cell Padding (Mobile)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "icon_gap_desktop",
+      "label": "Icon Spacing (Desktop)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "icon_gap_mobile",
+      "label": "Icon Spacing (Mobile)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "main_link_margin",
+      "label": "Main Link Bottom Margin",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 10
+    },
+
+    {
+      "type": "header",
+      "content": "Button Styling"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+
+    {
+      "type": "header",
+      "content": "Icon Sizes"
+    },
+    {
+      "type": "range",
+      "id": "icon_size_desktop",
+      "label": "Icon Size (Desktop)",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "label": "Icon Size (Mobile)",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "default": 24
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "grid_item",
+      "name": "Grid Cell",
+      "settings": [
+        {
+          "type": "text",
+          "id": "main_link_text",
+          "label": "Main Link Text"
+        },
+        {
+          "type": "url",
+          "id": "main_link_url",
+          "label": "Main Link URL"
+        },
+        {
+          "type": "checkbox",
+          "id": "main_link_as_button",
+          "label": "Style as Button",
+          "default": false
+        },
+
+        {
+          "type": "range",
+          "id": "icon_count",
+          "label": "Number of Icons",
+          "min": 0,
+          "max": 6,
+          "default": 0
+        },
+
+        {
+          "type": "header",
+          "content": "Icons (SVG + Link)"
+        },
+
+        {
+          "type": "textarea",
+          "id": "icon_svg_1",
+          "label": "Icon 1 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_1",
+          "label": "Icon 1 Link"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg_2",
+          "label": "Icon 2 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_2",
+          "label": "Icon 2 Link"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg_3",
+          "label": "Icon 3 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_3",
+          "label": "Icon 3 Link"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg_4",
+          "label": "Icon 4 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_4",
+          "label": "Icon 4 Link"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg_5",
+          "label": "Icon 5 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_5",
+          "label": "Icon 5 Link"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg_6",
+          "label": "Icon 6 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_6",
+          "label": "Icon 6 Link"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Flexible Grid Link + Icon",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

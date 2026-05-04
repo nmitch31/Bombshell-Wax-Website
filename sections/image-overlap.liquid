@@ -1,0 +1,330 @@
+{% schema %}
+{
+  "name": "Four Column Banner",
+  "settings": [
+    {
+      "type": "color",
+      "id": "col_1",
+      "label": "Column 1 Color",
+      "default": "#f9d8d8"
+    },
+    {
+      "type": "color",
+      "id": "col_2",
+      "label": "Column 2 Color",
+      "default": "#fce0c8"
+    },
+    {
+      "type": "color",
+      "id": "col_3",
+      "label": "Column 3 Color",
+      "default": "#d7f0e3"
+    },
+    {
+      "type": "color",
+      "id": "col_4",
+      "label": "Column 4 Color",
+      "default": "#d8e7ff"
+    },
+    {
+      "type": "image_picker",
+      "id": "pattern_1",
+      "label": "Column 1 Pattern Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "pattern_2",
+      "label": "Column 2 Pattern Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "pattern_3",
+      "label": "Column 3 Pattern Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "pattern_4",
+      "label": "Column 4 Pattern Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading Text",
+      "default": "Your Banner Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Banner Text",
+      "default": "Add your banner description here."
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Font Size (px)",
+      "min": 16,
+      "max": 72,
+      "step": 1,
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text Font Size (px)",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "image_picker",
+      "id": "top_image",
+      "label": "Top Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bottom_image",
+      "label": "Bottom Image"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Overlap Controls"
+    },
+    {
+      "type": "range",
+      "id": "top_overlap_desktop",
+      "label": "Top Image Overlap (Desktop, %)",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "default": 33
+    },
+    {
+      "type": "range",
+      "id": "bottom_overlap_desktop",
+      "label": "Bottom Image Overlap (Desktop, %)",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "default": 33
+    },
+    {
+      "type": "header",
+      "content": "Mobile Overlap Controls"
+    },
+    {
+      "type": "range",
+      "id": "top_overlap_mobile",
+      "label": "Top Image Overlap (Mobile, %)",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "default": 33
+    },
+    {
+      "type": "range",
+      "id": "bottom_overlap_mobile",
+      "label": "Bottom Image Overlap (Mobile, %)",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "default": 33
+    }
+  ],
+  "presets": [
+    {
+      "name": "Four Column Banner with Patterned Columns"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="four-column-banner"
+  style="
+    --col1: {{ section.settings.col_1 }};
+    --col2: {{ section.settings.col_2 }};
+    --col3: {{ section.settings.col_3 }};
+    --col4: {{ section.settings.col_4 }};
+    --overlap-top-desktop: {{ section.settings.top_overlap_desktop }}%;
+    --overlap-bottom-desktop: {{ section.settings.bottom_overlap_desktop }}%;
+    --overlap-top-mobile: {{ section.settings.top_overlap_mobile }}%;
+    --overlap-bottom-mobile: {{ section.settings.bottom_overlap_mobile }}%;
+    --heading-color: {{ section.settings.heading_color }};
+    --text-color: {{ section.settings.text_color }};
+    --heading-size: {{ section.settings.heading_size }}px;
+    --text-size: {{ section.settings.text_size }}px;
+  ">
+  <div class="banner-bg" aria-hidden="true"></div>
+  <div class="pattern-layer">
+    {% if section.settings.pattern_1 %}
+      <div class="pattern pattern-1" style="background-image: url({{ section.settings.pattern_1 | img_url: '200x' }});"></div>
+    {% endif %}
+    {% if section.settings.pattern_2 %}
+      <div class="pattern pattern-2" style="background-image: url({{ section.settings.pattern_2 | img_url: '200x' }});"></div>
+    {% endif %}
+    {% if section.settings.pattern_3 %}
+      <div class="pattern pattern-3" style="background-image: url({{ section.settings.pattern_3 | img_url: '200x' }});"></div>
+    {% endif %}
+    {% if section.settings.pattern_4 %}
+      <div class="pattern pattern-4" style="background-image: url({{ section.settings.pattern_4 | img_url: '200x' }});"></div>
+    {% endif %}
+  </div>
+
+  <div class="banner-row">
+    <div class="img-wrapper top-wrapper">
+      {% if section.settings.top_image != blank %}
+        <img src="{{ section.settings.top_image | img_url: '1600x' }}" alt="" class="top-img" />
+      {% endif %}
+    </div>
+
+    <div class="banner-text">
+      <div class="text-inner">
+        <h2>{{ section.settings.heading }}</h2>
+        <div class="copy">{{ section.settings.text }}</div>
+      </div>
+    </div>
+
+    <div class="img-wrapper bottom-wrapper">
+      {% if section.settings.bottom_image != blank %}
+        <img src="{{ section.settings.bottom_image | img_url: '1600x' }}" alt="" class="bottom-img" />
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+.four-column-banner {
+  position: relative;
+  overflow: visible;
+  padding: 3rem 1.5rem;
+}
+
+.banner-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    to right,
+    var(--col1) 0%, var(--col1) 25%,
+    var(--col2) 25%, var(--col2) 50%,
+    var(--col3) 50%, var(--col3) 75%,
+    var(--col4) 75%, var(--col4) 100%
+  );
+}
+
+/* Pattern Layer */
+.pattern-layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pattern-layer .pattern {
+  background-repeat: repeat-y;
+  background-position: center;
+  background-size: 85px auto;
+  opacity: 1;
+}
+
+/* Content Layer */
+.banner-row {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.banner-text {
+  text-align: center;
+  width: 100%;
+}
+
+.text-inner {
+  color: var(--text-color);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.banner-text h2 {
+  color: var(--heading-color);
+  font-size: var(--heading-size);
+  margin-bottom: 1rem;
+}
+
+.copy {
+  font-size: var(--text-size);
+  line-height: 1.5;
+}
+
+.img-wrapper {
+  width: 100%;
+  position: relative;
+  text-align: center;
+}
+
+.img-wrapper img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+  .banner-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .banner-text {
+    flex: 0 0 50%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+  }
+  .text-inner {
+    max-width: 90%;
+  }
+  .img-wrapper {
+    position: absolute;
+    right: 0;
+    width: 40%;
+    max-width: 520px;
+  }
+  .top-wrapper {
+    top: 0;
+    transform: translateY(calc(-1 * var(--overlap-top-desktop)));
+  }
+  .bottom-wrapper {
+    bottom: 0;
+    transform: translateY(var(--overlap-bottom-desktop)));
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .top-wrapper {
+    transform: translateY(calc(-1 * var(--overlap-top-mobile)));
+  }
+  .bottom-wrapper {
+    transform: translateY(var(--overlap-bottom-mobile)));
+  }
+}
+</style>

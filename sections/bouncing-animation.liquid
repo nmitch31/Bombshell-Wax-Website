@@ -1,0 +1,1712 @@
+{% comment %}
+  Section: Bouncing Product Animation
+  - Traveller (serum vial) bounces CENTRED over each base image
+  - Desktop: 4 bases — 3 wax bags + wax warmer (cash target)
+  - Mobile (<=600px): 3 bases — 2 wax bags + warmer. 4th bag hidden.
+  - On warmer: vial shrinks + fades in, cash/coins/bills explode out
+  - Auto-plays on loop when section is 25% in view
+{% endcomment %}
+
+<div id="{{ section.id }}" class="bounce-section" data-section-id="{{ section.id }}">
+
+  <div class="bounce-stage" aria-hidden="true">
+
+    <div class="bounce-bases">
+      {% assign base_count = 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == "base_image" and base_count < 4 %}
+          {% assign base_num = base_count | plus: 1 %}
+          <div class="bounce-base bounce-base--{{ base_num }}" {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}
+              <img
+                src="{{ block.settings.image | image_url: width: 400 }}"
+                alt="{{ block.settings.image_alt | escape }}"
+                width="400" height="auto" loading="lazy"
+                class="bounce-base__img{% if base_num == 4 %} bounce-base__img--target{% endif %}"
+              >
+            {% else %}
+              <div class="bounce-base__placeholder">
+                {{ 'product-1' | placeholder_svg_tag: 'bounce-base__svg' }}
+              </div>
+            {% endif %}
+
+            {% if base_num == 4 %}
+              <div class="cash-explosion" id="{{ section.id }}-cash">
+                <span class="cash-item cash-bill cash-bill--1" aria-hidden="true"><svg viewBox="0 0 56 32" xmlns="http://www.w3.org/2000/svg"><rect width="56" height="32" rx="4" fill="#4CAF50"/><rect x="4" y="4" width="48" height="24" rx="2" fill="#388E3C"/><circle cx="28" cy="16" r="7" fill="#4CAF50" stroke="#81C784" stroke-width="1.5"/><text x="28" y="20.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff" font-family="sans-serif">$</text><rect x="2" y="13" width="7" height="6" rx="1" fill="#4CAF50" stroke="#81C784" stroke-width="1"/><rect x="47" y="13" width="7" height="6" rx="1" fill="#4CAF50" stroke="#81C784" stroke-width="1"/></svg></span>
+                <span class="cash-item cash-bill cash-bill--2" aria-hidden="true"><svg viewBox="0 0 56 32" xmlns="http://www.w3.org/2000/svg"><rect width="56" height="32" rx="4" fill="#4CAF50"/><rect x="4" y="4" width="48" height="24" rx="2" fill="#388E3C"/><circle cx="28" cy="16" r="7" fill="#4CAF50" stroke="#81C784" stroke-width="1.5"/><text x="28" y="20.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff" font-family="sans-serif">$</text><rect x="2" y="13" width="7" height="6" rx="1" fill="#4CAF50" stroke="#81C784" stroke-width="1"/><rect x="47" y="13" width="7" height="6" rx="1" fill="#4CAF50" stroke="#81C784" stroke-width="1"/></svg></span>
+                <span class="cash-item cash-bill cash-bill--3" aria-hidden="true"><svg viewBox="0 0 56 32" xmlns="http://www.w3.org/2000/svg"><rect width="56" height="32" rx="4" fill="#66BB6A"/><rect x="4" y="4" width="48" height="24" rx="2" fill="#43A047"/><circle cx="28" cy="16" r="7" fill="#66BB6A" stroke="#A5D6A7" stroke-width="1.5"/><text x="28" y="20.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff" font-family="sans-serif">$</text><rect x="2" y="13" width="7" height="6" rx="1" fill="#66BB6A" stroke="#A5D6A7" stroke-width="1"/><rect x="47" y="13" width="7" height="6" rx="1" fill="#66BB6A" stroke="#A5D6A7" stroke-width="1"/></svg></span>
+                <span class="cash-item cash-bill cash-bill--4" aria-hidden="true"><svg viewBox="0 0 56 32" xmlns="http://www.w3.org/2000/svg"><rect width="56" height="32" rx="4" fill="#388E3C"/><rect x="4" y="4" width="48" height="24" rx="2" fill="#2E7D32"/><circle cx="28" cy="16" r="7" fill="#388E3C" stroke="#81C784" stroke-width="1.5"/><text x="28" y="20.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff" font-family="sans-serif">$</text><rect x="2" y="13" width="7" height="6" rx="1" fill="#388E3C" stroke="#81C784" stroke-width="1"/><rect x="47" y="13" width="7" height="6" rx="1" fill="#388E3C" stroke="#81C784" stroke-width="1"/></svg></span>
+                <span class="cash-item cash-bill cash-bill--5" aria-hidden="true"><svg viewBox="0 0 56 32" xmlns="http://www.w3.org/2000/svg"><rect width="56" height="32" rx="4" fill="#4CAF50"/><rect x="4" y="4" width="48" height="24" rx="2" fill="#388E3C"/><circle cx="28" cy="16" r="7" fill="#4CAF50" stroke="#81C784" stroke-width="1.5"/><text x="28" y="20.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff" font-family="sans-serif">$</text><rect x="2" y="13" width="7" height="6" rx="1" fill="#4CAF50" stroke="#81C784" stroke-width="1"/><rect x="47" y="13" width="7" height="6" rx="1" fill="#4CAF50" stroke="#81C784" stroke-width="1"/></svg></span>
+                <span class="cash-item cash-coin cash-coin--1" aria-hidden="true"><svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="13" fill="#FDD835" stroke="#F9A825" stroke-width="1.5"/><circle cx="14" cy="14" r="9" fill="#FFEE58" stroke="#F9A825" stroke-width="1"/><text x="14" y="18.5" text-anchor="middle" font-size="10" font-weight="bold" fill="#F57F17" font-family="sans-serif">$</text></svg></span>
+                <span class="cash-item cash-coin cash-coin--2" aria-hidden="true"><svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="13" fill="#FDD835" stroke="#F9A825" stroke-width="1.5"/><circle cx="14" cy="14" r="9" fill="#FFEE58" stroke="#F9A825" stroke-width="1"/><text x="14" y="18.5" text-anchor="middle" font-size="10" font-weight="bold" fill="#F57F17" font-family="sans-serif">$</text></svg></span>
+                <span class="cash-item cash-coin cash-coin--3" aria-hidden="true"><svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="13" fill="#FFB300" stroke="#FF8F00" stroke-width="1.5"/><circle cx="14" cy="14" r="9" fill="#FFC107" stroke="#FF8F00" stroke-width="1"/><text x="14" y="18.5" text-anchor="middle" font-size="10" font-weight="bold" fill="#E65100" font-family="sans-serif">$</text></svg></span>
+                <span class="cash-item cash-coin cash-coin--4" aria-hidden="true"><svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="13" fill="#FDD835" stroke="#F9A825" stroke-width="1.5"/><circle cx="14" cy="14" r="9" fill="#FFEE58" stroke="#F9A825" stroke-width="1"/><text x="14" y="18.5" text-anchor="middle" font-size="10" font-weight="bold" fill="#F57F17" font-family="sans-serif">$</text></svg></span>
+                <span class="cash-item cash-sign cash-sign--1" aria-hidden="true">💵</span>
+                <span class="cash-item cash-sign cash-sign--2" aria-hidden="true">💰</span>
+                <span class="cash-item cash-sign cash-sign--3" aria-hidden="true">💵</span>
+              </div>
+              <div class="warmer-glow"></div>
+            {% endif %}
+          </div>
+          {% assign base_count = base_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {%- comment -%} Bouncing traveller (serum vial) {%- endcomment -%}
+    <div class="bounce-traveller" id="{{ section.id }}-traveller">
+      {% assign traveller_block = null %}
+      {% for block in section.blocks %}
+        {% if block.type == "traveller_image" %}{% assign traveller_block = block %}{% endif %}
+      {% endfor %}
+      {% if traveller_block != null and traveller_block.settings.image != blank %}
+        <img src="{{ traveller_block.settings.image | image_url: width: 400 }}" alt="{{ traveller_block.settings.image_alt | escape }}" width="400" height="auto" loading="lazy">
+      {% else %}
+        <div class="bounce-base__placeholder">{{ 'product-2' | placeholder_svg_tag: 'bounce-base__svg' }}</div>
+      {% endif %}
+    </div>
+
+    {%- comment -%} ── Star trigger — lives inside stage so position:absolute works ── {%- endcomment -%}
+    <div class="ng-star-wrap" id="{{ section.id }}-star">
+      <button class="ng-star-btn" id="{{ section.id }}-star-btn" aria-label="Play a quick game">
+        <svg class="ng-star-icon" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="19,3 23.5,14 36,15 27,23.5 29.5,36 19,29.5 8.5,36 11,23.5 2,15 14.5,14" fill="#f9c31a" stroke="#e6a800" stroke-width="1.2" stroke-linejoin="round"/>
+        </svg>
+        <span class="ng-star-tooltip">Play a quick game</span>
+      </button>
+    </div>
+
+  </div>
+
+
+  {%- comment -%} ── Game overlay ── {%- endcomment -%}
+  <div class="ng-overlay" id="{{ section.id }}-overlay">
+    <div class="ng-modal">
+      <div class="ng-modal-header">
+        <p class="ng-modal-title">The BioSkin Peel Protocol game - apply your peel</p>
+        <button class="ng-close-btn" id="{{ section.id }}-close" aria-label="Close">&#215;</button>
+      </div>
+
+      <div id="{{ section.id }}-game-panel">
+        <p class="ng-drop-instruction" id="{{ section.id }}-drop-instruction">Place drops of serum by clicking every spot</p>
+        <div class="ng-game-area" id="{{ section.id }}-game-area">
+          <img src="{{ section.settings.game_bg_image | image_url: width: 800 }}" alt="Treatment area" draggable="false">
+          {%- comment -%} Start overlay sits on top of the image {%- endcomment -%}
+          <div class="ng-start-overlay" id="{{ section.id }}-start-screen">
+            <div class="ng-start-content" id="{{ section.id }}-start-content">
+              <div class="ng-start-icon">&#128137;</div>
+              <h2 class="ng-start-title">{{ section.settings.game_start_title }}</h2>
+              <p class="ng-start-sub">{{ section.settings.game_start_sub }}</p>
+              <button class="ng-start-btn" id="{{ section.id }}-start-btn">{{ section.settings.game_start_cta }}</button>
+            </div>
+          </div>
+        </div>
+        <div class="ng-hud">
+          <span class="ng-progress-text" id="{{ section.id }}-prog-text">0 / 0</span>
+          <div class="ng-progress-bar-wrap">
+            <div class="ng-progress-bar" id="{{ section.id }}-prog-bar"></div>
+          </div>
+          {% comment %}
+          <button class="ng-fill-btn" id="{{ section.id }}-fill-btn" title="Testing shortcut">Fill all</button>
+          {% endcomment %}
+        </div>
+      </div>
+
+      <div class="ng-rub-panel" id="{{ section.id }}-rub-panel">
+        <p class="ng-rub-instruction">Now rub the serum in — click and drag across the skin</p>
+        <div class="ng-rub-area" id="{{ section.id }}-rub-area">
+          <img src="{{ section.settings.game_bg_image | image_url: width: 800 }}" alt="Rub serum in" draggable="false">
+          <canvas class="ng-rub-canvas" id="{{ section.id }}-rub-canvas"></canvas>
+        </div>
+        <div class="ng-rub-hud">
+          <span class="ng-rub-label">Coverage</span>
+          <div class="ng-rub-bar-wrap">
+            <div class="ng-rub-bar" id="{{ section.id }}-rub-bar"></div>
+          </div>
+          <span class="ng-rub-label" id="{{ section.id }}-rub-pct">0%</span>
+        </div>
+      </div>
+      <div class="ng-win-screen" id="{{ section.id }}-win">
+        <div class="ng-win-emoji">&#127881;</div>
+        <p class="ng-win-title">{{ section.settings.win_title }}</p>
+        <p class="ng-win-sub">{{ section.settings.win_message }}</p>
+        <div class="ng-code-box">
+          <p class="ng-code-label">Your discount code</p>
+          <p class="ng-code-value">{{ section.settings.discount_code }}</p>
+          <p class="ng-code-label">For $25 off BioRePeelCl3® or BioRePeelCl3® System Kit.</p>
+        </div>
+        <p class="ng-win-note">{{ section.settings.win_note }}</p>
+        <div style="display:flex;gap:10px;justify-content:center;">
+         <button class="ng-play-again" id="{{ section.id }}-play-again">Play again</button>
+         <a class="ng-play-again" href="/collections/bioskin">Shop Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bounce-content">
+    {% if section.settings.eyebrow != blank %}<p class="bounce-content__eyebrow">{{ section.settings.eyebrow }}</p>{% endif %}
+    {% if section.settings.heading != blank %}<h2 class="bounce-content__heading">{{ section.settings.heading }}</h2>{% endif %}
+    {% if section.settings.subtext != blank %}<p class="bounce-content__sub">{{ section.settings.subtext }}</p>{% endif %}
+    {% if section.settings.cta_label != blank and section.settings.cta_link != blank %}
+      <a class="bounce-content__cta" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }}</a>
+    {% endif %}
+  </div>
+
+</div>
+
+<style>
+#{{ section.id }}.bounce-section *,
+#{{ section.id }}.bounce-section *::before,
+#{{ section.id }}.bounce-section *::after { box-sizing: border-box; }
+
+#{{ section.id }}.bounce-section {
+  --bounce-bg:       {{ section.settings.bg_color }};
+  --bounce-accent:   {{ section.settings.accent_color }};
+  --bounce-text:     {{ section.settings.text_color }};
+  --bounce-cta-bg:   {{ section.settings.cta_bg_color }};
+  --bounce-cta-text: {{ section.settings.cta_text_color }};
+  background-color: var(--bounce-bg);
+  padding: {{ section.settings.padding_top | default: 60 }}px 20px {{ section.settings.padding_bottom | default: 60 }}px;
+  overflow: visible;
+  font-family: inherit;
+}
+
+.bounce-stage {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 48px;
+  min-height: 240px;
+  overflow: visible;
+}
+
+.bounce-bases {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 0 4%;
+}
+
+.bounce-base {
+  position: relative;
+  flex: 1 1 0;
+  max-width: 22%;
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+}
+
+.bounce-base__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.warmer-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 18px;
+  background: radial-gradient(ellipse at center, rgba(255,215,0,0.22) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.bounce-base--4.is-absorbing .warmer-glow { opacity: 1; }
+
+.bounce-base__placeholder {
+  width: 100%;
+  aspect-ratio: 1 / 2;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bounce-base__svg { width: 60%; height: auto; opacity: 0.4; }
+
+/* ── Cash explosion ── */
+.cash-explosion {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 30;
+  overflow: visible;
+}
+
+.cash-item {
+  position: absolute;
+  display: block;
+  opacity: 0;
+  transform-origin: center center;
+  animation: none;
+}
+
+.cash-bill { width: clamp(34px, 6.5vw, 54px); height: auto; }
+.cash-coin { width: clamp(16px, 3vw, 26px); height: auto; }
+.cash-sign { font-size: clamp(14px, 2.8vw, 24px); line-height: 1; }
+
+@keyframes cash-fly-bill1  { 0%{opacity:0;transform:translate(0,0) rotate(-10deg) scale(0.3)} 12%{opacity:1} 65%{opacity:1;transform:translate(-120px,-145px) rotate(-38deg) scale(1.1)} 100%{opacity:0;transform:translate(-140px,-95px) rotate(-55deg) scale(0.85)} }
+@keyframes cash-fly-bill2  { 0%{opacity:0;transform:translate(0,0) rotate(8deg) scale(0.3)} 12%{opacity:1} 65%{opacity:1;transform:translate(90px,-155px) rotate(28deg) scale(1.1)} 100%{opacity:0;transform:translate(110px,-105px) rotate(44deg) scale(0.85)} }
+@keyframes cash-fly-bill3  { 0%{opacity:0;transform:translate(0,0) rotate(-22deg) scale(0.3)} 12%{opacity:1} 65%{opacity:1;transform:translate(-170px,-65px) rotate(-48deg) scale(1.0)} 100%{opacity:0;transform:translate(-190px,-18px) rotate(-64deg) scale(0.8)} }
+@keyframes cash-fly-bill4  { 0%{opacity:0;transform:translate(0,0) rotate(16deg) scale(0.3)} 12%{opacity:1} 65%{opacity:1;transform:translate(150px,-95px) rotate(42deg) scale(1.0)} 100%{opacity:0;transform:translate(170px,-42px) rotate(58deg) scale(0.8)} }
+@keyframes cash-fly-bill5  { 0%{opacity:0;transform:translate(0,0) rotate(-4deg) scale(0.25)} 12%{opacity:1} 65%{opacity:1;transform:translate(-28px,-178px) rotate(-22deg) scale(1.15)} 100%{opacity:0;transform:translate(-18px,-125px) rotate(-34deg) scale(0.92)} }
+@keyframes cash-fly-coin1  { 0%{opacity:0;transform:translate(0,0) scale(0.25) rotate(0deg)} 18%{opacity:1} 60%{opacity:1;transform:translate(-95px,-118px) scale(1.2) rotate(200deg)} 100%{opacity:0;transform:translate(-115px,-66px) scale(0.9) rotate(380deg)} }
+@keyframes cash-fly-coin2  { 0%{opacity:0;transform:translate(0,0) scale(0.25) rotate(0deg)} 18%{opacity:1} 60%{opacity:1;transform:translate(78px,-128px) scale(1.2) rotate(-215deg)} 100%{opacity:0;transform:translate(98px,-76px) scale(0.9) rotate(-415deg)} }
+@keyframes cash-fly-coin3  { 0%{opacity:0;transform:translate(0,0) scale(0.25) rotate(0deg)} 18%{opacity:1} 60%{opacity:1;transform:translate(128px,-55px) scale(1.1) rotate(235deg)} 100%{opacity:0;transform:translate(148px,-8px) scale(0.8) rotate(460deg)} }
+@keyframes cash-fly-coin4  { 0%{opacity:0;transform:translate(0,0) scale(0.25) rotate(0deg)} 18%{opacity:1} 60%{opacity:1;transform:translate(-128px,-44px) scale(1.1) rotate(-255deg)} 100%{opacity:0;transform:translate(-148px,4px) scale(0.8) rotate(-500deg)} }
+@keyframes cash-fly-sign1  { 0%{opacity:0;transform:translate(0,0) scale(0.2)} 18%{opacity:1} 62%{opacity:1;transform:translate(55px,-168px) scale(1.35)} 100%{opacity:0;transform:translate(65px,-116px) scale(1.1)} }
+@keyframes cash-fly-sign2  { 0%{opacity:0;transform:translate(0,0) scale(0.2)} 18%{opacity:1} 62%{opacity:1;transform:translate(-65px,-148px) scale(1.45)} 100%{opacity:0;transform:translate(-76px,-96px) scale(1.1)} }
+@keyframes cash-fly-sign3  { 0%{opacity:0;transform:translate(0,0) scale(0.2)} 18%{opacity:1} 62%{opacity:1;transform:translate(168px,-115px) scale(1.2)} 100%{opacity:0;transform:translate(188px,-62px) scale(0.95)} }
+
+.bounce-base--4.is-absorbing .cash-bill--1 { animation: cash-fly-bill1 1.15s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 120ms; }
+.bounce-base--4.is-absorbing .cash-bill--2 { animation: cash-fly-bill2 1.20s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay:  55ms; }
+.bounce-base--4.is-absorbing .cash-bill--3 { animation: cash-fly-bill3 1.05s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 205ms; }
+.bounce-base--4.is-absorbing .cash-bill--4 { animation: cash-fly-bill4 1.18s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay:   0ms; }
+.bounce-base--4.is-absorbing .cash-bill--5 { animation: cash-fly-bill5 1.08s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 155ms; }
+.bounce-base--4.is-absorbing .cash-coin--1 { animation: cash-fly-coin1 0.98s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay:  82ms; }
+.bounce-base--4.is-absorbing .cash-coin--2 { animation: cash-fly-coin2 1.02s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay:  28ms; }
+.bounce-base--4.is-absorbing .cash-coin--3 { animation: cash-fly-coin3 0.92s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 182ms; }
+.bounce-base--4.is-absorbing .cash-coin--4 { animation: cash-fly-coin4 1.08s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 102ms; }
+.bounce-base--4.is-absorbing .cash-sign--1 { animation: cash-fly-sign1 1.12s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay:  48ms; }
+.bounce-base--4.is-absorbing .cash-sign--2 { animation: cash-fly-sign2 1.02s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 132ms; }
+.bounce-base--4.is-absorbing .cash-sign--3 { animation: cash-fly-sign3 0.97s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 225ms; }
+
+/* Also allow mobile 3rd base to trigger cash (it's the warmer on mobile) */
+.bounce-base--3.is-absorbing .warmer-glow { opacity: 1; }
+.bounce-base--3.is-absorbing .cash-bill--1 { animation: cash-fly-bill1 1.15s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 120ms; }
+.bounce-base--3.is-absorbing .cash-bill--2 { animation: cash-fly-bill2 1.20s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay:  55ms; }
+.bounce-base--3.is-absorbing .cash-bill--3 { animation: cash-fly-bill3 1.05s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 205ms; }
+.bounce-base--3.is-absorbing .cash-bill--4 { animation: cash-fly-bill4 1.18s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay:   0ms; }
+.bounce-base--3.is-absorbing .cash-bill--5 { animation: cash-fly-bill5 1.08s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 155ms; }
+.bounce-base--3.is-absorbing .cash-coin--1 { animation: cash-fly-coin1 0.98s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay:  82ms; }
+.bounce-base--3.is-absorbing .cash-coin--2 { animation: cash-fly-coin2 1.02s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay:  28ms; }
+.bounce-base--3.is-absorbing .cash-coin--3 { animation: cash-fly-coin3 0.92s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 182ms; }
+.bounce-base--3.is-absorbing .cash-coin--4 { animation: cash-fly-coin4 1.08s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 102ms; }
+.bounce-base--3.is-absorbing .cash-sign--1 { animation: cash-fly-sign1 1.12s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay:  48ms; }
+.bounce-base--3.is-absorbing .cash-sign--2 { animation: cash-fly-sign2 1.02s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 132ms; }
+.bounce-base--3.is-absorbing .cash-sign--3 { animation: cash-fly-sign3 0.97s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: 225ms; }
+
+/* ── Traveller ── */
+.bounce-traveller {
+  position: absolute;
+  width: 22%;
+  max-width: 22%;
+  top: 0; left: 4%;
+  pointer-events: none;
+  will-change: transform, opacity;
+  z-index: 10;
+  transform-origin: center bottom;
+}
+.bounce-traveller img,
+.bounce-traveller .bounce-base__placeholder {
+  width: 100%; height: auto; border-radius: 12px; display: block;
+}
+
+/* ── Text ── */
+.bounce-content { text-align: center; max-width: 740px; margin: 0 auto; padding: 0 16px; }
+.bounce-content__eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bounce-accent); margin: 0 0 12px; }
+.bounce-content__heading { font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 800; line-height: 1.15; color: var(--bounce-text); margin: 0 0 16px; }
+.bounce-content__sub { font-size: clamp(0.95rem, 2vw, 1.1rem); line-height: 1.65; color: var(--bounce-text); opacity: 0.75; margin: 0 0 28px; }
+.bounce-content__cta { display: inline-block; background: var(--bounce-cta-bg); color: var(--bounce-cta-text); padding: 14px 36px; border-radius: 100px; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.04em; text-decoration: none; transition: opacity 0.2s ease, transform 0.2s ease; }
+.bounce-content__cta:hover { opacity: 0.88; transform: translateY(-2px); color: var(--bounce-cta-text); }
+
+
+/* ── Star button ── */
+.ng-star-wrap {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  transform: translate(-50%, calc(-100% - 10px));
+}
+.ng-star-wrap.ng-star-visible {
+  opacity: 1;
+  pointer-events: all;
+}
+.ng-star-btn {
+  position: relative;
+  background: none;
+  border: none;
+  /* Larger tap target on mobile */
+  padding: 12px;
+  cursor: pointer;
+  width: 62px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.ng-star-icon {
+  width: 38px;
+  height: 38px;
+  filter: drop-shadow(0 0 5px rgba(249,195,26,0.7));
+  animation: ng-star-pulse 1.8s ease-in-out infinite;
+}
+@keyframes ng-star-pulse {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.2); }
+}
+.ng-star-btn:hover .ng-star-icon {
+  animation-play-state: paused;
+}
+.ng-star-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  color: #111;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+/* ── Game overlay ── */
+.ng-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  touch-action: manipulation;
+}
+.ng-overlay.ng-open {
+  display: flex;
+  opacity: 1;
+  pointer-events: all;
+  animation: ng-overlay-in 0.25s ease forwards;
+}
+@keyframes ng-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.ng-modal {
+  position: relative;
+  width: min(94vw, 560px);
+  background: #1a1a1a;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.ng-modal-header {
+  padding: 14px 18px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 0.5px solid rgba(255,255,255,0.1);
+}
+.ng-modal-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0;
+}
+.ng-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,0.45);
+  font-size: 22px;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.15s;
+}
+.ng-close-btn:hover { color: #fff; }
+.ng-game-area {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+.ng-overlay.ng-open .ng-game-area.ng-cursor-needle {
+  cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2748%27%20height%3D%2748%27%20viewBox%3D%270%200%20512%20512%27%3E%3Cg%20fill%3D%27%2523333%27%3E%3Cpath%20d%3D%27M214.348%2C393.979c-1.047%2C1.047-2.172%2C1.781-3.406%2C2.281c-1.859%2C0.75-3.938%2C0.953-5.906%2C0.563c-1.984-0.391-3.781-1.281-5.344-2.844l-76.594-76.594c-1.047-1.047-1.781-2.188-2.281-3.422c-0.75-1.859-0.953-3.938-0.563-5.906s1.297-3.781%2C2.844-5.328l158.297-158.297l-23.672-23.656L99.441%2C279.057c-4.25%2C4.25-7.484%2C9.219-9.625%2C14.516c-3.219%2C7.938-4.016%2C16.563-2.422%2C24.844c1.594%2C8.266%2C5.656%2C16.266%2C12.047%2C22.625l76.594%2C76.594c4.234%2C4.25%2C9.219%2C7.5%2C14.5%2C9.625c7.938%2C3.219%2C16.563%2C4.016%2C24.844%2C2.422s16.266-5.656%2C22.641-12.047l158.297-158.281l-23.672-23.656L214.348%2C393.979z%27/%3E%3Cpath%20d%3D%27M89.004%2C399.9c-5.281%2C5.297-6.313%2C12.828-2.313%2C16.828l13.656%2C13.656c4%2C4.016%2C11.531%2C2.969%2C16.828-2.313l25.625-25.625l-28.156-28.172L89.004%2C399.9z%27/%3E%3Cpolygon%20points%3D%270.004%2C501.869%2025.348%2C506.932%2090.691%2C441.588%2075.488%2C426.385%27/%3E%3Cpath%20d%3D%27M311.52%2C57.963c-11.656-11.672-30.578-11.672-42.25%2C0s-11.672%2C30.578%2C0%2C42.25l147.594%2C147.594c11.672%2C11.672%2C30.594%2C11.672%2C42.25%2C0c11.672-11.672%2C11.672-30.594%2C0-42.25L311.52%2C57.963z%27/%3E%3Cpath%20d%3D%27M503.254%2C91.947l-78.141-78.125c-11.656-11.672-30.578-11.672-42.234%2C0c-11.672%2C11.672-11.672%2C30.594%2C0%2C42.25l8.078%2C8.078l-23.672%2C23.672l23.672%2C23.656l23.656-23.656l14.656%2C14.641l-23.672%2C23.656l23.672%2C23.656l23.641-23.656l8.094%2C8.094c11.672%2C11.656%2C30.594%2C11.656%2C42.25%2C0C514.91%2C122.541%2C514.91%2C103.619%2C503.254%2C91.947z%27/%3E%3Crect%20x%3D%27280.451%27%20y%3D%27243.316%27%20transform%3D%27matrix%280.7071%200.7071%20-0.7071%200.7071%20265.1201%20-139.0839%29%27%20width%3D%2739.996%27%20height%3D%2714.341%27/%3E%3Cpolygon%20points%3D%27267.895%2C311.322%20278.035%2C301.182%20249.738%2C272.9%20239.598%2C283.041%27/%3E%3Crect%20x%3D%27211.708%27%20y%3D%27312.032%27%20transform%3D%27matrix%28-0.7071%200.7071%20-0.7071%20-0.7071%20608.4381%20412.0587%29%27%20width%3D%2714.341%27%20height%3D%2740.018%27/%3E%3C/g%3E%3C/svg%3E") 1 46, crosshair;
+}
+.ng-overlay.ng-open .ng-game-area.ng-cursor-glove {
+  cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2744%27%20height%3D%2744%27%20viewBox%3D%270%200%2044%2044%27%3E%3Cpath%20d%3D%27M10%2044%20L8%2024%20Q8%2020%2012%2019%20L12%2012%20Q12%208%2015%208%20Q18%208%2018%2012%20L18%2010%20Q18%207%2021%207%20Q24%207%2024%2010%20L24%2011%20Q24%208%2027%208%20Q30%208%2030%2011%20L30%2019%20Q33%2019%2033%2022%20L33%2030%20Q33%2038%2026%2044%20Z%27%20fill%3D%27%2523f48fb1%27%20stroke%3D%27%2523c2185b%27%20stroke-width%3D%271.2%27%20stroke-linejoin%3D%27round%27/%3E%3Cline%20x1%3D%2715%27%20y1%3D%2712%27%20x2%3D%2715%27%20y2%3D%2719%27%20stroke%3D%27%2523c2185b%27%20stroke-width%3D%270.8%27%20opacity%3D%270.6%27/%3E%3Cline%20x1%3D%2721%27%20y1%3D%2710%27%20x2%3D%2721%27%20y2%3D%2719%27%20stroke%3D%27%2523c2185b%27%20stroke-width%3D%270.8%27%20opacity%3D%270.6%27/%3E%3Cline%20x1%3D%2727%27%20y1%3D%2711%27%20x2%3D%2727%27%20y2%3D%2719%27%20stroke%3D%27%2523c2185b%27%20stroke-width%3D%270.8%27%20opacity%3D%270.6%27/%3E%3Crect%20x%3D%278%27%20y%3D%2740%27%20width%3D%2722%27%20height%3D%274%27%20rx%3D%272%27%20fill%3D%27%2523f06292%27%20opacity%3D%270.7%27/%3E%3C/svg%3E") 15 8, pointer;
+}
+.ng-overlay.ng-open .ng-game-area.ng-cursor-default {
+  cursor: default;
+}
+.ng-game-area img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.ng-drop-target {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,200,0,0.85);
+  background: rgba(255,180,0,0.2);
+  transform: translate(-50%, -50%);
+  cursor: inherit;
+  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+  box-sizing: border-box;
+}
+.ng-drop-target:hover {
+  background: rgba(255,200,0,0.4);
+  transform: translate(-50%, -50%) scale(1.18);
+}
+.ng-drop-target.ng-hit {
+  background: rgb(25, 210, 198, .55);
+  border-color: #19d2c6;
+  pointer-events: none;
+  animation: ng-hit-pop 0.3s ease-out forwards;
+}
+@keyframes ng-hit-pop {
+  0%   { transform: translate(-50%,-50%) scale(1); }
+  50%  { transform: translate(-50%,-50%) scale(1.45); }
+  100% { transform: translate(-50%,-50%) scale(1); }
+}
+.ng-drop-instruction {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  padding: 8px 18px 6px;
+  margin: 0;
+  background: #111;
+  letter-spacing: 0.02em;
+  display: none;
+}
+.ng-hud {
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111;
+}
+.ng-progress-text {
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  min-width: 48px;
+}
+.ng-progress-bar-wrap {
+  flex: 1;
+  margin: 0 14px;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.ng-progress-bar {
+  height: 100%;
+  background: #19d2c6;
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+.ng-needle-emoji { font-size: 18px; }
+.ng-win-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 28px;
+  text-align: center;
+  background: #111;
+}
+.ng-win-screen.ng-visible { display: flex; }
+.ng-win-emoji { font-size: 46px; margin-bottom: 14px; }
+.ng-win-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 8px;
+}
+.ng-win-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.58);
+  margin: 0 0 24px;
+  line-height: 1.65;
+}
+.ng-code-box {
+  background: rgba(255,255,255,0.06);
+  border: 1px dashed rgb(25, 210, 198, 0.55);
+  border-radius: 10px;
+  padding: 14px 32px;
+  margin-bottom: 16px;
+}
+.ng-code-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.38);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+.ng-code-value {
+  font-size: 24px;
+  font-weight: 500;
+  color: #19d2c6;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+.ng-win-note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  margin: 0 0 20px;
+}
+.ng-play-again {
+  padding: 10px 28px;
+  background: none;
+  border: 0.5px solid rgba(255,255,255,0.22);
+  border-radius: 100px;
+  color: rgba(255,255,255,0.65);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.ng-play-again:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+
+
+/* ── Start screen ── */
+/* Overlay sits absolutely on top of the game image */
+.ng-start-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.52);
+  z-index: 20;
+  transition: opacity 0.55s ease;
+  pointer-events: all;
+}
+.ng-start-overlay.ng-fading {
+  opacity: 0;
+  pointer-events: none;
+}
+.ng-start-overlay.ng-gone {
+  display: none;
+}
+.ng-start-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 28px;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.ng-start-content.ng-fading {
+  opacity: 0;
+  transform: translateY(-12px);
+}
+.ng-start-icon {
+  font-size: 52px;
+  margin-bottom: 18px;
+  animation: ng-star-pulse 2s ease-in-out infinite;
+}
+.ng-start-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 10px;
+  line-height: 1.25;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+}
+.ng-start-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.82);
+  margin: 0 0 28px;
+  line-height: 1.65;
+  max-width: 300px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+.ng-start-btn {
+  background: #19d2c6;
+  color: #111;
+  border: none;
+  border-radius: 100px;
+  padding: 13px 40px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.03em;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+.ng-start-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+/* Drop targets start invisible and fade in after start screen clears */
+.ng-drop-target {
+  opacity: 0;
+  transition: opacity 2.1s ease;
+}
+.ng-drop-target.ng-visible {
+  opacity: 1;
+}
+
+/* ── Rub phase ── */
+.ng-rub-panel {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  background: #111;
+}
+.ng-rub-panel.ng-visible { display: flex; }
+.ng-rub-instruction {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  padding: 10px 18px 8px;
+  text-align: center;
+  margin: 0;
+}
+.ng-rub-area {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.ng-overlay.ng-open .ng-rub-area {
+  cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2744%27%20height%3D%2744%27%20viewBox%3D%270%200%2044%2044%27%3E%3Cpath%20d%3D%27M10%2044%20L8%2024%20Q8%2020%2012%2019%20L12%2012%20Q12%208%2015%208%20Q18%208%2018%2012%20L18%2010%20Q18%207%2021%207%20Q24%207%2024%2010%20L24%2011%20Q24%208%2027%208%20Q30%208%2030%2011%20L30%2019%20Q33%2019%2033%2022%20L33%2030%20Q33%2038%2026%2044%20Z%27%20fill%3D%27%2523f48fb1%27%20stroke%3D%27%2523c2185b%27%20stroke-width%3D%271.2%27%20stroke-linejoin%3D%27round%27/%3E%3Cline%20x1%3D%2715%27%20y1%3D%2712%27%20x2%3D%2715%27%20y2%3D%2719%27%20stroke%3D%27%2523c2185b%27%20stroke-width%3D%270.8%27%20opacity%3D%270.6%27/%3E%3Cline%20x1%3D%2721%27%20y1%3D%2710%27%20x2%3D%2721%27%20y2%3D%2719%27%20stroke%3D%27%2523c2185b%27%20stroke-width%3D%270.8%27%20opacity%3D%270.6%27/%3E%3Cline%20x1%3D%2727%27%20y1%3D%2711%27%20x2%3D%2727%27%20y2%3D%2719%27%20stroke%3D%27%2523c2185b%27%20stroke-width%3D%270.8%27%20opacity%3D%270.6%27/%3E%3Crect%20x%3D%278%27%20y%3D%2740%27%20width%3D%2722%27%20height%3D%274%27%20rx%3D%272%27%20fill%3D%27%2523f06292%27%20opacity%3D%270.7%27/%3E%3C/svg%3E") 15 8, pointer;
+}
+.ng-rub-area img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.ng-rub-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.ng-rub-hud {
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111;
+  width: 100%;
+}
+.ng-rub-bar-wrap {
+  flex: 1;
+  margin: 0 14px;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.ng-rub-bar {
+  height: 100%;
+  background: #f48fb1;
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.2s ease;
+}
+.ng-rub-label {
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+}
+
+.ng-fill-btn {
+  background: none;
+  border: 1px dashed rgba(255,255,255,0.3);
+  border-radius: 100px;
+  color: rgba(255,255,255,0.5);
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+.ng-fill-btn:hover {
+  border-color: rgba(255,255,255,0.6);
+  color: #fff;
+}
+
+/* ── Mobile: hide 4th base, widen 3 remaining ── */
+@media (max-width: 600px) {
+  .bounce-stage     { min-height: 160px; margin-bottom: 32px; }
+  .bounce-bases     { gap: 8px; padding: 0 3%; justify-content: space-around; }
+  .bounce-base--1   { display: none; }
+  .bounce-base      { max-width: 30%; flex-basis: 30%; }
+  .bounce-traveller { width: 30%; max-width: 30%; }
+}
+@media (max-width: 380px) {
+  .bounce-content__cta { padding: 12px 24px; font-size: 0.875rem; }
+}
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  var DROP_POS = [
+    {x:23.6,y:40.3},
+    {x:29.4,y:40.5},
+    {x:35.1,y:41.1},
+    {x:40.6,y:42.5},
+    {x:44.8,y:43.5},
+    {x:49.1,y:40.6},
+    {x:53.1,y:44.1},
+    {x:58.6,y:45},
+    {x:61.1,y:52.3},
+    {x:56.1,y:50.6},
+    {x:50.4,y:49.8},
+    {x:45.9,y:50.5},
+    {x:41.6,y:50},
+    {x:38.3,y:53.1},
+    {x:33.6,y:46.5},
+    {x:31.3,y:52},
+    {x:25.1,y:48.5},
+    {x:20.8,y:45.1},
+    {x:18.4,y:49.8},
+    {x:23.9,y:53.1},
+    {x:17.9,y:57.1},
+    {x:23.9,y:63.3},
+    {x:28.3,y:65.5},
+    {x:33.8,y:63.1},
+    {x:40.6,y:65.3},
+    {x:41.8,y:60.6},
+    {x:44.8,y:58},
+    {x:47.6,y:61.6},
+    {x:51.6,y:58.3},
+    {x:56.9,y:61.8},
+    {x:60.4,y:59.1},
+    {x:61.6,y:63.1},
+    {x:65.9,y:56.3},
+    {x:65.9,y:60.8},
+    {x:71.3,y:61.5},
+    {x:71.3,y:66},
+    {x:73.4,y:71.1},
+    {x:74.4,y:73.8},
+    {x:66.6,y:77.6},
+    {x:66.6,y:69.5},
+    {x:58.9,y:68.8},
+    {x:55.4,y:71.8},
+    {x:54.9,y:77.3},
+    {x:52.3,y:73.5},
+    {x:50.1,y:68.6},
+    {x:45.4,y:66.1},
+    {x:43.6,y:70.8},
+    {x:49.1,y:72.1},
+    {x:44.9,y:77},
+    {x:40.9,y:78},
+    {x:34.4,y:71.6},
+    {x:34.9,y:77.1},
+    {x:26.6,y:76},
+    {x:22.1,y:75.3}
+  ];
+
+  function init(sectionId) {
+    var section   = document.getElementById(sectionId);
+    if (!section) return;
+
+    var traveller = section.querySelector('.bounce-traveller');
+    var bases     = section.querySelectorAll('.bounce-base');
+    var stage     = section.querySelector('.bounce-stage');
+    if (!traveller || bases.length < 3 || !stage) return;
+
+    /* ── Shared helpers ── */
+    function isMobile() { return window.innerWidth <= 600; }
+
+    /* ════════════════════════════════════════
+       BOUNCE ANIMATION
+    ════════════════════════════════════════ */
+    var TRAVEL_DUR = {{ section.settings.animation_speed | default: 2200 }};
+    var BOUNCE_PCT = {{ section.settings.bounce_height   | default: 55 }};
+    var HOLD_DUR   = TRAVEL_DUR * 0.6;
+    var raf        = null;
+    var started    = false;
+    var segments   = [];
+    var segIdx     = 0;
+    var segStart   = null;
+
+    function getBasePos(base) {
+      var sr = stage.getBoundingClientRect();
+      var br = base.getBoundingClientRect();
+      var tr = traveller.getBoundingClientRect();
+      var tw = tr.width  || br.width;
+      var th = tr.height || br.height;
+      return {
+        x: br.left - sr.left + (br.width  / 2) - (tw / 2) - (isMobile() ? 10 : 20),
+        y: br.top  - sr.top  + (br.height / 2) - (th / 2)
+      };
+    }
+
+    function easeInOutQuad(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+    function easeInQuart(t)   { return t*t*t*t; }
+
+    function buildSegments() {
+      segments = [];
+      var pos = Array.prototype.map.call(bases, getBasePos);
+      var arc = traveller.offsetHeight * BOUNCE_PCT / 100;
+      if (isMobile()) {
+        segments.push({ type:'bounce', from:pos[1], to:pos[2], arcH:arc,        dur:TRAVEL_DUR });
+        segments.push({ type:'absorb', from:pos[2], to:pos[3], arcH:arc * 0.55, dur:TRAVEL_DUR });
+        segments.push({ type:'hold',   pos:pos[3],                               dur:HOLD_DUR   });
+        segments.push({ type:'reset',  pos:pos[1] });
+      } else {
+        segments.push({ type:'bounce', from:pos[0], to:pos[1], arcH:arc,        dur:TRAVEL_DUR });
+        segments.push({ type:'bounce', from:pos[1], to:pos[2], arcH:arc,        dur:TRAVEL_DUR });
+        segments.push({ type:'absorb', from:pos[2], to:pos[3], arcH:arc * 0.55, dur:TRAVEL_DUR });
+        segments.push({ type:'hold',   pos:pos[3],                               dur:HOLD_DUR   });
+        segments.push({ type:'reset',  pos:pos[0] });
+      }
+    }
+
+    function applyTraveller(x, y, opacity, scale) {
+      traveller.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + scale + ')';
+      traveller.style.opacity   = opacity;
+    }
+
+    function triggerAbsorption(on) {
+      var warmerIdx = isMobile() ? 2 : 3;
+      var warmer    = bases[warmerIdx];
+      if (!warmer) return;
+      if (on) {
+        warmer.classList.remove('is-absorbing');
+        void warmer.offsetWidth;
+        warmer.classList.add('is-absorbing');
+      } else {
+        warmer.classList.remove('is-absorbing');
+      }
+    }
+
+    function step(ts) {
+      if (!segStart) segStart = ts;
+      var seg = segments[segIdx];
+      if (!seg) { segIdx = 0; segStart = ts; raf = requestAnimationFrame(step); return; }
+
+      if (seg.type === 'hold') {
+        applyTraveller(seg.pos.x, seg.pos.y, 0, 0.05);
+        if (ts - segStart >= seg.dur) {
+          triggerAbsorption(false);
+          segIdx++;
+          segStart = null;
+        }
+        raf = requestAnimationFrame(step);
+        return;
+      }
+
+      if (seg.type === 'reset') {
+        if (raf) { cancelAnimationFrame(raf); raf = null; }
+        traveller.style.transition = 'none';
+        applyTraveller(seg.pos.x, seg.pos.y, 0, 1);
+        requestAnimationFrame(function () {
+          traveller.style.transition = 'opacity 0.38s ease';
+          traveller.style.opacity    = '1';
+          setTimeout(function () {
+            traveller.style.transition = '';
+            segIdx++;
+            segStart = null;
+            raf = requestAnimationFrame(step);
+            /* Show star after first complete loop */
+
+          }, 400);
+        });
+        return;
+      }
+
+      if (seg.type === 'bounce') {
+        var el = ts - segStart;
+        var t  = Math.min(el / seg.dur, 1);
+        var te = easeInOutQuad(t);
+        var x  = seg.from.x + (seg.to.x - seg.from.x) * te;
+        var ay = -4 * seg.arcH * t * (t - 1);
+        var y  = seg.from.y + (seg.to.y - seg.from.y) * te - ay;
+        applyTraveller(x, y, 1, 1);
+        if (t >= 1) { segIdx++; segStart = null; }
+        raf = requestAnimationFrame(step);
+        return;
+      }
+
+      if (seg.type === 'absorb') {
+        var el2 = ts - segStart;
+        var t2  = Math.min(el2 / seg.dur, 1);
+        var te2 = easeInOutQuad(t2);
+        var x2  = seg.from.x + (seg.to.x - seg.from.x) * te2;
+        var ay2 = -4 * seg.arcH * t2 * (t2 - 1);
+        var y2  = seg.from.y + (seg.to.y - seg.from.y) * te2 - ay2;
+        var ap  = Math.max(0, (t2 - 0.65) / 0.35);
+        applyTraveller(x2, y2, 1 - easeInQuart(ap), 1 - easeInQuart(ap) * 0.95);
+        if (t2 >= 1) {
+          applyTraveller(seg.to.x, seg.to.y, 0, 0.05);
+          triggerAbsorption(true);
+          segIdx++;
+          segStart = null;
+        }
+        raf = requestAnimationFrame(step);
+        return;
+      }
+
+      raf = requestAnimationFrame(step);
+    }
+
+    function startAnimation() {
+      if (started) return;
+      started = true;
+      buildSegments();
+      if (segments.length > 0) applyTraveller(segments[0].from.x, segments[0].from.y, 1, 1);
+      raf = requestAnimationFrame(step);
+      /* Show star immediately — small delay lets layout settle first */
+      setTimeout(showStar, 300);
+    }
+
+    function stopAnimation() {
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      started  = false;
+      segIdx   = 0;
+      segStart = null;
+      triggerAbsorption(false);
+      traveller.style.transition = '';
+      traveller.style.opacity    = '1';
+      traveller.style.transform  = '';
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { startAnimation(); }
+        else                      { stopAnimation();  }
+      });
+    }, { threshold: 0.25 });
+    observer.observe(section);
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        if (started) { stopAnimation(); startAnimation(); }
+      }, 200);
+    });
+
+    /* ════════════════════════════════════════
+       MINI-GAME
+    ════════════════════════════════════════ */
+    var starWrap  = document.getElementById(sectionId + '-star');
+    var starBtn   = document.getElementById(sectionId + '-star-btn');
+    var overlay   = document.getElementById(sectionId + '-overlay');
+    var closeBtn  = document.getElementById(sectionId + '-close');
+    var gamePanel = document.getElementById(sectionId + '-game-panel');
+    var gameArea  = document.getElementById(sectionId + '-game-area');
+    var winScreen = document.getElementById(sectionId + '-win');
+    var progText  = document.getElementById(sectionId + '-prog-text');
+    var progBar   = document.getElementById(sectionId + '-prog-bar');
+    var playAgain = document.getElementById(sectionId + '-play-again');
+
+    var gameTotal = DROP_POS.length;
+    var gameHit   = 0;
+
+    /* Position the star above the warmer image and reveal it */
+    function showStar() {
+      if (!starWrap || !stage) return;
+      if (isMobile()) {
+        /* Mobile: position above the warmer (last visible base) */
+        var warmerEl = bases[3] || bases[bases.length - 1];
+        if (warmerEl) {
+          var wr = warmerEl.getBoundingClientRect();
+          var sr = stage.getBoundingClientRect();
+          starWrap.style.left = (wr.left - sr.left + wr.width / 2) + 'px';
+          starWrap.style.top  = (wr.top  - sr.top) + 'px';
+        }
+      } else {
+        /* Desktop: centred horizontally on the stage, above the base row */
+        var sr = stage.getBoundingClientRect();
+        /* Find the top of the base images to position just above them */
+        var firstBase = bases[0];
+        var topY = firstBase
+          ? (firstBase.getBoundingClientRect().top - sr.top)
+          : 0;
+        starWrap.style.left = (sr.width / 2) + 'px';
+        starWrap.style.top  = topY + 'px';
+      }
+      starWrap.classList.add('ng-star-visible');
+    }
+
+    /* ── extra DOM refs for rub phase ── */
+    var rubPanel  = document.getElementById(sectionId + '-rub-panel');
+    var rubArea   = document.getElementById(sectionId + '-rub-area');
+    var rubCanvas = document.getElementById(sectionId + '-rub-canvas');
+    var rubBar    = document.getElementById(sectionId + '-rub-bar');
+    var rubPct    = document.getElementById(sectionId + '-rub-pct');
+
+    /* ── Phase 1: needle drop ── */
+    function buildGameTargets() {
+      gameArea.querySelectorAll('.ng-drop-target').forEach(function(el) { el.remove(); });
+      gameHit = 0;
+      gameArea.classList.remove('ng-cursor-glove', 'ng-cursor-default');
+      gameArea.classList.add('ng-cursor-needle');
+      updateHUD();
+      DROP_POS.forEach(function(pos, i) {
+        var el = document.createElement('div');
+        el.className = 'ng-drop-target';
+        el.style.left = pos.x + '%';
+        el.style.top  = pos.y + '%';
+        el.setAttribute('aria-label', 'Drop spot ' + (i + 1));
+        el.addEventListener('click', function() { hitTarget(el); });
+        gameArea.appendChild(el);
+      });
+    }
+
+    function hitTarget(el) {
+      if (el.classList.contains('ng-hit')) return;
+      el.classList.add('ng-hit');
+      gameHit++;
+      updateHUD();
+      /* Switch cursor to glove only once ALL drops are placed */
+      if (gameHit >= gameTotal) gameArea.classList.add('ng-cursor-glove');
+      if (gameHit >= gameTotal) setTimeout(startRubPhase, 600);
+    }
+
+    function updateHUD() {
+      if (progText) progText.textContent = gameHit + ' / ' + gameTotal;
+      if (progBar)  progBar.style.width  = (gameTotal > 0 ? (gameHit / gameTotal) * 100 : 0) + '%';
+    }
+
+    var fillBtn = document.getElementById(sectionId + '-fill-btn');
+
+    function fillAllSpots() {
+      gameArea.querySelectorAll('.ng-drop-target:not(.ng-hit)').forEach(function(el) {
+        el.classList.add('ng-hit');
+        gameHit++;
+      });
+      updateHUD();
+      if (gameHit >= gameTotal) {
+        gameArea.classList.add('ng-cursor-glove');
+        setTimeout(startRubPhase, 600);
+      }
+    }
+
+    if (fillBtn) fillBtn.addEventListener('click', fillAllSpots);
+
+    /* ── Phase 2: rub-in ── */
+    var RUB_TARGET   = 98;  /* % of zone cells that must be covered */
+    var rubbing      = false;
+    var rubCoverage  = 0;
+    var rubCtx       = null;
+    var rubComplete  = false;
+    var coveredCells = {};   /* keys of zone cells the brush has touched */
+    var zoneCells    = {};   /* keys of ALL cells inside the drop zone */
+    var zoneCellCount = 0;
+    var CELL_SIZE    = 16;   /* px — smaller = more precise coverage tracking */
+
+    /* Drop zone polygon — convex hull of the drop positions (in % units).
+       Traced to tightly bound the armpit treatment area in the image.      */
+    var ZONE_POLY_PCT = [
+      {x:14.4,y:56.7},
+      {x:15.2,y:48.4},
+      {x:18.0,y:43.0},
+      {x:21.3,y:37.7},
+      {x:50.5,y:37.4},
+      {x:61.3,y:42.7},
+      {x:74.8,y:61.7},
+      {x:77.6,y:75.1},
+      {x:69.5,y:79.6},
+      {x:40.9,y:81.5},
+      {x:24.3,y:78.6},
+      {x:19.4,y:77.5}
+    ];
+
+    /* Point-in-polygon test (ray casting) */
+    function pointInPoly(px, py, poly) {
+      var inside = false;
+      for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+        var xi = poly[i].x, yi = poly[i].y;
+        var xj = poly[j].x, yj = poly[j].y;
+        if (((yi > py) !== (yj > py)) && (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) {
+          inside = !inside;
+        }
+      }
+      return inside;
+    }
+
+    /* Build the set of grid cells that fall inside the zone polygon.
+       Called once per game start after canvas dimensions are known.  */
+    function buildZoneCells(canvasW, canvasH) {
+      zoneCells     = {};
+      zoneCellCount = 0;
+      var cols = Math.ceil(canvasW / CELL_SIZE);
+      var rows = Math.ceil(canvasH / CELL_SIZE);
+      for (var row = 0; row < rows; row++) {
+        for (var col = 0; col < cols; col++) {
+          /* Centre of this cell in % */
+          var pctX = ((col + 0.5) * CELL_SIZE / canvasW) * 100;
+          var pctY = ((row + 0.5) * CELL_SIZE / canvasH) * 100;
+          if (pointInPoly(pctX, pctY, ZONE_POLY_PCT)) {
+            var key = col + ',' + row;
+            zoneCells[key] = true;
+            zoneCellCount++;
+          }
+        }
+      }
+    }
+
+    /* Draw the zone outline on the canvas so the player knows where to rub */
+    function drawZoneOutline(canvasW, canvasH) {
+      if (!rubCtx) return;
+      rubCtx.save();
+      rubCtx.beginPath();
+      var first = ZONE_POLY_PCT[0];
+      rubCtx.moveTo(first.x / 100 * canvasW, first.y / 100 * canvasH);
+      for (var i = 1; i < ZONE_POLY_PCT.length; i++) {
+        rubCtx.lineTo(ZONE_POLY_PCT[i].x / 100 * canvasW, ZONE_POLY_PCT[i].y / 100 * canvasH);
+      }
+      rubCtx.closePath();
+      rubCtx.strokeStyle = 'rgba(249,195,26,0.7)';
+      rubCtx.lineWidth   = 2.5;
+      rubCtx.setLineDash([8, 5]);
+      rubCtx.stroke();
+      rubCtx.restore();
+    }
+
+    function startRubPhase() {
+      if (gamePanel) gamePanel.style.display = 'none';
+      if (rubPanel)  rubPanel.classList.add('ng-visible');
+      initRubCanvas();
+    }
+
+    function initRubCanvas() {
+      if (!rubCanvas || !rubArea) return;
+      rubComplete   = false;
+      rubCoverage   = 0;
+      coveredCells  = {};
+      var w = rubArea.offsetWidth;
+      var h = rubArea.offsetHeight;
+      rubCanvas.width  = w;
+      rubCanvas.height = h;
+      rubCtx = rubCanvas.getContext('2d');
+      rubCtx.clearRect(0, 0, w, h);
+
+      /* Build zone cell set and draw the guide outline */
+      buildZoneCells(w, h);
+      drawZoneOutline(w, h);
+      updateRubBar(0);
+
+      function getPos(e) {
+        var r = rubArea.getBoundingClientRect();
+        var src = e.touches ? e.touches[0] : e;
+        return { x: src.clientX - r.left, y: src.clientY - r.top };
+      }
+
+      function onStart(e) {
+        if (rubComplete) return;
+        e.preventDefault();
+        rubbing = true;
+        paint(getPos(e));
+      }
+
+      function onMove(e) {
+        if (!rubbing || rubComplete) return;
+        e.preventDefault();
+        paint(getPos(e));
+      }
+
+      function onEnd() { rubbing = false; }
+
+      /* Remove any old listeners before adding new ones (safe for replay) */
+      var fresh = rubArea.cloneNode(true);
+      rubArea.parentNode.replaceChild(fresh, rubArea);
+      rubArea = fresh;
+      /* Re-acquire canvas ref after clone */
+      rubCanvas = document.getElementById(sectionId + '-rub-canvas');
+      rubCtx    = rubCanvas.getContext('2d');
+      rubCanvas.width  = w;
+      rubCanvas.height = h;
+      rubCtx.clearRect(0, 0, w, h);
+      buildZoneCells(w, h);
+      drawZoneOutline(w, h);
+
+      rubArea.addEventListener('mousedown',  onStart);
+      rubArea.addEventListener('mousemove',  onMove);
+      rubArea.addEventListener('mouseup',    onEnd);
+      rubArea.addEventListener('mouseleave', onEnd);
+      rubArea.addEventListener('touchstart', onStart, { passive: false });
+      rubArea.addEventListener('touchmove',  onMove,  { passive: false });
+      rubArea.addEventListener('touchend',   onEnd);
+    }
+
+    function paint(pos) {
+      if (!rubCtx || zoneCellCount === 0) return;
+      var radius  = 24;
+      var canvasW = rubCanvas.width;
+      var canvasH = rubCanvas.height;
+
+      /* Only paint if the cursor centre is within (or near) the zone */
+      var pctX = (pos.x / canvasW) * 100;
+      var pctY = (pos.y / canvasH) * 100;
+      var nearZone = pointInPoly(pctX, pctY, ZONE_POLY_PCT);
+      if (!nearZone) return;
+
+      /* Draw translucent pink smear, clipped to the zone path */
+      rubCtx.save();
+      rubCtx.beginPath();
+      var first = ZONE_POLY_PCT[0];
+      rubCtx.moveTo(first.x / 100 * canvasW, first.y / 100 * canvasH);
+      for (var i = 1; i < ZONE_POLY_PCT.length; i++) {
+        rubCtx.lineTo(ZONE_POLY_PCT[i].x / 100 * canvasW, ZONE_POLY_PCT[i].y / 100 * canvasH);
+      }
+      rubCtx.closePath();
+      rubCtx.clip();
+
+      rubCtx.beginPath();
+      rubCtx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+      rubCtx.fillStyle = 'rgba(244,143,177,0.38)';
+      rubCtx.fill();
+      rubCtx.restore();
+
+      /* Redraw zone outline on top so it stays visible */
+      drawZoneOutline(canvasW, canvasH);
+
+      /* Mark zone cells touched by this brush stroke */
+      var col = Math.floor(pos.x / CELL_SIZE);
+      var row = Math.floor(pos.y / CELL_SIZE);
+      var reach = Math.ceil(radius / CELL_SIZE) + 1;
+      for (var dx = -reach; dx <= reach; dx++) {
+        for (var dy = -reach; dy <= reach; dy++) {
+          var key = (col + dx) + ',' + (row + dy);
+          if (zoneCells[key] && !coveredCells[key]) {
+            coveredCells[key] = true;
+          }
+        }
+      }
+
+      /* Coverage = covered zone cells / total zone cells.
+         Scale display so RUB_TARGET reads as 100% to the player. */
+      var covered = Object.keys(coveredCells).length;
+      var rawPct  = covered / zoneCellCount * 100;
+      rubCoverage = Math.min(100, Math.round(rawPct));
+      var displayPct = Math.min(100, Math.round(rawPct / RUB_TARGET * 100));
+      updateRubBar(displayPct);
+
+      if (rubCoverage >= RUB_TARGET && !rubComplete) {
+        rubComplete = true;
+        setTimeout(showWin, 700);
+      }
+    }
+
+    function updateRubBar(pct) {
+      if (rubBar) rubBar.style.width = pct + '%';
+      if (rubPct) rubPct.textContent = pct + '%';
+    }
+
+    function showWin() {
+      if (rubPanel)  rubPanel.classList.remove('ng-visible');
+      if (gamePanel) gamePanel.style.display = 'none';
+      if (winScreen) winScreen.classList.add('ng-visible');
+    }
+
+    function resetGame(skipFadeIn) {
+      if (winScreen) winScreen.classList.remove('ng-visible');
+      if (rubPanel)  rubPanel.classList.remove('ng-visible');
+      if (gamePanel) gamePanel.style.display = '';
+      if (rubCtx)    rubCtx.clearRect(0, 0, rubCanvas.width, rubCanvas.height);
+      rubComplete = false;
+      rubCoverage = 0;
+      coveredCells = {};
+      updateRubBar(0);
+      buildGameTargets();
+      /* On Play Again: show targets immediately without fade-in delay */
+      if (skipFadeIn) {
+        if (gameArea) {
+          gameArea.querySelectorAll('.ng-drop-target').forEach(function(el) {
+            el.classList.add('ng-visible');
+          });
+        }
+      }
+    }
+
+    var startScreen = document.getElementById(sectionId + '-start-screen');
+    var startBtn    = document.getElementById(sectionId + '-start-btn');
+
+    var startContent = document.getElementById(sectionId + '-start-content');
+
+    function showStartScreen() {
+      var dropInstr = document.getElementById(sectionId + '-drop-instruction');
+      if (dropInstr) dropInstr.style.display = 'none';
+      /* Reset overlay to fully visible */
+      if (startScreen) {
+        startScreen.classList.remove('ng-fading', 'ng-gone');
+      }
+      if (startContent) {
+        startContent.classList.remove('ng-fading');
+      }
+      if (gamePanel)   gamePanel.style.display = '';
+      if (rubPanel)    rubPanel.classList.remove('ng-visible');
+      if (winScreen)   winScreen.classList.remove('ng-visible');
+      /* Hide drop targets instantly on reset */
+      if (gameArea) {
+        gameArea.querySelectorAll('.ng-drop-target').forEach(function(el) {
+          el.classList.remove('ng-visible');
+        });
+      }
+    }
+
+    function beginGame() {
+      /* Step 1: fade the text/button content out (0.4s) */
+      if (startContent) startContent.classList.add('ng-fading');
+
+      setTimeout(function() {
+        /* Step 2: fade the dark overlay out (0.55s) */
+        if (startScreen) startScreen.classList.add('ng-fading');
+
+        setTimeout(function() {
+          /* Step 3: hide overlay completely, then fade drop targets in */
+          if (startScreen) startScreen.classList.add('ng-gone');
+          if (gameArea) gameArea.classList.add('ng-cursor-needle');
+          var dropInstr = document.getElementById(sectionId + '-drop-instruction');
+          if (dropInstr) dropInstr.style.display = 'block';
+          resetGame();
+          /* Stagger each drop target fading in */
+          if (gameArea) {
+            var targets = gameArea.querySelectorAll('.ng-drop-target');
+            targets.forEach(function(el, i) {
+              setTimeout(function() {
+                el.classList.add('ng-visible');
+              }, i * 30);
+            });
+          }
+        }, 580);
+      }, 420);
+    }
+
+    if (startBtn) startBtn.addEventListener('click', beginGame);
+
+    function openOverlay() {
+      if (overlay) {
+        overlay.classList.add('ng-open');
+      }
+      showStartScreen();
+    }
+
+    function closeOverlay() {
+      if (overlay) {
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.2s ease';
+        setTimeout(function() {
+          overlay.classList.remove('ng-open');
+          overlay.style.opacity = '';
+          overlay.style.transition = '';
+        }, 200);
+      }
+      /* Reset cursor classes so needle doesn't bleed outside the overlay */
+      if (gameArea) gameArea.classList.remove('ng-cursor-needle', 'ng-cursor-glove', 'ng-cursor-default');
+    }
+
+    if (starBtn) {
+      starBtn.addEventListener('click', openOverlay);
+      starBtn.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        openOverlay();
+      });
+    }
+    if (closeBtn) closeBtn.addEventListener('click', closeOverlay);
+    if (playAgain) playAgain.addEventListener('click', function() { resetGame(true); });
+    if (overlay) {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeOverlay();
+      });
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeOverlay();
+    });
+
+    if (gameArea) { buildGameTargets(); updateHUD(); }
+  }
+
+  function onReady(fn) {
+    if (document.readyState !== 'loading') { fn(); }
+    else { document.addEventListener('DOMContentLoaded', fn); }
+  }
+
+  onReady(function () { init('{{ section.id }}'); });
+
+  document.addEventListener('shopify:section:load', function (e) {
+    if (e.detail && e.detail.sectionId === '{{ section.id }}') {
+      init('{{ section.id }}');
+    }
+  });
+
+  /* Auto-open game + scroll to section if URL hash is #play */
+  onReady(function () {
+    if (window.location.hash === '#play') {
+      var attempts = 0;
+      var tryOpen = setInterval(function () {
+        var section = document.getElementById('{{ section.id }}');
+        var btn     = document.getElementById('{{ section.id }}-star-btn');
+        if (section && btn) {
+          /* Scroll the section into view first, then open the game */
+          section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function () { btn.click(); }, 600);
+          clearInterval(tryOpen);
+        }
+        if (++attempts > 25) clearInterval(tryOpen); /* give up after 5s */
+      }, 200);
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Bouncing Animation",
+  "tag": "section",
+  "class": "bounce-section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Label",
+      "default": "The Secret Weapon"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Add the Peel. Watch the Revenue."
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Our post-service peel serum pairs perfectly with every wax treatment — and your clients will keep coming back for more."
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button Label",
+      "default": "Shop the Bundle"
+    },
+    {
+      "type": "header",
+      "content": "Mini-Game"
+    },
+    {
+      "type": "text",
+      "id": "game_start_title",
+      "label": "Start Screen Title",
+      "default": "Welcome — play to earn a discount"
+    },
+    {
+      "type": "textarea",
+      "id": "game_start_sub",
+      "label": "Start Screen Description",
+      "default": "Use the needle to treat each drop on the skin, then rub the serum in with a gloved hand. Complete the treatment and we'll reward you with a code."
+    },
+    {
+      "type": "text",
+      "id": "game_start_cta",
+      "label": "Start Button Label",
+      "default": "Start treatment"
+    },
+    {
+      "type": "image_picker",
+      "id": "game_bg_image",
+      "label": "Game Background Image",
+      "info": "Upload the armpit/treatment area image used as the needle-drop game background."
+    },
+    {
+      "type": "text",
+      "id": "win_title",
+      "label": "Win Screen Title",
+      "default": "Treatment complete!"
+    },
+    {
+      "type": "textarea",
+      "id": "win_message",
+      "label": "Win Screen Message",
+      "default": "Amazing work — every drop landed perfectly. Here's your reward for playing:"
+    },
+    {
+      "type": "text",
+      "id": "discount_code",
+      "label": "Discount Code",
+      "default": "NEEDLEDROP15",
+      "info": "Enter your actual Shopify discount code here."
+    },
+    {
+      "type": "textarea",
+      "id": "win_note",
+      "label": "Win Screen Fine Print",
+      "default": "Add it at checkout — limited one use per customer."
+    },
+    {
+      "type": "header",
+      "content": "Animation Settings"
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "label": "Travel Speed (ms per bounce)",
+      "min": 800,
+      "max": 4000,
+      "step": 100,
+      "default": 2200,
+      "info": "Lower = faster."
+    },
+    {
+      "type": "range",
+      "id": "bounce_height",
+      "label": "Bounce Arc Height (%)",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "default": 55,
+      "info": "How high the vial arcs over each wax bag."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#0f0f0f"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#e272a3"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "Button Background",
+      "default": "#e272a3"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top (px)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom (px)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "traveller_image",
+      "name": "Bouncing Vial (Serum)",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Serum Vial Image",
+          "info": "The product that bounces across and disappears into the warmer."
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Alt Text",
+          "default": "Post-service peel serum"
+        }
+      ]
+    },
+    {
+      "type": "base_image",
+      "name": "Base Product Image",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Add exactly 4 in order: Wax Bag 1, Wax Bag 2, Wax Bag 3, Wax Warmer. On mobile, Bag 3 is hidden and the Warmer becomes the 3rd visible image."
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Alt Text",
+          "default": "Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bouncing Product Animation",
+      "category": "Custom",
+      "blocks": [
+        { "type": "traveller_image" },
+        { "type": "base_image" },
+        { "type": "base_image" },
+        { "type": "base_image" },
+        { "type": "base_image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

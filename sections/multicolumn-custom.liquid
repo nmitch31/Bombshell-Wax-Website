@@ -1,0 +1,147 @@
+{% schema %}
+{
+  "name": "Custom Multicolumn",
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns per row (Desktop)",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "label": "Columns per row (Mobile)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "svg_icon",
+          "label": "SVG Icon Code",
+          "default": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='40' height='40'><path fill='currentColor' d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/></svg>"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Title Here"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Add some text describing this feature."
+        },
+            {
+  "type": "url",
+  "id": "box_link",
+  "label": "Box Link"
+}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Multicolumn Section",
+      "blocks": [
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .custom-multicolumn-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .custom-multicolumn {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Ensures last row is centered */
+    gap: 20px; /* Space between boxes */
+    width: 100%;
+    max-width: 1200px; /* Prevents excessive width */
+  }
+
+  .custom-multicolumn .column {
+    flex: 1 1 calc(100% / var(--columns-desktop) - 20px);
+    max-width: calc(100% / var(--columns-desktop) - 20px);
+    text-align: center;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .custom-multicolumn .column:hover {
+    background: #ececec;
+  }
+
+  .custom-multicolumn .column svg {
+    width: 40px;
+    height: 40px;
+    fill: #333; /* Default color */
+    margin-bottom: 10px;
+  }
+
+  .custom-multicolumn .column h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+
+  .custom-multicolumn .column p {
+    font-size: 1rem;
+    color: #666;
+  }
+
+  /* Responsive Columns */
+  @media (max-width: 768px) {
+    .custom-multicolumn .column {
+      flex: 1 1 calc(100% / var(--columns-mobile) - 20px);
+      max-width: calc(100% / var(--columns-mobile) - 20px);
+    }
+  }
+</style>
+
+<div class="custom-multicolumn-wrapper">
+  <div class="custom-multicolumn" 
+       style="--columns-desktop: {{ section.settings.columns_desktop }}; 
+              --columns-mobile: {{ section.settings.columns_mobile }};">
+    {% for block in section.blocks %}
+      
+        <a href="{{ block.settings.box_link | default: '#' }}" class="column">
+        {{ block.settings.svg_icon }}
+        <h3>{{ block.settings.subtitle }}</h3>
+        <p>{{ block.settings.description }}</p>
+        </a>
+      
+    {% endfor %}
+  </div>
+</div>

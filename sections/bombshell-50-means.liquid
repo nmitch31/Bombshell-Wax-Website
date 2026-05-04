@@ -1,0 +1,498 @@
+{% comment %}
+  Section: What It Means to Be a Bombshell
+  Location: Esthetician profile pages (50-50 Program)
+  Add via: Theme Editor > Add Section
+{% endcomment %}
+
+<section
+  class="bombshell-quote-section"
+  id="bombshell-quote-{{ section.id }}"
+  style="
+    background-color: {{ section.settings.background_color }};
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+  "
+>
+
+  {%- comment -%} Decorative background accents {%- endcomment -%}
+  <div class="bq-bg-accent bq-bg-accent--top-right" aria-hidden="true"></div>
+  <div class="bq-bg-accent bq-bg-accent--bottom-left" aria-hidden="true"></div>
+
+  <div class="bq-inner">
+
+    {%- if section.settings.show_eyebrow and section.settings.eyebrow_text != blank -%}
+      <p class="bq-eyebrow">{{ section.settings.eyebrow_text }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <{{ section.settings.heading_tag }} class="bq-heading">
+        {{ section.settings.heading }}
+      </{{ section.settings.heading_tag }}>
+    {%- endif -%}
+
+    <div class="bq-divider" aria-hidden="true">
+      <span class="bq-divider__line"></span>
+      {% comment %}
+       diamond and second line:
+      <span class="bq-divider__diamond"></span>
+      <span class="bq-divider__line"></span>
+      {% endcomment %}
+    </div>
+
+    {%- if section.settings.quote_text != blank -%}
+      <div class="bq-quote-wrap">
+
+        {%- if section.settings.show_quote_mark -%}
+          <span class="bq-quote-mark" aria-hidden="true">&ldquo;</span>
+        {%- endif -%}
+
+        <blockquote class="bq-quote-text">
+          {{ section.settings.quote_text }}
+        </blockquote>
+
+        <div class="bq-attribution">
+          <span class="bq-attribution__line" aria-hidden="true"></span>
+          {%- if section.settings.esthetician_name != blank -%}
+            <span class="bq-attribution__name">{{ section.settings.esthetician_name }}</span>
+          {%- endif -%}
+          {%- if section.settings.esthetician_title != blank -%}
+            <span class="bq-attribution__title">· {{ section.settings.esthetician_title }}</span>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.badge_text != blank -%}
+          <div class="bq-center">
+            <div class="bq-badge">
+              <span class="bq-badge__dot" aria-hidden="true"></span>
+              {{ section.settings.badge_text }}
+            </div>
+          </div>
+        {%- endif -%}
+
+      </div>
+    {%- endif -%}
+
+    {%- assign show_meta = false -%}
+    {%- if section.settings.meta_state != blank or section.settings.meta_member_since != blank or section.settings.meta_specialty != blank -%}
+      {%- assign show_meta = true -%}
+    {%- endif -%}
+
+    {%- if show_meta -%}
+      <div class="bq-meta">
+        {%- if section.settings.meta_state != blank -%}
+          <span class="bq-meta__item">
+            <strong>State:</strong> {{ section.settings.meta_state }}
+          </span>
+        {%- endif -%}
+        {%- if section.settings.meta_state != blank and section.settings.meta_member_since != blank -%}
+          <span class="bq-meta__sep" aria-hidden="true">·</span>
+        {%- endif -%}
+        {%- if section.settings.meta_member_since != blank -%}
+          <span class="bq-meta__item">
+            <strong>Member since:</strong> {{ section.settings.meta_member_since }}
+          </span>
+        {%- endif -%}
+        {%- if section.settings.meta_specialty != blank -%}
+          <span class="bq-meta__sep" aria-hidden="true">·</span>
+          <span class="bq-meta__item">
+            <strong>Specialty:</strong> {{ section.settings.meta_specialty }}
+          </span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+<style>
+  #bombshell-quote-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    font-family: nunito;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-bg-accent {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-bg-accent--top-right {
+    top: 0px;
+    right: -80px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(226,114,163,0.12) 0%, transparent 70%);
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-bg-accent--bottom-left {
+    bottom: 0px;
+    left: -60px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(226,114,163,0.08) 0%, transparent 70%);
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 30px;
+    border: 1px transparent;
+    background: linear-gradient(to bottom right, #ffffff, rgba(226,114,163,.01), rgba(226,114,163,.1), rgba(226,114,163,.4));
+    box-shadow: 10px 14px 10px rgba(226,114,163,.4);
+    border-radius: 8px;
+  }
+
+  /* Eyebrow */
+  #bombshell-quote-{{ section.id }} .bq-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: {{ section.settings.gold_color }};
+    margin: 0 0 12px;
+    font-weight: 500;
+    font-family: nunito;
+  }
+
+  /* Heading */
+  #bombshell-quote-{{ section.id }} .bq-heading {
+    font-size: clamp(30px, 6vw, 40px);
+    font-weight: 500;
+    color: {{ section.settings.heading_color }};
+    margin: 0 0 8px;
+    line-height: 1.15;
+    font-family: nunito;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-heading em {
+    font-style: italic;
+    color: {{ section.settings.gold_color }};
+  }
+
+  /* Divider */
+  #bombshell-quote-{{ section.id }} .bq-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px auto 34px;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-divider__line {
+    display: block;
+    width: 200px;
+    height: 1px;
+    background: {{ section.settings.gold_color }};
+    opacity: 0.4;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-divider__diamond {
+    display: block;
+    width: 6px;
+    height: 6px;
+    background: {{ section.settings.gold_color }};
+    transform: rotate(45deg);
+  }
+
+  /* Quote block */
+  #bombshell-quote-{{ section.id }} .bq-quote-wrap {
+    text-align: left;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-quote-mark {
+    display: block;
+    font-size: 88px;
+    line-height: 0.6;
+    color: {{ section.settings.gold_color }};
+    opacity: 0.25;
+    font-family: Georgia, 'Times New Roman', serif;
+    user-select: none;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-quote-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: {{ section.settings.quote_text_color }};
+    font-style: italic;
+    margin: 0 0 28px;
+    padding: 0;
+    border: none;
+  }
+
+  /* Attribution */
+  #bombshell-quote-{{ section.id }} .bq-attribution {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-attribution__line {
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: {{ section.settings.gold_color }};
+    flex-shrink: 0;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-attribution__name {
+    font-size: 13px;
+    font-weight: 500;
+    color: {{ section.settings.gold_color }};
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-attribution__title {
+    font-size: 12px;
+    color: {{ section.settings.meta_text_color }};
+  }
+
+  /* Badge */
+  #bombshell-quote-{{ section.id }} .bq-center {
+    text-align: center;
+    margin-top: 36px;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(226,114,163,0.12);
+    border: 1px solid rgba(226,114,163,0.3);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: {{ section.settings.gold_color }};
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-badge__dot {
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: {{ section.settings.gold_color }};
+    flex-shrink: 0;
+  }
+
+  /* Meta row */
+  #bombshell-quote-{{ section.id }} .bq-meta {
+    border-top: 1px solid rgba(226,114,163,0.15);
+    margin-top: 44px;
+    padding-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    justify-content: center;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-meta__item {
+    font-size: 12px;
+    color: {{ section.settings.meta_text_color }};
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-meta__item strong {
+    color: rgba(0, 0, 0, 0.7);
+    font-weight: 500;
+  }
+
+  #bombshell-quote-{{ section.id }} .bq-meta__sep {
+    font-size: 12px;
+    color: {{ section.settings.meta_text_color }};
+  }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    #bombshell-quote-{{ section.id }} .bq-attribution {
+      gap: 8px;
+    }
+
+    #bombshell-quote-{{ section.id }} .bq-meta {
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #bombshell-quote-{{ section.id }} .bq-meta__sep {
+      display: none;
+    }
+
+    #bombshell-quote-{{ section.id }} .bq-quote-mark {
+      font-size: 64px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Meaning Bombshell 50",
+  "tag": "section",
+  "class": "bombshell-quote-section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Show eyebrow label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow text",
+      "default": "The Bombshell 50 Program"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "<p>What it means to be a <em>Bombshell</em></p>",
+      "info": "Wrap a word in <em> tags to italicize it in gold."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag (SEO)",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "header",
+      "content": "Quote"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quote_mark",
+      "label": "Show decorative quote mark",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "quote_text",
+      "label": "Esthetician's quote",
+      "default": "Being a Bombshell means more than just representing a brand — it means being chosen to stand for excellence in my craft. It means my clients see me as someone who invests in the best, and my peers see me as someone worth learning from.",
+      "info": "Write this in first person, in the esthetician's own voice."
+    },
+    {
+      "type": "header",
+      "content": "Attribution"
+    },
+    {
+      "type": "text",
+      "id": "esthetician_name",
+      "label": "Esthetician name",
+      "default": "Jessica M."
+    },
+    {
+      "type": "text",
+      "id": "esthetician_title",
+      "label": "Title / credentials",
+      "default": "Licensed Esthetician, Texas"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge label",
+      "default": "Bombshell 50 Educator & Brand Ambassador",
+      "info": "Leave blank to hide the badge."
+    },
+    {
+      "type": "header",
+      "content": "Meta Details"
+    },
+    {
+      "type": "text",
+      "id": "meta_state",
+      "label": "State",
+      "default": "Texas"
+    },
+    {
+      "type": "text",
+      "id": "meta_member_since",
+      "label": "Member since (year)",
+      "default": "2024"
+    },
+    {
+      "type": "text",
+      "id": "meta_specialty",
+      "label": "Specialty",
+      "default": "Brazilian Waxing"
+    },
+    {
+      "type": "header",
+      "content": "Colors & Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "quote_text_color",
+      "label": "Quote text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "gold_color",
+      "label": "Accent / gold color",
+      "default": "#e272a3"
+    },
+    {
+      "type": "color",
+      "id": "meta_text_color",
+      "label": "Meta / muted text color",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "What It Means Bombshell 50"
+    }
+  ]
+}
+{% endschema %}

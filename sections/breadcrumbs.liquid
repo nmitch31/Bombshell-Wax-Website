@@ -1,0 +1,142 @@
+<div class="wrap-breadcrumb-hero">
+  <div
+    class="breadcrumb-hero"
+    style="background-image: url({% if section.settings.bg_breadcrumb != blank %}{{ section.settings.bg_breadcrumb | img_url: 'master' }}{% else %}//via.placeholder.com/1920x747{% endif %});"
+    role="img"
+    aria-label="{{ page.title }}"
+  >
+    
+    <div {% if section.settings.enable_overlay %}class="breadcrumb-overlay" {% else %} {% endif %}>
+      <div class="breadcrumb-inner">
+        <h1 class="breadcrumb-title">{{ page.title }}</h1>
+
+        <nav class="breadcrumb-trail" aria-label="Breadcrumb">
+          <a href="{{ routes.root_url }}" class="breadcrumb-home" title="Home">Home</a>
+          <span class="breadcrumb-sep" aria-hidden="true"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+          <span class="breadcrumb-current" aria-current="page">{{ page.title }}</span>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Container spans full width */
+  .wrap-breadcrumb-hero { width: 100%; margin: 0; padding: 0; }
+
+  /* Hero with desktop aspect ratio 18/7 and background cover.
+     Use flexbox to center content both axes. */
+  .breadcrumb-hero {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* modern browsers: aspect-ratio for desktop */
+    aspect-ratio: 18 / 7;
+    position: relative;
+  }
+
+  /* overlay for better text contrast */
+  .breadcrumb-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)); /* slight darken */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .breadcrumb-inner {
+    text-align: center;
+    max-width: 1200px;
+    width: 100%;
+    padding: 12px;
+  }
+
+  .breadcrumb-title {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: clamp(24px, 4vw, 44px);
+    line-height: 1.1;
+    font-weight: 600;
+  }
+
+  .breadcrumb-trail {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    font-size: 14px;
+  }
+
+  .breadcrumb-home:hover{
+color: #e272a3}
+
+  .breadcrumb-trail a { color: inherit; text-decoration: none; opacity: 0.95; }
+  .breadcrumb-trail .breadcrumb-sep { display: inline-flex; align-items: center; }
+  .breadcrumb-trail .breadcrumb-current { font-weight: 500; }
+
+  /* Mobile: swap background to mobile image and use 1/1 aspect ratio */
+  @media screen and (max-width: 767px) {
+    .breadcrumb-hero {
+      aspect-ratio: 1 / 1;
+      background-image: url({% if section.settings.bg_breadcrumb_mobile != blank %}{{ section.settings.bg_breadcrumb_mobile | img_url: 'master' }}{% else %}//via.placeholder.com/800x800{% endif %}) !important;
+    }
+
+    .breadcrumb-title { font-size: clamp(20px, 6vw, 32px); }
+    .breadcrumb-inner { padding: 10px; }
+  }
+
+  /* small screens fallback (for older browsers without aspect-ratio) */
+  @supports not (aspect-ratio: 1/1) {
+    .breadcrumb-hero {
+      height: auto;
+      /* Use padding-top trick for desktop ratio: (7/18)*100 = 38.888...% */
+      padding-top: 38.8889%;
+    }
+    @media screen and (max-width: 767px) {
+      .breadcrumb-hero { padding-top: 100%; } /* 1:1 */
+    }
+    .breadcrumb-overlay { position: absolute; top: 0; right: 0; bottom: 0; left: 0; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Breadcrumb Hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Breadcrumb Hero"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_breadcrumb",
+      "label": "Background Image (Desktop)",
+      "info": "Recommended: 1920 x 747 (18:7 ratio)"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_breadcrumb_mobile",
+      "label": "Background Image (Mobile)",
+      "info": "Recommended: 800 x 800 (1:1 ratio)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_overlay",
+      "label": "Enable",
+      "default": false
+    },
+  ],
+  "presets": [
+    {
+      "name": "Breadcrumb Hero",
+      "category": "Header"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,767 @@
+{% comment %}
+  Section: My Bombshell Arsenal
+  Location: Esthetician profile pages (50-50 Program)
+  Add via: Theme Editor > Add Section
+  Notes:
+    - Each block is one product card
+    - Use the "Product" picker to pull directly from your Shopify catalog
+    - Override product name/price per block if needed, or leave blank to inherit from the product
+    - "How I use it" quote is unique per esthetician per product
+    - Supports 1–8 product blocks
+    - Grid is 3-col desktop, 2-col tablet, 1-col mobile
+{% endcomment %}
+
+<section
+  class="ba-arsenal-section"
+  id="ba-arsenal-{{ section.id }}"
+  style="
+    background-color: {{ section.settings.background_color }};
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+  "
+>
+
+  <div class="ba-inner">
+
+    {%- comment -%} ── Section Header ── {%- endcomment -%}
+    <header class="ba-header">
+
+      {%- if section.settings.show_eyebrow and section.settings.eyebrow_text != blank -%}
+        <p class="ba-eyebrow">{{ section.settings.eyebrow_text }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading_line != blank -%}
+        <span class="ba-title-line">{{ section.settings.heading_line }}</span>
+      {%- endif -%}
+
+      <{{ section.settings.heading_tag }} class="ba-title">
+        <span>{{ section.settings.heading_word }}</span>
+      </{{ section.settings.heading_tag }}>
+
+      <div class="ba-title-deco" aria-hidden="true">
+        <span class="ba-deco-line"></span>
+        {% comment %} diamond and extra line:
+        <span class="ba-deco-diamond"></span>
+        <span class="ba-deco-line"></span>
+        {% endcomment %}
+      </div>
+
+      {%- if section.settings.subtitle != blank -%}
+        <p class="ba-subtitle">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+
+    </header>
+
+    {%- comment -%} ── Product Grid ── {%- endcomment -%}
+    {%- if section.blocks.size > 0 -%}
+      <div
+        class="ba-grid"
+        style="grid-template-columns: repeat({{ section.settings.columns }}, minmax(0, 1fr));"
+      >
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'product' -%}
+
+            {%- assign block_product = block.settings.product -%}
+            {%- assign card_number = forloop.index | prepend: '0' | slice: -2, 2 -%}
+
+            {%- comment -%} Resolve display values: block override > product data > fallback {%- endcomment -%}
+            {%- if block.settings.custom_product_name != blank -%}
+              {%- assign display_name = block.settings.custom_product_name -%}
+            {%- elsif block_product != blank -%}
+              {%- assign display_name = block_product.title -%}
+            {%- else -%}
+              {%- assign display_name = 'Product name' -%}
+            {%- endif -%}
+
+            {%- if block.settings.custom_price != blank -%}
+              {%- assign display_price = block.settings.custom_price -%}
+              {%- assign price_is_custom = true -%}
+            {%- elsif block_product != blank -%}
+              {%- assign display_price = block_product.price | money -%}
+              {%- assign price_is_custom = false -%}
+            {%- else -%}
+              {%- assign display_price = '' -%}
+              {%- assign price_is_custom = false -%}
+            {%- endif -%}
+
+            {%- if block_product != blank -%}
+              {%- assign product_url = block_product.url -%}
+              {%- assign product_image = block_product.featured_image -%}
+            {%- else -%}
+              {%- assign product_url = '#' -%}
+              {%- assign product_image = nil -%}
+            {%- endif -%}
+
+            <article
+              class="ba-card"
+              {{ block.shopify_attributes }}
+            >
+              <span class="ba-card-number" aria-hidden="true">{{ card_number }}</span>
+
+              {%- comment -%} Product image {%- endcomment -%}
+              <a
+                class="ba-img-wrap"
+                href="{{ product_url }}"
+                aria-label="View {{ display_name }}"
+                tabindex="-1"
+              >
+                {%- if product_image != nil -%}
+                  {{
+                    product_image
+                    | image_url: width: 600
+                    | image_tag:
+                      loading: 'lazy',
+                      alt: product_image.alt | default: display_name,
+                      class: 'ba-product-img',
+                      widths: '300, 400, 600'
+                  }}
+                {%- else -%}
+                  <div class="ba-img-placeholder" aria-hidden="true">
+                    <div class="ba-img-inner"></div>
+                  </div>
+                {%- endif -%}
+              </a>
+
+              <div class="ba-card-body">
+
+                {%- if block.settings.product_category != blank -%}
+                  <p class="ba-product-tag">{{ block.settings.product_category }}</p>
+                {%- endif -%}
+
+                <h3 class="ba-product-name">
+                  <a href="{{ product_url }}" class="ba-product-name-link">{{ display_name }}</a>
+                </h3>
+
+                {%- if display_price != blank -%}
+                  <p class="ba-product-price">
+                    {%- if price_is_custom -%}
+                      {{ display_price }}
+                    {%- else -%}
+                      {{ display_price }}
+                    {%- endif -%}
+                  </p>
+                {%- endif -%}
+
+                <div class="ba-divider-mini" aria-hidden="true"></div>
+
+                {%- if block.settings.usage_quote != blank -%}
+                  <p class="ba-usage-label">How I use it</p>
+                  <blockquote class="ba-usage-text">
+                    &ldquo;{{ block.settings.usage_quote }}&rdquo;
+                  </blockquote>
+                {%- endif -%}
+
+                {%- if block.settings.show_cta -%}
+                  <a
+                    class="ba-card-cta"
+                    href="{{ product_url }}"
+                    aria-label="Shop {{ display_name }}"
+                  >
+                    {{ block.settings.cta_label }} ↗
+                  </a>
+                {%- endif -%}
+
+              </div>
+            </article>
+
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} ── Bottom Banner ── {%- endcomment -%}
+      {%- if section.settings.show_bottom_banner -%}
+        <div class="ba-bottom-banner">
+          {%- if section.settings.banner_credit != blank -%}
+            <p class="ba-banner-text">{{ section.settings.banner_credit }}</p>
+          {%- endif -%}
+          {%- if section.settings.shop_all_url != blank -%}
+            <a
+              class="ba-shop-all"
+              href="{{ section.settings.shop_all_url }}"
+            >
+              {{ section.settings.shop_all_label }} ↗
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+    {%- endif -%}
+
+  </div>
+</section>
+
+<style>
+  #ba-arsenal-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    font-family: nunito;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-inner {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Header ── */
+  #ba-arsenal-{{ section.id }} .ba-header {
+    text-align: center;
+    margin-bottom: {{ section.settings.header_gap }}px;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-eyebrow {
+    font-family: var(--font-body-family, 'Helvetica Neue', sans-serif);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: {{ section.settings.gold_color }};
+    margin: 0 0 16px;
+    font-weight: 400;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-title-line {
+    display: block;
+    font-family: var(--font-body-family, 'Helvetica Neue', sans-serif);
+    font-size: clamp(11px, 1.8vw, 14px);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: {{ section.settings.heading_color }};
+    opacity: 0.35;
+    margin-bottom: 4px;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-title {
+    font-size: clamp(36px, 7vw, 64px);
+    font-weight: 400;
+    font-style: italic;
+    color: {{ section.settings.heading_color }};
+    margin: 0;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-title span {
+    color: {{ section.settings.gold_color }};
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-title-deco {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-deco-line {
+    display: block;
+    width: 200px;
+    height: 1px;
+    background: {{ section.settings.gold_color }};
+    opacity: 0.3;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-deco-diamond {
+    display: block;
+    width: 5px;
+    height: 5px;
+    background: {{ section.settings.gold_color }};
+    transform: rotate(45deg);
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-subtitle {
+    font-family: var(--font-body-family, 'Helvetica Neue', sans-serif);
+    font-size: 13px;
+    color: {{ section.settings.heading_color }};
+    opacity: 0.38;
+    letter-spacing: 0.04em;
+    margin: 16px 0 0;
+  }
+
+  /* ── Grid ── */
+  #ba-arsenal-{{ section.id }} .ba-grid {
+    display: grid;
+    gap: 2px;
+    border: 1px solid rgba(226,114,163,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 2px;
+  }
+
+  /* ── Card ── */
+  #ba-arsenal-{{ section.id }} .ba-card {
+    background: {{ section.settings.card_background }};
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-card-number {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    font-family: var(--font-body-family, 'Helvetica Neue', sans-serif);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: {{ section.settings.gold_color }};
+    opacity: 0.45;
+    font-weight: 400;
+    z-index: 1;
+  }
+
+  /* ── Image ── */
+  #ba-arsenal-{{ section.id }} .ba-img-wrap {
+    display: block;
+    aspect-ratio: 1 / 1;
+    background: {{ section.settings.image_background }};
+    border-bottom: 1px solid rgba(226,114,163,0.08);
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.image_fit }};
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-card:hover .ba-product-img {
+    transform: scale(1.04);
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-img-placeholder {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px; height: 56px;
+    border: 1px solid rgba(226,114,163,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-img-inner {
+    width: 28px; height: 28px;
+    border: 1px solid rgba(226,114,163,0.35);
+    border-radius: 50%;
+    background: rgba(226,114,163,0.06);
+  }
+
+  /* ── Card Body ── */
+  #ba-arsenal-{{ section.id }} .ba-card-body {
+    padding: 20px 20px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-product-tag {
+    font-family: var(--font-body-family, 'Helvetica Neue', sans-serif);
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: {{ section.settings.gold_color }};
+    margin: 0 0 8px;
+    font-weight: 400;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-product-name {
+    font-size: clamp(15px, 2vw, 19px);
+    font-weight: 400;
+    color: {{ section.settings.heading_color }};
+    margin: 0 0 5px;
+    line-height: 1.2;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-product-name-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-product-name-link:hover {
+    color: {{ section.settings.gold_color }};
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-product-price {
+    font-family: var(--font-body-family, 'Helvetica Neue', sans-serif);
+    font-size: 12px;
+    color: {{ section.settings.heading_color }};
+    opacity: 0.35;
+    margin: 0 0 16px;
+    letter-spacing: 0.05em;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-divider-mini {
+    width: 24px;
+    height: 1px;
+    background: {{ section.settings.gold_color }};
+    opacity: 0.3;
+    margin-bottom: 14px;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-usage-label {
+    font-family: var(--font-body-family, 'Helvetica Neue', sans-serif);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: {{ section.settings.gold_color }};
+    opacity: 0.55;
+    margin: 0 0 8px;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-usage-text {
+    font-size: 13px;
+    line-height: 1.7;
+    color: {{ section.settings.heading_color }};
+    opacity: 0.5;
+    font-style: italic;
+    flex: 1;
+    margin: 0 0 20px;
+    padding: 0;
+    border: none;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-body-family, 'Helvetica Neue', sans-serif);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: {{ section.settings.gold_color }};
+    text-decoration: none;
+    border-bottom: 1px solid rgba(226,114,163,0.3);
+    padding-bottom: 2px;
+    align-self: flex-start;
+    margin-top: auto;
+    transition: opacity 0.2s ease;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-card-cta:hover {
+    opacity: 0.7;
+  }
+
+  /* ── Bottom Banner ── */
+  #ba-arsenal-{{ section.id }} .ba-bottom-banner {
+    background: rgba(226,114,163,0.04);
+    border: 1px solid rgba(226,114,163,0.12);
+    border-top: none;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-radius: 0 0 2px 2px;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-banner-text {
+    font-family: var(--font-body-family, 'Helvetica Neue', sans-serif);
+    font-size: 11px;
+    color: {{ section.settings.heading_color }};
+    opacity: 0.35;
+    letter-spacing: 0.07em;
+    margin: 0;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-banner-text strong {
+    opacity: 1;
+    color: {{ section.settings.heading_color }};
+    font-weight: 400;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-shop-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body-family, 'Helvetica Neue', sans-serif);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: {{ section.settings.gold_color }};
+    text-decoration: none;
+    border: 1px solid rgba(226,114,163,0.25);
+    border-radius: 1px;
+    padding: 8px 20px;
+    transition: background 0.2s ease;
+  }
+
+  #ba-arsenal-{{ section.id }} .ba-shop-all:hover {
+    background: rgba(226,114,163,0.08);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 540px) {
+    #ba-arsenal-{{ section.id }} .ba-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    #ba-arsenal-{{ section.id }} .ba-bottom-banner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media (min-width: 541px) and (max-width: 860px) {
+    #ba-arsenal-{{ section.id }} .ba-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "My Bombshell Arsenal",
+  "tag": "section",
+  "class": "ba-arsenal-section-wrapper",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Show eyebrow label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow text",
+      "default": "Bombshell 50 · Curated by",
+      "info": "Short label above the title. Good place for the esthetician's name."
+    },
+    {
+      "type": "text",
+      "id": "heading_line",
+      "label": "Heading — first line",
+      "default": "My Bombshell",
+      "info": "Shown small and muted above the main word."
+    },
+    {
+      "type": "text",
+      "id": "heading_word",
+      "label": "Heading — main word (gold italic)",
+      "default": "Arsenal",
+      "info": "Displayed large and italic in gold. Usually 'Arsenal'."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag (SEO)",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "The exact products in my treatment room — and why I swear by each one."
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "label": "Space below header (px)",
+      "min": 24,
+      "max": 100,
+      "step": 4,
+      "default": 56
+    },
+    {
+      "type": "header",
+      "content": "Grid Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "options": [
+        { "value": "1", "label": "1 column" },
+        { "value": "2", "label": "2 columns" },
+        { "value": "3", "label": "3 columns" },
+        { "value": "4", "label": "4 columns" }
+      ],
+      "default": "3",
+      "info": "Tablet always shows 2 columns. Mobile always shows 1."
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Product image fit",
+      "options": [
+        { "value": "cover", "label": "Cover (fills square, may crop)" },
+        { "value": "contain", "label": "Contain (shows full product, no crop)" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max section width (px)",
+      "min": 800,
+      "max": 1400,
+      "step": 20,
+      "default": 1080
+    },
+    {
+      "type": "header",
+      "content": "Bottom Banner"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_banner",
+      "label": "Show bottom banner",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "banner_credit",
+      "label": "Banner credit text",
+      "default": "Curated by Jessica M. · Bombshell 50 Ambassador",
+      "info": "Wrap a name in <strong> tags to bold it, e.g. Curated by <strong>Jessica M.</strong>"
+    },
+    {
+      "type": "url",
+      "id": "shop_all_url",
+      "label": "Shop all button URL",
+      "info": "Link to your full product collection or a filtered collection."
+    },
+    {
+      "type": "text",
+      "id": "shop_all_label",
+      "label": "Shop all button label",
+      "default": "Shop full collection"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#0f0e0c"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#141210"
+    },
+    {
+      "type": "color",
+      "id": "image_background",
+      "label": "Image area background",
+      "default": "#1c1a17"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading / text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "gold_color",
+      "label": "Accent / gold color",
+      "default": "#C9A84C"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product Card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Select a product from your store. Image, name, and price pull in automatically."
+        },
+        {
+          "type": "text",
+          "id": "product_category",
+          "label": "Category label",
+          "placeholder": "e.g. Hard Wax, Pre-Treatment, Post-Care",
+          "info": "Small label shown above the product name. Leave blank to hide."
+        },
+        {
+          "type": "text",
+          "id": "custom_product_name",
+          "label": "Custom product name (optional)",
+          "info": "Overrides the product title pulled from your catalog. Leave blank to use the product title."
+        },
+        {
+          "type": "text",
+          "id": "custom_price",
+          "label": "Custom price display (optional)",
+          "placeholder": "e.g. $24.00",
+          "info": "Overrides the price from your catalog. Useful for bundles or display-only pricing. Leave blank to use the product price."
+        },
+        {
+          "type": "textarea",
+          "id": "usage_quote",
+          "label": "How I use it — esthetician's tip",
+          "placeholder": "Write in first person. This is the esthetician's personal voice about this specific product.",
+          "info": "Displayed in italics as a quote below the product details. Leave blank to hide the 'How I use it' section."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_cta",
+          "label": "Show 'Shop now' link",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "CTA link label",
+          "default": "Shop now"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "My Bombshell Arsenal",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

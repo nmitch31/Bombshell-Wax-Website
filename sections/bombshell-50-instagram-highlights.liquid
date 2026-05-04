@@ -1,0 +1,617 @@
+{% comment %}
+  Section: Instagram Highlights
+  Location: Esthetician profile pages (50-50 Program)
+  Add via: Theme Editor > Add Section
+  Notes:
+    - Paste the full Instagram embed code (from Instagram > Share > Embed) into each "Embed code" field
+    - Instagram's embed script is loaded once at the bottom of the section
+    - Supports 1–6 posts via blocks
+    - Layout is responsive: 3-col desktop, 2-col tablet, 1-col mobile
+{% endcomment %}
+
+<section
+  class="ig-highlights-section"
+  id="ig-highlights-{{ section.id }}"
+  style="
+    background-color: {{ section.settings.background_color }};
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+  "
+>
+
+  <div class="igh-bg-glow" aria-hidden="true"></div>
+
+  <div class="igh-inner">
+
+    {%- if section.settings.show_eyebrow and section.settings.eyebrow_text != blank -%}
+      <p class="igh-eyebrow">{{ section.settings.eyebrow_text }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <{{ section.settings.heading_tag }} class="igh-heading">
+        {{ section.settings.heading }}
+      </{{ section.settings.heading_tag }}>
+    {%- endif -%}
+
+    <div class="igh-divider" aria-hidden="true">
+      <span class="igh-divider__line"></span>
+      {% comment %}
+       Diamond and second line:
+      <span class="igh-divider__diamond"></span>
+      <span class="igh-divider__line"></span>
+      {% endcomment %}
+    </div>
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="igh-subheading">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div
+        class="igh-grid igh-grid--{{ section.settings.columns }}"
+        style="--igh-cols: {{ section.settings.columns }};"
+      >
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'post' -%}
+            <div
+              class="igh-card"
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.embed_code != blank -%}
+                <div class="igh-embed-wrap">
+                  {{ block.settings.embed_code }}
+                </div>
+              {%- else -%}
+                <div class="igh-embed-empty">
+                  <span class="igh-embed-empty__icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" fill="currentColor"/>
+                    </svg>
+                  </span>
+                  <p class="igh-embed-empty__text">Paste Instagram embed code in the editor</p>
+                </div>
+              {%- endif -%}
+
+              {%- if block.settings.caption != blank or block.settings.post_url != blank -%}
+                <div class="igh-card__footer">
+                  {%- if block.settings.caption != blank -%}
+                    <p class="igh-card__caption">{{ block.settings.caption }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.post_url != blank -%}
+                    <a
+                      class="igh-card__link"
+                      href="{{ block.settings.post_url }}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="View post on Instagram"
+                    >
+                      Go to this post
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_profile_footer -%}
+      <div class="igh-profile-footer">
+        <div class="igh-profile-handle">
+          <span class="igh-profile-handle__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" fill="currentColor"/>
+            </svg>
+          </span>
+          {%- if section.settings.instagram_handle != blank -%}
+            <span class="igh-profile-handle__name">
+              <strong>@{{ section.settings.instagram_handle }}</strong>
+              {%- if section.settings.handle_tagline != blank -%}
+                &nbsp;· {{ section.settings.handle_tagline }}
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.instagram_url != blank -%}
+          <a
+            class="igh-follow-btn"
+            href="{{ section.settings.instagram_url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Follow on Instagram ↗
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+
+</section>
+
+{% comment %} Load Instagram embed script once per page {% endcomment %}
+{%- unless request.page_type == 'index' -%}
+  <script async defer src="//www.instagram.com/embed.js"></script>
+{%- endunless -%}
+
+<style>
+  #ig-highlights-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    font-family: nunito;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-bg-glow {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(226,114,163,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* Eyebrow */
+  #ig-highlights-{{ section.id }} .igh-eyebrow {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: {{ section.settings.gold_color }};
+    margin: 0 0 12px;
+    font-weight: 500;
+  }
+
+  /* Heading */
+  #ig-highlights-{{ section.id }} .igh-heading {
+    text-align: center;
+    font-size: clamp(24px, 5vw, 40px);
+    font-weight: 500;
+    color: {{ section.settings.heading_color }};
+    margin: 0 0 8px;
+    line-height: 1.2;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-heading em {
+    font-style: italic;
+    color: {{ section.settings.gold_color }};
+  }
+
+  /* Divider */
+  #ig-highlights-{{ section.id }} .igh-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 16px auto 24px;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-divider__line {
+    display: block;
+    width: 50px;
+    height: 1px;
+    background: {{ section.settings.gold_color }};
+    opacity: 0.35;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-divider__diamond {
+    display: block;
+    width: 5px;
+    height: 5px;
+    background: {{ section.settings.gold_color }};
+    transform: rotate(45deg);
+  }
+
+  /* Subheading */
+  #ig-highlights-{{ section.id }} .igh-subheading {
+    text-align: center;
+    font-size: 14px;
+    color: {{ section.settings.subheading_color }};
+    margin: 0 0 36px;
+    letter-spacing: 0.03em;
+  }
+
+  /* Grid */
+  #ig-highlights-{{ section.id }} .igh-grid {
+    display: grid;
+    gap: {{ section.settings.grid_gap }}px;
+    margin-bottom: 40px;
+    grid-template-columns: repeat(var(--igh-cols, 3), minmax(0, 1fr));
+  }
+
+  /* Card */
+  #ig-highlights-{{ section.id }} .igh-card {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(226,114,163,0.15);
+    background: {{ section.settings.card_background }};
+  }
+
+  /* Embed wrapper — fixed aspect ratio so all cards are the same height */
+  #ig-highlights-{{ section.id }} .igh-embed-wrap {
+    width: 100%;
+    position: relative;
+    padding-bottom: {{ section.settings.embed_aspect_ratio }}%;
+    height: 0;
+    overflow: hidden;
+    background: {{ section.settings.card_background }};
+  }
+
+  #ig-highlights-{{ section.id }} .igh-embed-wrap iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: unset !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    border: none;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-embed-wrap blockquote {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: unset !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    overflow: hidden;
+  }
+
+  /* Empty state placeholder */
+  #ig-highlights-{{ section.id }} .igh-embed-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 48px 20px;
+    color: rgba(226,114,163,0.4);
+    border-bottom: 1px solid rgba(226,114,163,0.1);
+    min-height: 200px;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-embed-empty__text {
+    font-size: 12px;
+    color: rgba(0,0,0,0.3);
+    text-align: center;
+    margin: 0;
+    letter-spacing: 0.04em;
+  }
+
+  /* Card footer */
+  #ig-highlights-{{ section.id }} .igh-card__footer {
+    padding: 12px 16px 16px;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-card__caption {
+    font-size: 12px;
+    color: {{ section.settings.caption_color }};
+    line-height: 1.55;
+    margin: 0 0 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-card__link {
+    font-size: 11px;
+    color: {{ section.settings.gold_color }};
+    text-decoration: none;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-card__link:hover {
+    text-decoration: underline;
+  }
+
+  /* Profile footer */
+  #ig-highlights-{{ section.id }} .igh-profile-footer {
+    border-top: 1px solid rgba(226,114,163,0.12);
+    padding-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-profile-handle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-profile-handle__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(226,114,163,0.3);
+    color: {{ section.settings.gold_color }};
+    flex-shrink: 0;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-profile-handle__name {
+    font-size: 13px;
+    color: {{ section.settings.subheading_color }};
+  }
+
+  #ig-highlights-{{ section.id }} .igh-profile-handle__name strong {
+    color: {{ section.settings.heading_color }};
+    font-weight: 500;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-follow-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(226,114,163,0.1);
+    border: 1px solid rgba(226,114,163,0.35);
+    border-radius: 100px;
+    padding: 9px 22px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: {{ section.settings.gold_color }};
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+
+  #ig-highlights-{{ section.id }} .igh-follow-btn:hover {
+    background: rgba(226,114,163,0.18);
+  }
+
+  /* Responsive breakpoints */
+  @media (max-width: 480px) {
+    #ig-highlights-{{ section.id }} .igh-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    #ig-highlights-{{ section.id }} .igh-profile-footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media (min-width: 481px) and (max-width: 768px) {
+    #ig-highlights-{{ section.id }} .igh-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Instagram Highlights",
+  "tag": "section",
+  "class": "ig-highlights-section-wrapper",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Show eyebrow label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow text",
+      "default": "Social Highlights"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "<p>Follow the <em>Journey</em></p>",
+      "info": "Wrap a word in <em> tags to italicize it in gold."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag (SEO)",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Behind the scenes, education moments & client transformations"
+    },
+    {
+      "type": "header",
+      "content": "Grid Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "options": [
+        { "value": "1", "label": "1 column" },
+        { "value": "2", "label": "2 columns" },
+        { "value": "3", "label": "3 columns" }
+      ],
+      "default": "3",
+      "info": "On tablet: 2 columns. On mobile: always 1 column."
+    },
+    {
+      "type": "range",
+      "id": "embed_aspect_ratio",
+      "label": "Post height (aspect ratio %)",
+      "min": 75,
+      "max": 177,
+      "step": 2,
+      "default": 125,
+      "info": "Sets a uniform height for every post. 125 = balanced (recommended). 177 = full Reel/portrait. 100 = square. 75 = landscape."
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap between posts (px)",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Instagram Profile Footer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_profile_footer",
+      "label": "Show profile footer",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "instagram_handle",
+      "label": "Instagram handle (without @)",
+      "default": "yourhandle",
+      "info": "Example: jessica.waxpro"
+    },
+    {
+      "type": "text",
+      "id": "handle_tagline",
+      "label": "Handle tagline",
+      "default": "Follow for tutorials & tips"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram profile URL"
+    },
+    {
+      "type": "header",
+      "content": "Colors & Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#0d0d0d"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background color",
+      "default": "#161616"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading / muted text color",
+      "default": "#737373"
+    },
+    {
+      "type": "color",
+      "id": "caption_color",
+      "label": "Caption text color",
+      "default": "#8c8c8c"
+    },
+    {
+      "type": "color",
+      "id": "gold_color",
+      "label": "Accent / gold color",
+      "default": "#C9A84C"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "post",
+      "name": "Instagram Post",
+      "settings": [
+        {
+          "type": "html",
+          "id": "embed_code",
+          "label": "Instagram embed code",
+          "info": "On Instagram: open the post > tap ··· > Share > Embed > Copy embed code. Paste the full <blockquote>...</blockquote> code here. Do NOT include the <script> tag — it is loaded automatically by the section."
+        },
+        {
+          "type": "textarea",
+          "id": "caption",
+          "label": "Caption (optional)",
+          "info": "A short description shown below the post. Leave blank to hide."
+        },
+        {
+          "type": "url",
+          "id": "post_url",
+          "label": "Post URL (optional)",
+          "info": "Direct link to the Instagram post. Leave blank to hide the 'View on Instagram' link."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Highlights",
+      "blocks": [
+        { "type": "post" },
+        { "type": "post" },
+        { "type": "post" }
+      ]
+    }
+  ]
+}
+{% endschema %}

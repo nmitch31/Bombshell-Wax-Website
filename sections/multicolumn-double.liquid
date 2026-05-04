@@ -1,0 +1,179 @@
+{% schema %}
+{
+  "name": "Double Multicolumn",
+  "settings": [
+    {
+      "type": "range",
+      "id": "left_columns_desktop",
+      "label": "Left Columns per row (Desktop)",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "left_columns_mobile",
+      "label": "Left Columns per row (Mobile)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "right_columns_desktop",
+      "label": "Right Columns per row (Desktop)",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "right_columns_mobile",
+      "label": "Right Columns per row (Mobile)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "column_side",
+          "label": "Column Side",
+          "options": [
+            { "value": "left", "label": "Left Column" },
+            { "value": "right", "label": "Right Column" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "textarea",
+          "id": "svg_icon",
+          "label": "SVG Icon Code",
+          "default": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='40' height='40'><path fill='currentColor' d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/></svg>"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Title Here"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Add some text describing this feature."
+        },
+        {
+          "type": "url",
+          "id": "box_link",
+          "label": "Box Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Double Multicolumn"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .double-multicolumn-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    gap: 40px;
+    align-items: flex-start;
+  }
+
+  .double-multicolumn__column {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .double-multicolumn__column .column {
+    flex: 1 1 calc(100% / var(--columns-desktop) - 20px);
+    max-width: calc(100% / var(--columns-desktop) - 20px);
+    text-align: center;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .double-multicolumn__column .column:hover {
+    background: #ececec;
+  }
+
+  .double-multicolumn__column .column svg {
+    width: 40px;
+    height: 40px;
+    fill: #333;
+    margin-bottom: 10px;
+  }
+
+  .double-multicolumn__column .column h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+
+  .double-multicolumn__column .column p {
+    font-size: 1rem;
+    color: #666;
+  }
+
+  @media (max-width: 768px) {
+    .double-multicolumn__column .column {
+      flex: 1 1 calc(100% / var(--columns-mobile) - 20px);
+      max-width: calc(100% / var(--columns-mobile) - 20px);
+    }
+  }
+</style>
+
+<div class="double-multicolumn-wrapper">
+  <div class="double-multicolumn__column" 
+       style="--columns-desktop: {{ section.settings.left_columns_desktop }}; 
+              --columns-mobile: {{ section.settings.left_columns_mobile }};">
+    {% for block in section.blocks %}
+      {% if block.settings.column_side == "left" %}
+        <a href="{{ block.settings.box_link | default: '#' }}" class="column">
+          {{ block.settings.svg_icon }}
+          <h3>{{ block.settings.subtitle }}</h3>
+          <p>{{ block.settings.description }}</p>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="double-multicolumn__column" 
+       style="--columns-desktop: {{ section.settings.right_columns_desktop }}; 
+              --columns-mobile: {{ section.settings.right_columns_mobile }};">
+    {% for block in section.blocks %}
+      {% if block.settings.column_side == "right" %}
+        <a href="{{ block.settings.box_link | default: '#' }}" class="column">
+          {{ block.settings.svg_icon }}
+          <h3>{{ block.settings.subtitle }}</h3>
+          <p>{{ block.settings.description }}</p>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
