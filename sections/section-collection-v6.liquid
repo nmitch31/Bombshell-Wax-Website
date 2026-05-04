@@ -1,0 +1,257 @@
+<div data-section-id="{{ section.id }}" data-section-type="section-collection-v3" style="{% if section.settings.margin_top != blank %}margin-top: {{section.settings.margin_top}}px;{%endif%} {% if section.settings.margin_bottom != blank %}margin-bottom: {{section.settings.margin_bottom}}px;{% endif %} {% if section.settings.sections_layout == "dark" %}background: {{section.settings.sections_bg_color}};{% endif %}">
+  <div class="section-collection-v3">
+    <div class="container container-v2">
+      
+      
+      <div class="section-collection-v2 pd-small" style="background: {{section.settings.bg_section}}">
+    <div class="container container-v2">
+      <div class="col-12 col-md-10 col-lg-8 px-0 mx-auto text-center">
+
+        {% if section.settings.title_heading != blank %}
+        <h3 class="title_heading mb-0" style="color: {{section.settings.color_title}}">{{section.settings.title_heading}}</h3>
+        {% endif %}
+
+        {% if section.settings.sub_heading != blank %}
+        <p class="sub_heading" style="color: {{section.settings.color_sub_heading}}">{{section.settings.sub_heading}}</p>
+        {% endif %}
+
+      </div>
+    </div>
+      </div>    
+      <div class="custom-multicolumn-wrapper">
+  <div class="custom-multicolumn" 
+       style="--columns-desktop: {{ section.settings.columns_desktop }}; 
+              --columns-mobile: {{ section.settings.columns_mobile }};">
+    {% for block in section.blocks %}
+      
+        <a class="column {{ block.settings.box_link }}">
+        {{ block.settings.svg_icon }}
+        <h3>{{ block.settings.subtitle }}</h3>
+        <p>{{ block.settings.description }}</p>
+        </a>
+      
+    {% endfor %}
+  </div>
+</div>
+    
+  </div>
+<div class="section-video-v1" >
+    <div class="container-v1">
+      <div class="box-video relative">
+        {% if section.settings.video_bg != blank %}
+        <img src="{{section.settings.video_bg|img_url:'master'}}" class="img-fluid w-100" alt="Image">
+        {% else %}
+        <img src="//via.placeholder.com/1500x700" class="img-fluid w-100" alt="Image">
+        {% endif %}
+        <a class="absolute button-video" data-fancybox href="{{ section.settings.section_video_url }}"> 
+          <span class="">
+            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 width="778.981px" height="778.98px" viewBox="0 0 778.981 778.98" style="enable-background:new 0 0 778.981 778.98;"
+                 xml:space="preserve">
+              <g>
+                <g id="_x37__33_">
+                  <g>
+                    <path d="M673.195,348.856L150.077,7.981C119.068-8.899,83.499-1.363,83.499,53.535v671.209c0,54.509,38.156,64.215,66.579,45.525
+                             l523.118-340.874C703.341,408.064,702.479,368.462,673.195,348.856z M138.647,702.356V75.895L635.01,389.126L138.647,702.356z"/>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+                      </div>
+{% schema %}
+{
+  "name": "COLLECTION V6",
+  "class": "index-section",
+  "settings": [ 
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns per row (Desktop)",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "label": "Columns per row (Mobile)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+     {
+      "type": "header",
+      "content": "Background Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_bg",
+      "info": "1920 x 700px recommended",
+      "label": "Image video"
+    },
+    {
+      "type": "header",
+      "content": "Video"
+    },
+    {
+      "type": "url",
+      "id": "section_video_url",
+      "label": "URL Video",
+      "info": "[Upload video .mp4 in here](/admin/settings/files)"
+    },
+    {
+      "type": "header",
+      "content": "Section Space"
+    },
+    {
+      "type": "color",
+      "id": "bg_section",
+      "label": "Background Section",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "text",
+      "id": "title_heading",
+      "label": "Title Heading",
+      "default": "Featured Categories"
+    },
+    {
+      "type": "color",
+      "id": "color_title",
+      "label": "Color",
+      "default": "#000"
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Title Heading",
+      "default": "They are made with vegetable oil and/or animals fats for their skin care properties. The soapmaker will often include additives to the soap for their healing, exfoliating and esthetic properties."
+    },
+    {
+      "type": "color",
+      "id": "color_sub_heading",
+      "label": "Color",
+      "default": "#666"
+    },
+    {
+      "type": "header",
+      "content": "Section Space"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "svg_icon",
+          "label": "SVG Icon Code",
+          "default": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='40' height='40'><path fill='currentColor' d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/></svg>"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Title Here"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Add some text describing this feature."
+        },
+            {
+  "type": "textarea",
+  "id": "box_link",
+  "label": "Box Link"
+}
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+
+{% stylesheet %}
+  <style>
+  .custom-multicolumn-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .custom-multicolumn {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Ensures last row is centered */
+    gap: 20px; /* Space between boxes */
+    width: 100%;
+    max-width: 1200px; /* Prevents excessive width */
+  }
+
+  .custom-multicolumn .column {
+    flex: 1 1 calc(100% / var(--columns-desktop) - 20px);
+    max-width: calc(100% / var(--columns-desktop) - 20px);
+    text-align: center;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .custom-multicolumn .column:hover {
+    background: #ececec;
+  }
+
+  .custom-multicolumn .column svg {
+    width: 40px;
+    height: 40px;
+    fill: #333; /* Default color */
+    margin-bottom: 10px;
+  }
+
+  .custom-multicolumn .column h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+
+  .custom-multicolumn .column p {
+    font-size: 1rem;
+    color: #666;
+  }
+
+  /* Responsive Columns */
+  @media (max-width: 768px) {
+    .custom-multicolumn .column {
+      flex: 1 1 calc(100% / var(--columns-mobile) - 20px);
+      max-width: calc(100% / var(--columns-mobile) - 20px);
+    }
+  }
+</style>
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

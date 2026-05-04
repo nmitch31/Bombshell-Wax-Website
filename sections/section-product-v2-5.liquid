@@ -1,0 +1,384 @@
+<div data-section-id="{{ section.id }}" data-section-type="section-product-v2" style="{% if section.settings.margin_top != blank %}margin-top: {{section.settings.margin_top}}px;{%endif%} {% if section.settings.margin_bottom != blank %}margin-bottom: {{section.settings.margin_bottom}}px;{% endif %}">
+  <div class="section-product-v2 mt-all">
+    <div class="container container-v2">
+      {% if section.settings.title_heading != blank %}
+      <div class="text-center">
+        <h3 class="title_heading text-center mb-4 animate-on-scroll" style="color: {{section.settings.color_title}}"
+   data-effect="{{ section.settings.effect_title }}"
+   data-delay="{{ section.settings.effect_delay }}"
+   data-duration="{{ section.settings.effect_duration }}">{{section.settings.title_heading}}</h3>
+   <p class="text-center mb-4 animate-on-scroll" style="color: {{section.settings.color_subtitle}}"
+   data-effect="{{ section.settings.effect_title }}"
+   data-delay="{{ section.settings.effect_delay }}"
+   data-duration="{{ section.settings.effect_duration }}">{{section.settings.subtitle_heading}}</p>
+      </div>
+      {% endif %}
+      <div class="row justify-content-center animate-on-scroll"
+   data-effect="{{ section.settings.effect_chart }}"
+   data-delay="{{ section.settings.effect_delay_chart }}"
+   data-duration="{{ section.settings.effect_duration_chart }}">
+        <div class="col-lg-12">
+          <ul class="nav nav-tabs title-tab justify-content-center">
+            {% if section.blocks.size > 0 %}
+            {%- assign i = 1 -%}
+            {% for block in section.blocks %}
+            <li>
+              <a href="#a{{i}}" data-toggle="tab" class="{% if forloop.first %}active{% endif %} ds-prod-1">{{block.settings.tab_title}}</a>
+            </li>
+            {%- assign i = i | plus : 1 -%}
+
+            {% endfor %}
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+      <div class="tab-content">
+        {% if section.blocks.size > 0 %}
+        {%- assign i = 1 -%}
+        {% for block in section.blocks %}
+        {% assign products_limit = block.settings.tab_limit %}
+        {% assign col = block.settings.tab_collection %}
+
+        <div id="a{{i}}" class="tab-pane fade {% if forloop.first %}show active{% endif %}">
+
+          
+<div class="row justify-content-center bulkpricechart animate-on-scroll"
+   data-effect="{{ section.settings.effect_chart }}"
+   data-delay="{{ section.settings.effect_delay_chart }}"
+   data-duration="{{ section.settings.effect_duration_chart }}">
+    <div class="">Bulk Pricing Discounts:</div>
+  </div>
+          
+            
+<div class="row justify-content-center">           
+      <!-- Example: evenly spaced text blocks per tab -->
+      {% if forloop.index == 1 %}
+  
+<div class="d-flex flex-wrap justify-content-center align-items-center mb-4 animate-on-scroll"
+   data-effect="{{ section.settings.effect_chart }}"
+   data-delay="{{ section.settings.effect_delay_chart }}"
+   data-duration="{{ section.settings.effect_duration_chart }}">
+  
+  <div class="wordpadding borderbox rounded text-center mr-1">
+    <div class="fw-bold">6 lbs</div>
+    <div class="text-muted small discount-percentage">Save 8%</div>
+  </div>
+  <div class="wordpadding borderbox rounded text-center mr-1">
+    <div class="fw-bold">10 lbs</div>
+    <div class="text-muted small discount-percentage">Save 15%</div>
+  </div>
+  <div class="wordpadding borderbox rounded text-center mr-1">
+    <div class="fw-bold">16 lbs</div>
+    <div class="text-muted small discount-percentage">Save 20%</div>
+  </div>
+    <div class="wordpadding borderbox rounded text-center mr-1">
+    <div class="fw-bold">24 lbs</div>
+    <div class="text-muted small discount-percentage">Save 25%</div>
+  </div>
+  <div class="wordpadding borderbox rounded text-center mr-1">
+    <div class="fw-bold">46 lbs</div>
+    <div class="text-muted small discount-percentage">Save 33%</div>
+  </div>
+</div>
+
+  
+      {% elsif forloop.index == 2 %}
+
+<div class="d-flex flex-wrap justify-content-center align-items-center mb-4 animate-on-scroll"
+   data-effect="{{ block.settings.effect_chart }}"
+   data-delay="{{ block.settings.effect_delay_chart }}"
+   data-duration="{{ block.settings.effect_duration_chart }}">
+  <div class="wordpadding borderbox rounded text-center mr-1">
+    <div class="fw-bold">2 cans</div>
+    <div class="text-muted small discount-percentage">Save 10%</div>
+  </div>
+  <div class="wordpadding borderbox rounded text-center mr-1">
+    <div class="fw-bold">6 cans</div>
+    <div class="text-muted smal discount-percentage">Save 19%</div>
+  </div>
+  <div class="wordpadding borderbox rounded text-center mr-1">
+    <div class="fw-bold">12 cans</div>
+    <div class="text-muted small discount-percentage">Save 30%</div>
+  </div>
+  
+</div>
+      {% endif %}
+</div>
+<div class="row products-grid">
+            
+            {% for product in collections[col].products limit: products_limit %}
+            <div class="product-tab-pd productwrapper">
+              {% include 'product-item-v1' %}
+            </div>
+            {% else %}
+            {% for i in (1..8) %}
+            <div class="product-tab-pd productwrapper">
+              {% include 'empty-product-item' %}
+            </div>
+            {% endfor %}
+            {% endfor %}
+          </div>
+        </div>
+        {%- assign i = i | plus : 1 -%}
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "PRODUCT V2.5",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Space"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    },
+    {
+      "type": "text",
+      "id": "title_heading",
+      "label": "Title Section",
+      "default": "Our Best Seller"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle_heading",
+      "label": "subTitle Section",
+      "default": "Our bestest bestseBest Seller"
+    },
+    {
+      "type": "color",
+      "id": "color_title",
+      "label": "Color title",
+      "default": "#222"
+    },
+    {
+      "type": "color",
+      "id": "color_subtitle",
+      "label": "Color subtitle",
+      "default": "#222"
+    },
+    {
+  "type": "header",
+  "content": "Animation Settings"
+},
+{
+  "type": "select",
+  "id": "effect_title",
+  "label": "Title Animation Effect",
+  "options": [
+    { "value": "fadeInUp", "label": "Fade In Up" },
+    { "value": "fadeInDown", "label": "Fade In Down" },
+    { "value": "fadeInLeft", "label": "Fade In Left" },
+    { "value": "fadeInRight", "label": "Fade In Right" },
+    { "value": "zoomIn", "label": "Zoom In" },
+    { "value": "slideInUp", "label": "Slide In Up" },
+    { "value": "bounceIn", "label": "Bounce In" },
+    { "value": "tada", "label": "Tada" },
+    { "value": "heartBeat", "label": "HeartBeat" }
+  ],
+  "default": "fadeInUp"
+},
+{
+  "type": "text",
+  "id": "effect_duration",
+  "label": "Animation Duration (e.g. 1s, 2s)",
+  "default": "1s"
+},
+{
+  "type": "text",
+  "id": "effect_delay",
+  "label": "Animation Delay (e.g. 0s, 0.3s, 1s)",
+  "default": "0s"
+},
+{
+  "type": "select",
+  "id": "effect_chart",
+  "label": "Chart Animation Effect",
+  "options": [
+    { "value": "fadeInUp", "label": "Fade In Up" },
+    { "value": "fadeInDown", "label": "Fade In Down" },
+    { "value": "fadeInLeft", "label": "Fade In Left" },
+    { "value": "fadeInRight", "label": "Fade In Right" },
+    { "value": "zoomIn", "label": "Zoom In" },
+    { "value": "slideInUp", "label": "Slide In Up" },
+    { "value": "bounceIn", "label": "Bounce In" },
+    { "value": "tada", "label": "Tada" },
+    { "value": "heartBeat", "label": "HeartBeat" }
+  ],
+  "default": "fadeInUp"
+},
+{
+  "type": "text",
+  "id": "effect_duration_chart",
+  "label": "Animation Duration (e.g. 1s, 2s)",
+  "default": "1s"
+},
+{
+  "type": "text",
+  "id": "effect_delay_chart",
+  "label": "Animation Delay (e.g. 0s, 0.3s, 1s)",
+  "default": "0s"
+},
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Title Tab",
+          "default": "NEW ARRIVALS"
+        },
+        {
+          "type": "collection",
+          "id": "tab_collection",
+          "label": "Chose Collection"
+        },
+        {
+          "type": "range",
+          "id": "tab_limit",
+          "min": 2,
+          "max": 50,
+          "step": 1,
+          "label": "Limit Products",
+          "default": 8
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PRODUCT V2.5",
+      "category": "HOME",
+      "blocks": [
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "NEW ARRIVALS"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "BEST SELLERS"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "TOP RATES"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  
+
+
+  
+  
+  
+  .tight-box {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 80px;
+  }
+.alignx{
+  align-items: center;
+}
+
+  .discount-percentage{
+    font-weight: bold;
+    color: #e272a3 !important;
+    background: rgba(226, 114, 163, 0.15);
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-size: 15px;
+  }
+
+  .fw-bold{
+    font-weight: bold;
+  }
+
+img {
+  border-radius: 4px;
+}
+.img-product {
+  padding: 10px;
+  border-radius: 4px;
+  border: 0px solid;
+}
+a {
+  font-family: nunito;
+  font-weight: 800;
+  border-radius: 4px;
+}
+
+.productwrapper{
+background:white;
+border-radius: 6px;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+gap:30px;
+display: flex;
+}
+.productwrapper:hover{
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.product-tab-pd {
+  /* remove bootstrap column constraints if necessary */
+  width: 100%;
+}
+@media (max-width: 992px) {
+  .products-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 576px) {
+  .products-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.wordpadding{
+padding: 10px 8px;}
+
+.borderbox{
+border: 1px solid #e272a3;
+font-family: nunito;
+}
+
+.bulkpricechart{
+font-family: nunito;
+padding: 5px;
+}
+
+.container .container-v2{
+margin-bottom: 10px;}
+</style>

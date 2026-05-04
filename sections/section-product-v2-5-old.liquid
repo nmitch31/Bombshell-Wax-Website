@@ -1,0 +1,240 @@
+<div data-section-id="{{ section.id }}" data-section-type="section-product-v2" style="{% if section.settings.margin_top != blank %}margin-top: {{section.settings.margin_top}}px;{%endif%} {% if section.settings.margin_bottom != blank %}margin-bottom: {{section.settings.margin_bottom}}px;{% endif %}">
+  <div class="section-product-v2 mt-all">
+    <div class="container container-v2">
+      {% if section.settings.title_heading != blank %}
+      <div class="text-center">
+        <h3 class="title_heading text-center mb-4" style="color: {{section.settings.color_title}}">{{section.settings.title_heading}}</h3>
+      </div>
+      {% endif %}
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <ul class="nav nav-tabs title-tab justify-content-center">
+            {% if section.blocks.size > 0 %}
+            {%- assign i = 1 -%}
+            {% for block in section.blocks %}
+            <li>
+              <a href="#a{{i}}" data-toggle="tab" class="{% if forloop.first %}active{% endif %} ds-prod-1">{{block.settings.tab_title}}</a>
+            </li>
+            {%- assign i = i | plus : 1 -%}
+
+            {% endfor %}
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+      <div class="tab-content">
+        {% if section.blocks.size > 0 %}
+        {%- assign i = 1 -%}
+        {% for block in section.blocks %}
+        {% assign products_limit = block.settings.tab_limit %}
+        {% assign col = block.settings.tab_collection %}
+
+        <div id="a{{i}}" class="tab-pane fade {% if forloop.first %}show active{% endif %}">
+
+          
+<div class="row justify-content-center">
+    <div class="">Bulk Pricing Chart:</div>
+  </div>
+          
+            
+<div class="row justify-content-center">           
+      <!-- Example: evenly spaced text blocks per tab -->
+      {% if forloop.index == 1 %}
+  
+<div class="d-flex flex-wrap justify-content-center align-items-center mb-4">
+  
+  <div class="px-2 py-1 border rounded text-center mr-1">
+    <div class="fw-bold">6 lbs</div>
+    <div class="text-muted small discount-percentage">Save 8%</div>
+  </div>
+  <div class="px-2 py-1 border rounded text-center mr-1">
+    <div class="fw-bold">10 lbs</div>
+    <div class="text-muted small discount-percentage">Save 15%</div>
+  </div>
+  <div class="px-2 py-1 border rounded text-center mr-1">
+    <div class="fw-bold">16 lbs</div>
+    <div class="text-muted small discount-percentage">Save 20%</div>
+  </div>
+    <div class="px-2 py-1 border rounded text-center mr-1">
+    <div class="fw-bold">24 lbs</div>
+    <div class="text-muted small discount-percentage">Save 25%</div>
+  </div>
+  <div class="px-2 py-1 border rounded text-center mr-1">
+    <div class="fw-bold">46 lbs</div>
+    <div class="text-muted small discount-percentage">Save 33%</div>
+  </div>
+</div>
+
+  
+      {% elsif forloop.index == 2 %}
+
+<div class="d-flex flex-wrap justify-content-center align-items-center mb-4">
+  <div class="px-2 py-1 border rounded text-center mr-1">
+    <div class="fw-bold">2 cans</div>
+    <div class="text-muted small discount-percentage">Save 10%</div>
+  </div>
+  <div class="px-2 py-1 border rounded text-center mr-1">
+    <div class="fw-bold">6 cans</div>
+    <div class="text-muted smal discount-percentage">Save 19%</div>
+  </div>
+  <div class="px-2 py-1 border rounded text-center mr-1">
+    <div class="fw-bold">12 cans</div>
+    <div class="text-muted small discount-percentage">Save 30%</div>
+  </div>
+  
+</div>
+      {% endif %}
+</div>
+<div class="row">
+            
+            {% for product in collections[col].products limit: products_limit %}
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 product-tab-pd ">
+              {% include 'product-item-v1' %}
+            </div>
+            {% else %}
+            {% for i in (1..8) %}
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 product-tab-pd">
+              {% include 'empty-product-item' %}
+            </div>
+            {% endfor %}
+            {% endfor %}
+          </div>
+        </div>
+        {%- assign i = i | plus : 1 -%}
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "PRODUCT V2.5 OLD",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Space"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    },
+    {
+      "type": "text",
+      "id": "title_heading",
+      "label": "Title Section",
+      "default": "Our Best Seller"
+    },
+    {
+      "type": "color",
+      "id": "color_title",
+      "label": "Color",
+      "default": "#222"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Title Tab",
+          "default": "NEW ARRIVALS"
+        },
+        {
+          "type": "collection",
+          "id": "tab_collection",
+          "label": "Chose Collection"
+        },
+        {
+          "type": "range",
+          "id": "tab_limit",
+          "min": 2,
+          "max": 50,
+          "step": 1,
+          "label": "Limit Products",
+          "default": 8
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PRODUCT V2.5 OLD",
+      "category": "HOME",
+      "blocks": [
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "NEW ARRIVALS"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "BEST SELLERS"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "TOP RATES"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .tight-box {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    min-width: 80px;
+  }
+.alignx{
+  align-items: center;
+}
+
+  .discount-percentage{
+    font-weight: bold;
+    color: #e272a3 !important;
+    background: rgba(226, 114, 163, 0.15);
+    padding: 3px 7px;
+    border-radius: 6px;
+    font-size: 15px;
+  }
+
+  .fw-bold{
+    font-weight: bold;
+  }
+
+img {
+  border-radius: 5%;
+}
+.img-product {
+  margin: 10px;
+  border-radius: 5%;
+  border: 0px solid;
+  box-shadow: 0px 0px 6px 2px;
+}
+a {
+  font-family: nunito;
+  font-weight: 800;
+  border-radius: 10px;
+}
+</style>

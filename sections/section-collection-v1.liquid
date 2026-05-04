@@ -1,0 +1,301 @@
+<div data-section-id="{{ section.id }}" data-section-type="section-collection-v1" style="{% if section.settings.margin_top != blank %}margin-top: {{section.settings.margin_top}}px;{%endif%} {% if section.settings.margin_bottom != blank %}margin-bottom: {{section.settings.margin_bottom}}px;{% endif %}">
+  <div class="section-collection-v1">
+    <div class="container container-v2">
+
+      {% for block in section.blocks %}
+      {% if block.type == 'collection' %}
+      {% assign mod = forloop.index | modulo : 2 %}
+      {% if mod == 0 %}
+      <div class="row align-items-center no-gutters" style="background:{{block.settings.bg_color}}">
+        <div class="col-md-6 col-sm-12 order-2 order-md-1">
+          <div class="col-info">
+
+            <h3 class="title" style="color : {{block.settings.color_title}}">{{block.settings.block_title}}</h3>
+
+            <p class="des animate-on-scroll"
+   data-effect="{{ block.settings.effect_desc }}"
+   data-delay="{{ block.settings.effect_delay_desc }}"
+   data-duration="{{ block.settings.effect_duration_desc }}" style="color : {{block.settings.color_des}}">{{block.settings.block_des}}</p>
+            <a class="button-universal" href="{{block.settings.block_url}}" target = "_blank">
+              {{block.settings.block_buton}}
+            </a>
+
+          </div>
+        </div>
+
+        <div class="col-md-6 col-sm-12 order-1 order-md-2 ">
+          <div class="col-image">
+            <a href="{{block.settings.block_url}}">
+              <img alt="{{ collection.title }}" class="w-100" src="{% if block.settings.img_collection != blank %} {{block.settings.img_collection | img_url : 'master'}} {% else %}//via.placeholder.com/685x757{% endif %}">
+            </a>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="row align-items-center no-gutters" style="background:{{block.settings.bg_color}}">
+        <div class="col-md-6 col-sm-12">
+          <div class="col-image">
+            <a href="{{block.settings.block_url}}">
+              <img alt="{{ collection.title }}" class="w-100" src="{% if block.settings.img_collection != blank %} {{block.settings.img_collection | img_url : 'master'}} {% else %}//via.placeholder.com/685x757{% endif %}">
+            </a>
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="col-info">
+            <h3 class="title animate-on-scroll"
+   data-effect="{{ block.settings.effect_heading }}"
+   data-delay="{{ block.settings.effect_delay_heading }}"
+   data-duration="{{ block.settings.effect_duration_heading }}" style="color : {{block.settings.color_title}}">{{block.settings.block_title}}</h3>
+            <p class="des animate-on-scroll"
+   data-effect="{{ section.settings.effect_sub_heading }}"
+   data-delay="{{ section.settings.effect_delay_sub_heading }}"
+   data-duration="{{ section.settings.effect_duration_sub_heading }}" style="color : {{block.settings.color_des}}">{{block.settings.block_des}}</p>
+            <a class="button-universal" href="{{block.settings.block_url}}" target = "_blank">
+              {{block.settings.block_buton}}
+            </a>
+
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% endif %}
+      {% endfor %}
+
+
+    </div>
+  </div>
+
+  <style>
+      .button-universal{
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_font_color }};
+  }
+  .button-universal:hover{
+    background-color: {{ section.settings.button_hover_color }};
+    color: {{ section.settings.button_hover_font_color }};
+  }
+  </style>
+</div>
+{% schema %}
+{
+  "name": "COLLECTION V1",
+  "settings": [
+	
+    {
+      "type": "header",
+      "content": "Section Space"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    },
+    {
+  "type": "color",
+  "id": "button_bg_color",
+  "label": "Button Background Color",
+  "default": "#e272a3"
+},
+{
+  "type": "color",
+  "id": "button_hover_color",
+  "label": "Button Hover Background Color",
+  "default": "#333333"
+},
+        {
+  "type": "color",
+  "id": "button_font_color",
+  "label": "Button Font Color",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "button_hover_font_color",
+  "label": "Button Hover Font Color",
+  "default": "#ffffff"
+},
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+		{
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background Color",
+          "default": "#f2eeec"
+        },
+		{
+          "type": "image_picker",
+          "id": "img_collection",
+          "label": "Image Collection",
+          "info": "570 x 630px recommended"
+        },
+        {
+          "type": "text",
+          "id": "block_title",
+          "label": "Title",
+          "default": "THE BENEFITS OF USING"
+        },
+		{
+           "type": "color",
+           "id": "color_title",
+           "label": "Color Title"
+        },
+		{
+          "type": "textarea",
+          "id": "block_des",
+          "label": "Description",
+          "default": "We thank you for visiting our page, and hope that you will enjoy experiencing our soaps. We are happy to give you a 5% discount on your order. Just fill in a simple form!"
+        },
+		{
+           "type": "color",
+           "id": "color_des",
+           "label": "Color Description"
+        },
+		
+
+        {
+          "type": "text",
+          "id": "block_buton",
+          "label": "Button View Collection",
+          "default": "View All Collection"
+        },
+        {
+          "type": "url",
+          "id": "block_url",
+          "label": "URL button",
+          "default": "/collections/all"
+        },
+
+        {
+  "type": "select",
+  "id": "effect_heading",
+  "label": "Heading Animation Effect",
+  "options": [
+    { "value": "fadeInUp", "label": "Fade In Up" },
+    { "value": "fadeInDown", "label": "Fade In Down" },
+    { "value": "fadeInLeft", "label": "Fade In Left" },
+    { "value": "fadeInRight", "label": "Fade In Right" },
+    { "value": "zoomIn", "label": "Zoom In" },
+    { "value": "slideInUp", "label": "Slide In Up" },
+    { "value": "bounceIn", "label": "Bounce In" },
+    { "value": "tada", "label": "Tada" },
+    { "value": "heartBeat", "label": "HeartBeat" }
+  ],
+  "default": "fadeInUp"
+},
+{
+  "type": "text",
+  "id": "effect_duration_heading",
+  "label": "Animation Duration (e.g. 1s, 2s)",
+  "default": "1s"
+},
+{
+  "type": "text",
+  "id": "effect_delay_heading",
+  "label": "Animation Delay (e.g. 0s, 0.3s, 1s)",
+  "default": "0s"
+},
+{
+  "type": "select",
+  "id": "effect_desc",
+  "label": "Description Animation Effect",
+  "options": [
+    { "value": "fadeInUp", "label": "Fade In Up" },
+    { "value": "fadeInDown", "label": "Fade In Down" },
+    { "value": "fadeInLeft", "label": "Fade In Left" },
+    { "value": "fadeInRight", "label": "Fade In Right" },
+    { "value": "zoomIn", "label": "Zoom In" },
+    { "value": "slideInUp", "label": "Slide In Up" },
+    { "value": "bounceIn", "label": "Bounce In" },
+    { "value": "tada", "label": "Tada" },
+    { "value": "heartBeat", "label": "HeartBeat" }
+  ],
+  "default": "fadeInUp"
+},
+{
+  "type": "text",
+  "id": "effect_duration_desc",
+  "label": "Animation Duration (e.g. 1s, 2s)",
+  "default": "1s"
+},
+{
+  "type": "text",
+  "id": "effect_delay_desc",
+  "label": "Animation Delay (e.g. 0s, 0.3s, 1s)",
+  "default": "0s"
+},
+
+
+{
+  "type": "select",
+  "id": "effect_sub_heading",
+  "label": "Heading Animation Effect",
+  "options": [
+    { "value": "fadeInUp", "label": "Fade In Up" },
+    { "value": "fadeInDown", "label": "Fade In Down" },
+    { "value": "fadeInLeft", "label": "Fade In Left" },
+    { "value": "fadeInRight", "label": "Fade In Right" },
+    { "value": "zoomIn", "label": "Zoom In" },
+    { "value": "slideInUp", "label": "Slide In Up" },
+    { "value": "bounceIn", "label": "Bounce In" },
+    { "value": "tada", "label": "Tada" },
+    { "value": "heartBeat", "label": "HeartBeat" }
+  ],
+  "default": "fadeInUp"
+},
+{
+  "type": "text",
+  "id": "effect_duration_sub_heading",
+  "label": "Animation Duration (e.g. 1s, 2s)",
+  "default": "1s"
+},
+{
+  "type": "text",
+  "id": "effect_delay_sub_heading",
+  "label": "Animation Delay (e.g. 0s, 0.3s, 1s)",
+  "default": "0s"
+}
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "COLLECTION V1",
+        "category": "HOME",
+	  "blocks": [
+        {
+          "type": "collection",
+          "settings": {
+			"block_title": "THE BENEFITS OF USING",
+			"block_des": "We thank you for visiting our page, and hope that you will enjoy experiencing our soaps. We are happy to give you a 5% discount on your order. Just fill in a simple form!"
+          }
+        },
+		 {
+          "type": "collection",
+          "settings": {
+			"block_title": "WE LOVE OUR CLIENTS",
+			"block_des": "We thank you for visiting our page, and hope that you will enjoy experiencing our soaps. We are happy to give you a 5% discount on your order. Just fill in a simple form!"
+          }
+        }		
+      ]
+    }
+  ]
+}
+  {% endschema %}
+
+  {% stylesheet %}  
+  {% endstylesheet %}
+
+  {% javascript %}
+  {% endjavascript %}

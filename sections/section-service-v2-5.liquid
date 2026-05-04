@@ -1,0 +1,216 @@
+<div data-section-id="{{ section.id }}" data-section-type="section-service-v2" style="{% if section.settings.margin_top != blank %}margin-top: {{section.settings.margin_top}}px;{%endif%} {% if section.settings.margin_bottom != blank %}margin-bottom: {{section.settings.margin_bottom}}px;{% endif %} {% if section.settings.sections_layout == "dark" %}background: {{section.settings.sections_bg_color}};{% endif %}">
+  <div class="container container-v2">
+    <div class="section-service-v2">
+      <div class="col-12 col-md-10 col-lg-8 px-0 mx-auto text-center">
+
+        {% if section.settings.title_heading != blank %}
+        <h3 class="title_heading mb-0" style="color: {{section.settings.color_title}}">{{section.settings.title_heading}}</h3>
+        {% endif %}
+
+        {% if section.settings.sub_heading != blank %}
+        <p class="sub_heading" style="color: {{section.settings.color_sub_heading}}">{{section.settings.sub_heading}}</p>
+        {% endif %}
+
+      </div>
+      <div class="row js-service-v2">
+        {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+        {% if block.type == "service" %}
+        <div class="text-center itemtservice justify-content-center">
+          <div class="box-service col-lg-12">
+            <div class="number">
+              {% if block.settings.img_icon != blank %}
+              <img alt="features" src="{{block.settings.img_icon |img_url : 'master'}}">
+              {% else %}
+              {{block.settings.block_number}}
+              {% endif %}
+            </div>
+
+            <div class="info">
+              {% if block.settings.block_title != blank %}
+              <h4 class="title">{{block.settings.block_title}}</h4>
+              {% endif %}
+              {% if block.settings.block_content != blank %}          	
+              <p class="content">{{block.settings.block_content}}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "SERVICE V2.5",
+  "class": "index-section",
+  "settings": [
+      {
+      "type": "text",
+      "id": "title_heading",
+      "label": "Title Heading",
+      "default": "Featured Categories"
+    },
+    {
+      "type": "color",
+      "id": "color_title",
+      "label": "Color",
+      "default": "#000"
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Title Heading",
+      "default": "They are made with vegetable oil and/or animals fats for their skin care properties. The soapmaker will often include additives to the soap for their healing, exfoliating and esthetic properties."
+    },
+    {
+      "type": "color",
+      "id": "color_sub_heading",
+      "label": "Color",
+      "default": "#666"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_img",
+      "label": "Background image Section"
+    },
+    {
+      "type": "header",
+      "content": "Section Space"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Service V2.5",
+      "settings": [
+        {
+          "type": "text",
+          "id": "block_number",
+          "label": "Number",
+          "default": "1"
+        },
+        {
+          "type": "image_picker",
+          "id": "img_icon",
+          "label": "Image icon"
+        },
+        {
+          "type": "text",
+          "id": "block_title",
+          "label": "Title",
+          "default": " SHIPPING & RETURN"
+        },
+        {
+          "type": "textarea",
+          "id": "block_content",
+          "label": "Content",
+          "default": " If your glasses aren't perfect, return them within 30 days<br> for a full refund. We'll even pay shipping."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SERVICE V2.5",
+      "category": "HOME",
+      "blocks": [
+        {
+          "type": "service",
+          "settings": {
+            "block_number": "1",
+            "block_title": " FREE SHIPPING",
+            "block_content": "For all order over $99"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "block_number": "2",
+            "block_title": "DELIVERY ON TIME",
+            "block_content": "Definition and measurement"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "block_number": "3",
+            "block_title": "SECURE PAMENT",
+            "block_content": "100% secure payment"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+
+{% stylesheet %}
+  <style>
+.weight-options {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Reduce space between boxes */
+    flex-wrap: nowrap; /* Prevent wrapping into a second row */
+    overflow-x: auto; /* Allow scrolling if needed */
+    white-space: nowrap; /* Prevent elements from stacking */
+    padding: 0px 0;
+}
+
+.option {
+    background: #fff;
+    padding: 5px 5px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1.5px solid transparent;
+    min-width: 90px; /* Force a small, equal width */
+    max-width: 100px;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.option:hover {
+    transform: translateY(-3px);
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.15);
+    border-color: #e272a3; /* Subtle brand color outline */
+}
+
+h4 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.discount {
+    font-size: 12px;
+    font-weight: bold;
+    color: #e272a3;
+    background: rgba(226, 114, 163, 0.15);
+    padding: 3px 7px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-top: 4px;
+}
+
+  </style>
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

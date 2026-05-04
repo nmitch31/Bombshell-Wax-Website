@@ -1,0 +1,111 @@
+{% stylesheet %}
+.video-fullscreen-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+.video-fullscreen-wrapper iframe {
+  border: none;
+  display: block;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Desktop */
+@media screen and (min-width: 768px) {
+  .video-fullscreen-wrapper iframe {
+    width: var(--video-width-desktop);
+    height: var(--video-height-desktop);
+  }
+}
+
+/* Mobile */
+@media screen and (max-width: 767px) {
+  .video-fullscreen-wrapper iframe {
+    width: var(--video-width-mobile);
+    height: var(--video-height-mobile);
+  }
+}
+{% endstylesheet %}
+
+<div class="video-fullscreen-wrapper skip-video-wrapper" style="
+  --video-width-desktop: {{ section.settings.desktop_width | append: 'px' }};
+  --video-height-desktop: {{ section.settings.desktop_height | append: 'px' }};
+  --video-width-mobile: {{ section.settings.mobile_width | append: 'px' }};
+  --video-height-mobile: {{ section.settings.mobile_height | append: 'px' }};
+">
+  {{ section.settings.youtube_embed | raw }}
+</div>
+
+{% schema %}
+{
+  "name": "YouTube Video Fullscreen",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "youtube_embed",
+      "label": "YouTube Embed Code",
+      "info": "Paste a full YouTube iframe embed code."
+    },
+    {
+      "type": "header",
+      "content": "Desktop Video Size"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width",
+      "label": "Desktop Width (px)",
+      "min": 300,
+      "max": 1200,
+      "step": 10,
+      "default": 850
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop Height (px)",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "default": 480
+    },
+    {
+      "type": "header",
+      "content": "Mobile Video Size"
+    },
+    {
+      "type": "range",
+      "id": "mobile_width",
+      "label": "Mobile Width (px)",
+      "min": 200,
+      "max": 400,
+      "step": 10,
+      "default": 320
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile Height (px)",
+      "min": 100,
+      "max": 500,
+      "step": 10,
+      "default": 180
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fullscreen YouTube Video"
+    }
+  ]
+}
+{% endschema %}
+
+

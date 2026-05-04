@@ -1,0 +1,95 @@
+<div class="container container-v1" style="background: {{section.settings.bg_section}}">
+  <div class="grid">
+      {% if section.settings.rich_icon_svg != blank %}
+      	<div class="elementor-icon">{{section.settings.rich_icon_svg}}</div>
+      {% endif %}
+      {% if section.settings.section_title != blank %}
+        <div class="rich-text__heading--{{ section.settings.text_size }} text-center">
+          <h2 id="wax-header" class="heading-yea" style="color: {{section.settings.color_title}}">{{ section.settings.section_title  }}</h2>
+        </div>
+      {% endif %}
+  </div>
+</div>
+
+
+
+{% schema %}
+{
+  "name": {
+    "en": "Rich text2"
+  },
+  "class": "index-section",
+  "settings": [
+     {
+      "type": "color",
+      "id": "color_title",
+      "label": "Color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "bg_section",
+      "label": "Background Section",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "textarea",
+      "id": "rich_icon_svg",
+      "label": "Icon Svg"
+    },
+    {
+      "type": "textarea",
+      "id": "section_title",
+      "label": {
+        "en": "Heading"
+      },
+      "default": {
+        "en": "Talk about your brand"
+      }
+    }
+  ],
+  "presets": [
+    {
+      "name": {
+        "en": "Rich text2"
+      },
+      "category": {
+        "en": "Text"
+      }
+    }
+  ]
+}
+{% endschema %}
+{% stylesheet %}
+  
+    #wax-header {
+  scroll-margin-top: 100px; /* match your header height */
+  scroll-behavior: smooth;
+}
+  
+  
+  
+  
+  .heading-yea {
+  color: #000;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 45px;
+  text-transform:unset;
+  margin-bottom: 15px;
+}
+  
+  @media (max-width: 768px) {
+  .heading-yea {
+    font-size: 18px;
+  }
+}
+@media (min-width: 768px) {
+  .heading-yea {
+    font-size: 22px;
+  }}
+
+  .heading-yea{
+    line-height: 22px;
+  }
+{% endstylesheet %}

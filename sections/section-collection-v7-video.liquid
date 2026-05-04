@@ -1,0 +1,182 @@
+<div data-section-id="{{ section.id }}" data-section-type="section-collection-v1" style="{% if section.settings.margin_top != blank %}margin-top: {{section.settings.margin_top}}px;{%endif%} {% if section.settings.margin_bottom != blank %}margin-bottom: {{section.settings.margin_bottom}}px;{% endif %}">
+  <div class="section-collection-v1" style="background-image: url({% if section.settings.background-img != blank %}{{section.settings.background-img|img_url:'master'}}{% else %}//via.placeholder.com/1920x700{% endif %})">
+    <div class="container container-v2">
+
+      {% for block in section.blocks %}
+      {% if block.type == 'collection' %}
+      {% assign mod = forloop.index | modulo : 2 %}
+      {% if mod == 0 %}
+      <div class="row align-items-center no-gutters" style="background:{{block.settings.bg_color}}">
+        <div class="col-md-6 col-sm-12 order-2 order-md-1">
+          <div class="col-info">
+            <h3 class="title" style="color : {{block.settings.color_title}}">{{block.settings.block_title}}</h3>
+            <p class="des" style="color : {{block.settings.color_des}}">{{block.settings.block_des}}</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-sm-12 order-1 order-md-2 ">
+          <div class="col-image">
+            
+              <img class="w-100" src="{% if block.settings.img_collection != blank %} {{block.settings.img_collection | img_url : 'master'}} {% else %}//via.placeholder.com/685x757{% endif %}">
+            
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="row align-items-center no-gutters" style="background:{{block.settings.bg_color}}">
+        <div class="col-md-6 col-sm-12">
+          <div class="col-image">
+           
+              <div class="video-wrapper">
+  {% if block.settings.video_url != blank %}
+    <iframe width="100%" height="100%" src="{{ block.settings.video_url }}" frameborder="0" allowfullscreen></iframe>
+  {% else %}
+    <p>No video provided</p>
+  {% endif %}
+</div>
+
+           
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="col-info">
+            <h3 class="title" style="color : {{block.settings.color_title}}">{{block.settings.block_title}}</h3>
+            <p class="des" style="color : {{block.settings.color_des}}">{{block.settings.block_des}}</p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% endif %}
+      {% endfor %}
+
+
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Collection V7-video",
+  "settings": [
+	{
+      "type": "header",
+      "content": "Background Video"
+    },
+	{
+      "type": "image_picker",
+      "id": "background-img",
+      "info": "1920 x 700px recommended",
+      "label": "Background Image"
+    },
+    {
+      "type": "header",
+      "content": "Section Space"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+		{
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background Color",
+          "default": "#f2eeec"
+        },
+		{
+  "type": "text",
+  "id": "video_url",
+  "label": "Video URL",
+  "info": "Paste the embed link from YouTube or Vimeo"
+},
+        {
+          "type": "text",
+          "id": "block_title",
+          "label": "Title",
+          "default": "THE BENEFITS OF USING"
+        },
+		{
+           "type": "color",
+           "id": "color_title",
+           "label": "Color Title"
+        },
+		{
+          "type": "textarea",
+          "id": "block_des",
+          "label": "Description",
+          "default": "We thank you for visiting our page, and hope that you will enjoy experiencing our soaps. We are happy to give you a 5% discount on your order. Just fill in a simple form!"
+        },
+		{
+           "type": "color",
+           "id": "color_des",
+           "label": "Color Description"
+        },
+		
+
+        {
+          "type": "text",
+          "id": "block_buton",
+          "label": "Button View Collection",
+          "default": "View All Collection"
+        },
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "COLLECTION V7",
+        "category": "HOME",
+	  "blocks": [
+        {
+          "type": "collection",
+          "settings": {
+			"block_title": "THE BENEFITS OF USING",
+			"block_des": "We thank you for visiting our page, and hope that you will enjoy experiencing our soaps. We are happy to give you a 5% discount on your order. Just fill in a simple form!"
+          }
+        },
+		 {
+          "type": "collection",
+          "settings": {
+			"block_title": "WE LOVE OUR CLIENTS",
+			"block_des": "We thank you for visiting our page, and hope that you will enjoy experiencing our soaps. We are happy to give you a 5% discount on your order. Just fill in a simple form!"
+          }
+        }		
+      ]
+    }
+  ]
+}
+  {% endschema %}
+
+  {% stylesheet %}
+    <style>
+    .video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+    </style>
+  {% endstylesheet %}
+
+  {% javascript %}
+  {% endjavascript %}

@@ -1,0 +1,537 @@
+<div class="aboutus-pages">
+  {% if section.settings.enable_section %}
+  <div class="container container-v4">
+    <div class="about-introduce">
+      <div class="row">
+
+        <!-- LEFT COLUMN (TEXT + GRID INSERTED HERE) -->
+        <div class="col-md-6 intro_detail d-flex align-items-center order-md-1 order-2">
+          <div class="info-intro">
+            <h2 class="title_intro">{{ section.settings.title_intro }}</h2>
+            <p class="des_intro">{{ section.settings.des_intro }}</p>
+            <div class="content_intro">{{ section.settings.content_intro }}</div>
+
+            <!-- ▼▼▼ INSERTED GRID OF LINKS ▼▼▼ -->
+            <section id="flex-grid-{{ section.id }}" class="flex-grid-section">
+              <div 
+                class="flex-grid-wrapper"
+                style="
+                  --cols-desktop: {{ section.settings.columns_desktop }};
+                  --rows-desktop: {{ section.settings.rows_desktop }};
+                  --cols-mobile: {{ section.settings.columns_mobile }};
+                  --rows-mobile: {{ section.settings.rows_mobile }};
+                  --gap-desktop: {{ section.settings.grid_gap_desktop }}px;
+                  --gap-mobile: {{ section.settings.grid_gap_mobile }}px;
+                  --cell-pad-desktop: {{ section.settings.cell_padding_desktop }}px;
+                  --cell-pad-mobile: {{ section.settings.cell_padding_mobile }}px;
+                  --icon-gap-desktop: {{ section.settings.icon_gap_desktop }}px;
+                  --icon-gap-mobile: {{ section.settings.icon_gap_mobile }}px;
+                  --main-link-margin: {{ section.settings.main_link_margin }}px;
+                "
+              >
+                {% for block in section.blocks %}
+                  {% if block.type == 'grid_item' %}
+                  <div class="grid-cell">
+                    
+                    {%- if block.settings.main_link_text != blank and block.settings.main_link_url != blank -%}
+                      <a 
+                        href="{{ block.settings.main_link_url }}" 
+                        class="main-link {% if block.settings.main_link_as_button %}button-style{% endif %}"
+                        target="_blank"
+                      >
+                        {{ block.settings.main_link_text }}
+                      </a>
+                    {%- endif -%}
+
+                    {% if block.settings.icon_count > 0 %}
+                      <div class="icon-row">
+                        {% for i in (1..block.settings.icon_count) %}
+                          {% assign icon_svg_key = "icon_svg_" | append: i %}
+                          {% assign icon_url_key = "icon_url_" | append: i %}
+
+                          {% assign icon_svg = block.settings[icon_svg_key] %}
+                          {% assign icon_url = block.settings[icon_url_key] %}
+
+                          {% if icon_svg != blank and icon_url != blank %}
+                            <a href="{{ icon_url }}" class="icon-link" target="_blank">
+                              {{ icon_svg }}
+                            </a>
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+
+                  </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </section>
+
+            <style>
+              #flex-grid-{{ section.id }} .flex-grid-wrapper {
+                display: grid;
+                gap: var(--gap-desktop);
+                grid-template-columns: repeat(var(--cols-desktop), max-content);
+                grid-template-rows: repeat(var(--rows-desktop), auto);
+                justify-content: center;
+              }
+
+              #flex-grid-{{ section.id }} .grid-cell {
+                text-align: center;
+                padding: var(--cell-pad-desktop);
+              }
+
+              #flex-grid-{{ section.id }} .main-link {
+                display: inline-block;
+                margin-bottom: var(--main-link-margin);
+                text-decoration: none;
+                color: inherit;
+              }
+
+              #flex-grid-{{ section.id }} .button-style {
+                padding: 10px 18px;
+                border-radius: 4px;
+                background: {{ section.settings.button_bg }};
+                color: {{ section.settings.button_text }};
+              }
+
+              #flex-grid-{{ section.id }} .icon-row {
+                display: flex;
+                justify-content: center;
+                gap: var(--icon-gap-desktop);
+              }
+
+              #flex-grid-{{ section.id }} .icon-link svg {
+                width: {{ section.settings.icon_size_desktop }}px;
+                height: {{ section.settings.icon_size_desktop }}px;
+              }
+
+              @media (max-width: 768px) {
+                #flex-grid-{{ section.id }} .flex-grid-wrapper {
+                  gap: var(--gap-mobile);
+                  grid-template-columns: repeat(var(--cols-mobile), max-content);
+                  grid-template-rows: repeat(var(--rows-mobile), auto);
+                  justify-content: center;
+                }
+
+                #flex-grid-{{ section.id }} .grid-cell {
+                  padding: var(--cell-pad-mobile);
+                }
+
+                #flex-grid-{{ section.id }} .icon-row {
+                  gap: var(--icon-gap-mobile);
+                }
+
+                #flex-grid-{{ section.id }} .icon-link svg {
+                  width: {{ section.settings.icon_size_mobile }}px;
+                  height: {{ section.settings.icon_size_mobile }}px;
+                }
+              }
+            </style>
+            <!-- ▲▲▲ END GRID INSERTION ▲▲▲ -->
+
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN (VIDEO) -->
+        <div class="col-md-6 intro_image order-md-2 order-1">
+          <div class="box-video" style="position: relative; display: block;">
+            {% if section.settings.video_bg != blank %}
+              <img src="{{ section.settings.video_bg | img_url: 'master' }}" class="img-fluid w-100 border-radius" alt="Image">
+            {% else %}
+              <img src="//via.placeholder.com/660x600" class="img-fluid w-100 border-radius" alt="Image">
+            {% endif %}
+            <a style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 8;" target="_blank" data-fancybox href="{{ section.settings.section_video_url }}">
+              <span>
+                <!-- Play Icon SVG preserved exactly -->
+                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     width="78.981px" height="78.98px" viewBox="0 0 778.981 778.98" style="enable-background:new 0 0 778.981 778.98;"
+                     xml:space="preserve">
+                  <g>
+                    <g id="_x37__33_">
+                      <g>
+                        <path d="M673.195,348.856L150.077,7.981C119.068-8.899,83.499-1.363,83.499,53.535v671.209c0,54.509,38.156,64.215,66.579,45.525
+                                 l523.118-340.874C703.341,408.064,702.479,368.462,673.195,348.856z M138.647,702.356V75.895L635.01,389.126L138.647,702.356z"/>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const grid = document.querySelector("#flex-grid-{{ section.id }} .flex-grid-wrapper");
+  if (!grid) return;
+
+  const cells = Array.from(grid.querySelectorAll(".grid-cell"));
+  if (!cells.length) return;
+
+  function applyLastRowCentering() {
+    // Reset any previous overrides
+    cells.forEach(cell => {
+      cell.style.gridColumn = "";
+      cell.style.justifySelf = "";
+    });
+
+    const total = cells.length;
+
+    // Determine current column count based on viewport
+    let cols;
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      cols = {{ section.settings.columns_mobile | default: 2 }};
+    } else {
+      cols = {{ section.settings.columns_desktop | default: 4 }};
+    }
+
+    if (!cols || cols <= 0) return;
+
+    // If the last row has exactly 1 item, center it by spanning full row
+    const remainder = total % cols;
+    if (remainder === 1) {
+      const lastCell = cells[total - 1];
+      lastCell.style.gridColumn = "1 / -1";
+      lastCell.style.justifySelf = "center";
+    }
+  }
+
+  applyLastRowCentering();
+  window.addEventListener("resize", applyLastRowCentering);
+});
+</script>
+
+
+{% schema %}
+{
+  "name": "Text and Video + Grid",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_section",
+      "label": "Enable",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title_intro",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "des_intro",
+      "label": "Description"
+    },
+    {
+      "type": "html",
+      "id": "content_intro",
+      "label": "Content"
+    },
+
+    {
+      "type": "header",
+      "content": "Grid Layout Controls"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (Desktop)",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "rows_desktop",
+      "label": "Rows (Desktop)",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "label": "Columns (Mobile)",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "rows_mobile",
+      "label": "Rows (Mobile)",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    },
+
+    {
+      "type": "header",
+      "content": "Spacing Controls"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_desktop",
+      "label": "Grid Gap (Desktop)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_mobile",
+      "label": "Grid Gap (Mobile)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_desktop",
+      "label": "Cell Padding (Desktop)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_mobile",
+      "label": "Cell Padding (Mobile)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "icon_gap_desktop",
+      "label": "Icon Spacing (Desktop)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "icon_gap_mobile",
+      "label": "Icon Spacing (Mobile)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "main_link_margin",
+      "label": "Main Link Bottom Margin",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 10
+    },
+
+    {
+      "type": "header",
+      "content": "Button Styling"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+
+    {
+      "type": "header",
+      "content": "Icon Sizes"
+    },
+    {
+      "type": "range",
+      "id": "icon_size_desktop",
+      "label": "Icon Size (Desktop)",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "label": "Icon Size (Mobile)",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "default": 24
+    },
+
+    {
+      "type": "header",
+      "content": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_bg",
+      "label": "Video Thumbnail",
+      "info": "670x600px recommended"
+    },
+    {
+      "type": "url",
+      "id": "section_video_url",
+      "label": "Video URL",
+      "info": "[Upload video .mp4 here](/admin/settings/files)"
+    },
+
+    {
+      "type": "header",
+      "content": "Section Space"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "grid_item",
+      "name": "Grid Cell",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "main_link_text",
+          "label": "Main Link Text"
+        },
+        {
+          "type": "url",
+          "id": "main_link_url",
+          "label": "Main Link URL"
+        },
+        {
+          "type": "checkbox",
+          "id": "main_link_as_button",
+          "label": "Style as Button",
+          "default": false
+        },
+
+        {
+          "type": "range",
+          "id": "icon_count",
+          "label": "Number of Icons",
+          "min": 0,
+          "max": 6,
+          "default": 0
+        },
+
+        {
+          "type": "header",
+          "content": "Icons (SVG + Link)"
+        },
+
+        {
+          "type": "textarea",
+          "id": "icon_svg_1",
+          "label": "Icon 1 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_1",
+          "label": "Icon 1 Link"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg_2",
+          "label": "Icon 2 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_2",
+          "label": "Icon 2 Link"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg_3",
+          "label": "Icon 3 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_3",
+          "label": "Icon 3 Link"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg_4",
+          "label": "Icon 4 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_4",
+          "label": "Icon 4 Link"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg_5",
+          "label": "Icon 5 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_5",
+          "label": "Icon 5 Link"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg_6",
+          "label": "Icon 6 SVG"
+        },
+        {
+          "type": "url",
+          "id": "icon_url_6",
+          "label": "Icon 6 Link"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Text and Video + Grid",
+      "category": "ABOUT"
+    }
+  ]
+}
+{% endschema %}
+
+{% javascript %}
+{% endjavascript %}
